@@ -1,4 +1,4 @@
-# CIP [0000]: Identity Claims and Metadata
+# CIP [0000]: Title for Improvement
 
 - Date: 2019-09-19
 - Author: @githubhandle
