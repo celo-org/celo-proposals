@@ -18,7 +18,7 @@ Aim for anywhere from a few sentences to a couple paragraphs. The goal is to pro
 
 ### Proposed Solution
 
-Explains in detail the proposed solution. Should be the longest section of the doc and contain one or more subsections as needed. way that lends itself to many different hosting setups, reflecting the diversity of our validators and their setups.
+Explains in detail the proposed solution. Should be the longest section of the doc and contain one or more subsections as needed.
 
 
 ### Alternative Solutions
@@ -31,7 +31,7 @@ If applicable, discuss any unsolved issues that the author may wish to seek feed
 
 ### Future Work
 
-If applicable, describe future work implied by this doc (e.g. the “Simplifications For v0.1” section in the initial identity spec)
+If applicable, describe future work implied by this proposal
 
 ### Proposed timeline
 
