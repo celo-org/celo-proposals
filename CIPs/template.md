@@ -21,7 +21,7 @@ Explain why this is a problem or what benefits the enhancement will bring. To th
 
 ## Proposed Solution
 
-Detail the specification and implementation changes in this EIP.
+Detail the specification and implementation changes in this CIP.
 
 ## Alternative Solutions
 
