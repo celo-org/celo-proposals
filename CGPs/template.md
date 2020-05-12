@@ -1,18 +1,19 @@
 # CIP [0000]: Title for Governance Proposal
 
 - Date: 2020-05-11
-- Author: @githubhandle
+- Author(s): @githubhandle
 - Status: DRAFT|PROPOSED|EXECUTED|EXPIRED
 	- DRAFT = Feedback collection
-	- PROPOSED = The governance proposal has been submitted to the network
+	- PROPOSED = The governance proposal was submitted to the network
 	- EXECUTED = The governance proposal was executed on the network
 	- EXPIRED = The governance proposal expired
-- Governance Propsal ID #: [if submitted]
+- Governance Proposal ID #: [if submitted]
 - Date Executed: [if executed]
 
 ## Overview
 
 Pick a four digit number subsequent to the latest PR raised and name your file that.
+Eg. if the latest PR to the CGP folder was [0034], then your PR should be [0035].
 
 Describe the issue that motivates this CGP. It should indicate all parameters that are being changed and why doing so is important.
 
