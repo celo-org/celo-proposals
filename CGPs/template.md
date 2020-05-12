@@ -32,7 +32,7 @@ Fill out the following template for each transaction in the proposal
 
 ## Verification
 
-An explanation of how to verify that this CGP does what it intends to do. Can be left as “TODO” until the proposal is made. Include things like CLI commands to run and pointers to code.
+An explanation of how voters can verify that this CGP does what it intends to do. Can be left as “TODO” until the proposal is made. Include things like CLI commands to run and pointers to code.
 
 ## Risks
 
