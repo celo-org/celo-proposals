@@ -1,4 +1,4 @@
-# CIP [0000]: Title for Governance Proposal
+# CGP [0000]: Title for Governance Proposal
 
 - Date: 2020-05-11
 - Author(s): @githubhandle
@@ -11,6 +11,8 @@
 - Date Executed: [if executed]
 
 ## Overview
+
+CGP - Celo Governance Proposal
 
 Pick a four digit number subsequent to the latest PR raised and name your file that.
 Eg. if the latest PR to the CGP folder was [0034], then your PR should be [0035].
