@@ -14,12 +14,14 @@
 
 CGP - Celo Governance Proposal
 
-Pick a four digit number subsequent to the latest PR raised and name your file that.
-Eg. if the latest PR to the CGP folder was [0034], then your PR should be [0035].
+Pick a four digit number subsequent to the latest PR raised and name your file that with the suffic P (for pending).
+Eg. if the latest PR to the CGP folder was [0034], then your PR should be [0035P].
 
 Describe the issue that motivates this CGP. It should indicate all parameters that are being changed and why doing so is important.
 
 Explain what benefits the enhancement this change will bring. To the extent possible, enumerate use cases affected by this CGP.
+
+Once the proposal is successfully proposed on chain, update this file so that the title number matches the proposal ID.
 
 ## Proposed Changes
 
