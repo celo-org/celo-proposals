@@ -1,23 +1,22 @@
-# CGP [0000]: Title for Governance Proposal
-
-- Date: 2020-05-11
-- Author(s): @githubhandle
-- Status: DRAFT|PROPOSED|EXECUTED|EXPIRED
-	- DRAFT = Feedback collection
-	- PROPOSED = The governance proposal was submitted to the network
-	- EXECUTED = The governance proposal was executed on the network
-	- EXPIRED = The governance proposal expired
-- Governance Proposal ID #: [if submitted]
-- Date Executed: [if executed]
+---
+cgp: <to be assigned>
+title: <CGP title>
+author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
+status: Draft
+governance-proposal-id: <ID if CGP is submitted to the network>
+date-created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
+date-executed: <date executed on if executed, in ISO 8601 (yyyy-mm-dd) format>
+---
 
 ## Overview
 
 CGP - Celo Governance Proposal
 
-Pick a four digit number subsequent to the latest PR raised and name your file that with the suffic P (for pending).
-Eg. if the latest PR to the CGP folder was [0034], then your PR should be [0035P].
+A number for the CGP will be assigned by the CIP Editor. When opening a pull request to submit your CGP, please use an abbreviated title in the filename, `cgp-draft_title_abbrev.md`. 
 
 Describe the issue that motivates this CGP. It should indicate all parameters that are being changed and why doing so is important.
+
+It should also list CIP(s), if any, that it will be implementing.
 
 Explain what benefits the enhancement this change will bring. To the extent possible, enumerate use cases affected by this CGP.
 
@@ -30,7 +29,7 @@ Fill out the following template for each transaction in the proposal
 1. Description of transaction 1 
   - Destination: A human readable description of the address and method being called
   - Data: A human readable description of the transaction data
-  - Value: How much cGLD is being sent, and why?
+  - Value: How much CELO is being sent, and why?
 
 ## Verification
 
