@@ -19,10 +19,34 @@ block. The input to the CIP20 interface to these functions is
 For clarity, within the configuration block, all multi-byte integers use 
 little-endian byte order.
 
-**blake2s** 
-
 The configuration block is specified in the blake2s documentation. It is
 exactly 32 bytes as follows:
+
+
+```
+type parameterBlock struct {
+	DigestSize      byte   // 0
+	KeyLength       byte   // 1
+	fanout          byte   // 2
+	depth           byte   // 3
+	leafLength      uint32 // 4-7
+	nodeOffset      uint48 // 8-13
+	nodeDepth       byte   // 14
+	innerLength     byte   // 15
+	Salt            []byte // 16-23
+	Personalization []byte // 24-31
+}
+```
+
+For example, the default configuration (blake2s-256) as specified in the Blake2 
+documentation is 
+`0x2000010100000000000000000000000000000000000000000000000000000000`. It 
+represents blake2s operating in sequential mode with no key, salt, or 
+personalization, outputting a `0x20` (32) byte digest.
+
+**blake2Xs**
+
+Blake2xs modifies the block above to specify the XOF digest length as follows:
 
 ```
 type parameterBlock struct {
@@ -40,32 +64,8 @@ type parameterBlock struct {
 }
 ```
 
-For example, the default configuration (blake2s-256) as specified in the Blake2 
-documentation is 
-`0x2000010100000000000000000000000000000000000000000000000000000000`. It 
-represents blake2s operating in sequential mode with no key, salt, or 
-personalization, outputting a `0x20` (32) byte digest.
-
-**blake2xs** 
-
-We modify the blake2s block slightly to allow longer digest sizes. Our blake2xs 
-configuration block is 33 bytes as follows:
-
-```
-type parameterBlock struct {
-	DigestSize      uint16 // 0
-	KeyLength       byte   // 1
-	fanout          byte   // 2
-	depth           byte   // 3
-	leafLength      uint32 // 4-7
-	nodeOffset      uint32 // 8-11
-	xofLength       uint16 // 12-13
-	nodeDepth       byte   // 14
-	innerLength     byte   // 15
-	Salt            []byte // 16-23
-	Personalization []byte // 24-31
-}
-```
+The nodeOffset block is shortened, and a new 16-bit `xofLength` field specifies 
+the desired output length of the XOF.
 
 ## Examples
 
