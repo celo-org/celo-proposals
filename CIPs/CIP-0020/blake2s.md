@@ -59,9 +59,10 @@ queries with an upper bound on total bytes queried. The upper bound is
 explicitly commited to within the hash function IV. To support this mode of
 operation without introducing state to the precompile, we allow the caller to
 specify both an `xofLength` (the upper bound) and an `outputBytes` (the number
-of bytes actually queried).
+of bytes actually queried). If `outputBytes` is set to `uint32(0)`, it will be
+interpreted as equal to xofLength.
 
-**Note**: We define `outputBytes` as a big-endian 32-bit number, encoded as
+**Note**: We define `outputBytes` as a big-endian 16-bit number, encoded as
 exactly 4 bytes.
 
 The input to the CIP20 interface for Blake2Xs is
