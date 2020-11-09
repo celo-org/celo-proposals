@@ -7,21 +7,29 @@ hash functions for CIP20.
 
 ## Specification
 
-Blake2s allows several configuration options. To fully support these, the 
-precompile accepts a fixed-length configuration block in addition to the 
-preimage. To support keyed hashing, the configuration there is an optional, 
-variable-width key. The size of the key is specified within the configuration 
-block. The input to the CIP20 interface to these functions is 
+Blake2s allows several configuration options. To fully support these, the
+precompile accepts a fixed-length configuration block in addition to the
+preimage. To support keyed hashing, the configuration may be accompanied by an
+optional, variable-width key. The size of the key is specified within the
+configuration, and is bounded at 32 bytes.
+
+## Configuration Block
+
+The configuration block allows the caller to modify the hash function to create
+domain-specific hashes. It is explicitly committed to in the initialization
+vector.
+
+For clarity, within the configuration block, all multi-byte integers use
+little-endian byte order unless explicitly stated otherwise.
+
+### Blake2s
+
+The input to the CIP20 interface for Blake2s is
 `configuration || key || preimage` where `||` is the concatenation operator.
-
-### Configuration Block
-
-For clarity, within the configuration block, all multi-byte integers use 
-little-endian byte order.
+This will produce a prefix of between 32 and 64 bytes, depending on key length.
 
 The configuration block is specified in the blake2s documentation. It is
 exactly 32 bytes as follows:
-
 
 ```
 type parameterBlock struct {
@@ -38,15 +46,31 @@ type parameterBlock struct {
 }
 ```
 
-For example, the default configuration (blake2s-256) as specified in the Blake2 
-documentation is 
-`0x2000010100000000000000000000000000000000000000000000000000000000`. It 
-represents blake2s operating in sequential mode with no key, salt, or 
+For example, the default configuration (blake2s-256) as specified in the Blake2
+documentation is
+`0x2000010100000000000000000000000000000000000000000000000000000000`. It
+represents blake2s operating in sequential mode with no key, salt, or
 personalization, outputting a `0x20` (32) byte digest.
 
-**blake2Xs**
+### Blake2Xs
 
-Blake2xs modifies the block above to specify the XOF digest length as follows:
+Blake2Xs produces a variable-length digest. It is designed to allow successive
+queries with an upper bound on total bytes queried. The upper bound is
+explicitly commited to within the hash function IV. To support this mode of
+operation without introducing state to the precompile, we allow the caller to
+specify both an `xofLength` (the upper bound) and an `outputBytes` (the number
+of bytes actually queried).
+
+**Note**: We define `outputBytes` as a big-endian 32-bit number, encoded as
+exactly 4 bytes.
+
+The input to the CIP20 interface for Blake2Xs is
+`configuration || key || outputBytes || preimage` where `||` is the
+concatenation operator. This creates a prefix of between 36 and 68 bytes
+(depending on the length of the key).
+
+Blake2Xs modifies the Blake2s config block above to specify the XOF digest
+length as follows:
 
 ```
 type parameterBlock struct {
@@ -64,8 +88,12 @@ type parameterBlock struct {
 }
 ```
 
-The nodeOffset block is shortened, and a new 16-bit `xofLength` field specifies 
-the desired output length of the XOF.
+Compared to Blake2s, the `nodeOffset` block is shortened, and a new 16-bit
+`xofLength` field specifies the desired output length of the XOF.
+
+## Gas Accounting
+
+- TODO
 
 ## Examples
 
@@ -80,7 +108,7 @@ the desired output length of the XOF.
     - 14 byte key - `0x20`
     - default tree options
     - no salt or personalization
-    - key -- 
+    - key --
     `000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f`
     - preimage -- `00`
 
