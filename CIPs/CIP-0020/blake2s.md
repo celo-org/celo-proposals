@@ -117,6 +117,9 @@ Compared to Blake2s, the `nodeOffset` block is shortened, and a new 16-bit
 ## References
 
 - [Blake2 documentation](https://www.blake2.net/blake2.pdf)
+- [celo-blockchain integration](https://github.com/celo-org/celo-blockchain/tree/prestwich/cip-0020)
+
+Code snippets above are reproduced from the following blake2 libraries, which
+are dedicated to the public domain:
 - [Blake2s lib](https://github.com/dchest/blake2s)
 - [Blake2xs lib](https://github.com/dchest/blake2xs)
-- [celo-blockchain integration](https://github.com/celo-org/celo-blockchain/tree/prestwich/cip-0020)
