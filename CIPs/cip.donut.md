@@ -18,7 +18,7 @@ Enable the activation of the Celo Donut Hardfork specification which includes Et
 ## Abstract
 
 Add support for protocol-impacting changes introduced in the Ethereum Berlin specification for Yolov3 and Celo improvement proposals in a hardfork
-named by the community as ____Donut_.
+named by the community as _Donut_.
 
 This hardfork includes pre-Berlin EIPs like simple EVM subroutines and gas cost increases for state access opcodes, as well as BLS precompiles and extensible hash-function precompiles.
 
@@ -63,4 +63,3 @@ Adoption of the content of this CIP requires a hardfork as it introduces changes
 ## Copyright
 
 This work is licensed under the Apache License, Version 2.0.
-
