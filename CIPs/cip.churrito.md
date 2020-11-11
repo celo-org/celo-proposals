@@ -1,0 +1,50 @@
+---
+cip: TBD 
+title: Churrito Hardfork Specification 
+author: Yaz Khoury (@YazzyYaz), James Prestwich (@prestwich), Or Neeman (@oneeman) 
+discussions-to:
+status: Draft
+type: Meta 
+created: 2020-11-11 
+license: Apache 2.0
+---
+
+This is the Meta CIP for the technical specifications of the Celo Churrito Hardfork.
+
+## Simple Summary
+
+Enable the activation of the Celo Churrito Hardfork specification which includes important security patch to ensure correct specification of EVM behavior. 
+
+## Abstract
+
+Add support for protocol-impacting changes introduced in Geth in a hardfork called `Churrito`.
+
+This document proposes the following blocks at which to implement these changes in the Celo networks:
+- `TBD` on Baklava Testnet ()
+- `TBD` on Alfajores Testnet ()
+- `TBD` on Celo Mainnet ()
+
+For more information on the opcodes and their respective EIPs and CIP implementations, please see the _Specification_
+section of this document.
+
+## Motivation
+
+To improve the security of the EVM and ensure it is correctly specified.
+
+## Specification
+
+The Churrito Hardfork specification meta document will correctly implement the following EIP:
+* [EIP 211: New opcodes: RETURNDATASIZE and RETURNDATACOPY](https://eips.ethereum.org/EIPS/eip-211)
+
+## Rationale
+
+__Security__: Enables Celo network to add security changes to the EVM from latest Geth upstream to minimize issues. 
+
+## Implementation
+
+Adoption of the content of this CIP requires a hardfork as it introduces changes that aren't backward compatible. The following clients with Celo support will implement the Celo Churrito hardfork specification:
+- celo-blockchain
+
+## Copyright
+
+This work is licensed under the Apache License, Version 2.0.
