@@ -61,7 +61,7 @@ Branch mrsmkl/precompile-bls-key
 
 ## Security Considerations
 
-The precompile is veru similar to an existing one, so there shouldn't be too many security implications. Mostly have to be sure that all the edge cases are handled properly and to make sure there's no non-deterministic behavior.
+The precompile is very similar to an existing one, so there shouldn't be too many security implications. Mostly have to be sure that all the edge cases are handled properly and to make sure there's no non-deterministic behavior.
 
 ## License
 
