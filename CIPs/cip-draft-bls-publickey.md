@@ -21,7 +21,7 @@ Returns the BLS public key of a validator in the same way as the existing precom
 
 ## Motivation
 
-Currently it's not possible to get the validator BLS public key from the chain. However the keys are needed to implement slashing in the case of bad epoch snark data (see CIP-20).
+Currently it's not possible to get the validator BLS public key used for consensus from the chain. It's only possible to get the current BLS key that would be active in the next epoch. However the keys are needed to implement slashing in the case of bad epoch snark data (see CIP-20).
 
 ## Specification
 
