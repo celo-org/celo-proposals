@@ -54,7 +54,7 @@ The proposal adds a new precompiled function `ED25519VFY` with the following inp
 - any non-zero value indicates a signature verification failure
 
 ### Address
-The address of `ED25519VFY` is `0x9`.
+The address of `ED25519VFY` is `TBC`.
 
 ### Gas costs
 Gas cost for `ED25519VFY` is 2000.
