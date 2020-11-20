@@ -2,7 +2,7 @@
 cip: TBC
 title: Ed25519 precompile
 author: Joe Bowman <joe@chorus.one>
-discussions-to: https://github.com/celo-org/celo-proposals/issues/XX
+discussions-to: https://github.com/celo-org/celo-proposals/issues/91
 status: Draft
 type: Standards
 category: Ring 0
