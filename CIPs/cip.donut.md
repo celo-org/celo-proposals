@@ -45,9 +45,9 @@ The Donut Hardfork specification meta document includes the following proposals:
 
 ## Rationale
 
-Functionality: We add a number of new features and precompiles to enable new cryptographic protocols and support Plumo.
+__Functionality__: We add a number of new features and precompiles to enable new cryptographic protocols and support Plumo.
 
-Validator Quality of life: CIPs 21 and (split etherbase?) address common validator needs wrt reward allocation.
+__Validator Quality of Life__: CIPs 21 and Split Etherbase proposal address common validator needs with respect to reward allocation.
 
 ## Implementation
 
