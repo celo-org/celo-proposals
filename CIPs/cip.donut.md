@@ -35,15 +35,9 @@ The enhance the EVM's capabilities and while pushing forward the Celo blockchain
 
 ## Specification
 The Donut Hardfork specification meta document includes the following proposals:
-* [EIP 2565: ModExp Gas Cost](https://eips.ethereum.org/EIPS/eip-2565)
-* [EIP 2315: Simple Subroutines for EVM](https://eips.ethereum.org/EIPS/eip-2315)
-* [EIP 2929: Gas Cost Increases For State Access Opcodes](https://eips.ethereum.org/EIPS/eip-2929)
-* [EIP 2930: Optional Access Lists](https://eips.ethereum.org/EIPS/eip-2930)
-* [EIP 2718: Typed Tx Envelope](https://eips.ethereum.org/EIPS/eip-2718)
 * [EIP 665: Ed25519 Signature Verification](https://eips.ethereum.org/EIPS/eip-665)
 * [EIP 2537: BLS Curve Operations on 12-381](https://eips.ethereum.org/EIPS/eip-2537)
 * [EIP 2539: BLS Curve Operations on 12-377](https://eips.ethereum.org/EIPS/eip-2539)
-* [EIP 3026: BW6-761 Curve Operations](https://eips.ethereum.org/EIPS/eip-3026)
 * [CIP 20: Extensible Hash Function Precompile](https://github.com/celo-org/celo-proposals/pull/44)
 * [CIP 21: Governable Lookback Window](https://github.com/celo-org/celo-proposals/pull/48)
 * [CIP 22: Epoch Snark Data](https://github.com/celo-org/celo-proposals/pull/67/files#diff-57a5e04aa05b40794aa8beb293d2b68c967dab4d7f625546baec17a8e5bb568b)
