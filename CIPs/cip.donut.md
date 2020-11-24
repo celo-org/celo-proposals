@@ -1,8 +1,8 @@
 ---
-cip: 
+cip: 27
 title: Donut Hardfork 
-author: Yaz Khoury <@YazzyYaz> 
-discussions-to:  
+author: Yaz Khoury <@YazzyYaz>, James Prestwich <@prestwich>, Kobi Gurkan <@kobigurk>
+discussions-to: https://github.com/celo-org/celo-proposals/issues/94 
 status: Draft
 type: Meta 
 created: 2020-11-10
@@ -34,8 +34,9 @@ section of this document.
 The enhance the EVM's capabilities and while pushing forward the Celo blockchain functionality in order to enable economic conditions for prosperity as well as adopting Ethereum's Berlin specifications.
 
 ## Specification
+
 The Donut Hardfork specification meta document includes the following proposals:
-* [EIP 665: Ed25519 Signature Verification](https://eips.ethereum.org/EIPS/eip-665)
+* [CIP 25: Ed25519 Precompile](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0025.md)
 * [EIP 2537: BLS Curve Operations on 12-381](https://eips.ethereum.org/EIPS/eip-2537)
 * [EIP 2539: BLS Curve Operations on 12-377](https://eips.ethereum.org/EIPS/eip-2539)
 * [CIP 20: Extensible Hash Function Precompile](https://github.com/celo-org/celo-proposals/pull/44)
@@ -44,10 +45,9 @@ The Donut Hardfork specification meta document includes the following proposals:
 
 ## Rationale
 
-__Optimization__: EVM improvements via simple subroutines will allow for a more efficient EVM.
+Functionality: We add a number of new features and precompiles to enable new cryptographic protocols and support Plumo.
 
-__Interoperability__: Allowing compatibility between Celo and Ethereum EVM so developers can easily have an up-to-date EVM on both networks and easily be able to run their smart contracts on both networks.
-
+Validator Quality of life: CIPs 21 and (split etherbase?) address common validator needs wrt reward allocation.
 
 ## Implementation
 
