@@ -1,8 +1,8 @@
 ---
-cip: <to be assigned>
+cip: 28
 title: Split etherbase
-author: Andres di Giovanni (@andres-dg)
-discussions-to: <URL>
+author: Andres di Giovanni <@andres-dg>
+discussions-to: https://github.com/celo-org/celo-proposals/issues/95
 status: Draft
 type: Standards Track
 category: Ring 0
