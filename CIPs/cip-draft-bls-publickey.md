@@ -1,11 +1,11 @@
 ---
-cip: 
+cip: 26
 title: Precompile for getting BLS public key for a given validator in a historical block
 author: Sami Mäkelä (@mrsmkl)
-discussions-to: <URL>
+discussions-to: https://github.com/celo-org/celo-proposals/issues/93
 status: Draft
 type: Standards Track
-category (*only required for Standards Track): <Ring 0, 1, 2, 3>
+category (*only required for Standards Track): Ring 0
 created: 2020-11-17
 license: Apache 2.0
 ---
