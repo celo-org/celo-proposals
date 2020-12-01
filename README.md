@@ -13,7 +13,7 @@ Draft all proposals following the template below and submit to the CIPs/CGPs rep
 
 #### CIP template: ####
 
-Please see [CIPS/template.md](CIPs/template.md) for a template.
+Please see [CIPS/template.md](CIPs/cip-template.md) for a template.
 
 #### CGP template: ####
 
