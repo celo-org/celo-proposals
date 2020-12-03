@@ -54,7 +54,34 @@ personalization, outputting a `0x20` (32) byte digest.
 
 ## Gas Accounting
 
-- TODO
+Gas for Blake2s will be set equal to SHA256 costs: `60 + (12 * words)`. The
+number of words is calculated without the configuration block (equivalent to
+the total length of the input minus the length of the configuration). If the
+input is less than 32 bytes, it is invalid, and the pricing function MUST
+return `INVALID_CIP20_INPUT_GAS`.
+
+```python
+def price_word_metered_hash(
+	base: int,
+	per_word: int,
+	word_size: int,
+	input: bytes
+) -> int:
+    length_ceiling = len(input) + word_size - 1
+    words = length_ceiling // word_size
+    return base + words * per_word
+
+def price_blake2s(input: bytes) -> int:
+	if len(input) < 32:
+		return INVALID_CIP20_INPUT_GAS
+	return price_word_metered_hash(
+		60,
+		12,
+		32,
+		input[32:]
+	)
+```
+
 
 ## Examples
 
