@@ -1,5 +1,5 @@
 ---
-cip: <to be assigned>
+cip: 30
 title: Precompile for BLS12-377 curve operations
 author: Alex Vlasov (@shamatar)
 discussions-to: <todo>
