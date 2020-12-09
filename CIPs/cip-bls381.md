@@ -37,15 +37,15 @@ Multiexponentiation operation is included to efficiently aggregate public keys o
 
 |Precompile   |Address   |
 |---|---|
-|BLS12_G1ADD          | 0x0a  |
-|BLS12_G1MUL          | 0x0b  |
-|BLS12_G1MULTIEXP     | 0x0c  |
-|BLS12_G2ADD          | 0x0d  |
-|BLS12_G2MUL          | 0x0e  |
-|BLS12_G2MULTIEXP     | 0x0f  |
-|BLS12_PAIRING        | 0x10  |
-|BLS12_MAP_FP_TO_G1   | 0x11  |
-|BLS12_MAP_FP2_TO_G2  | 0x12  |
+|BLS12_G1ADD          | TBA  |
+|BLS12_G1MUL          | TBA  |
+|BLS12_G1MULTIEXP     | TBA  |
+|BLS12_G2ADD          | TBA  |
+|BLS12_G2MUL          | TBA  |
+|BLS12_G2MULTIEXP     | TBA  |
+|BLS12_PAIRING        | TBA  |
+|BLS12_MAP_FP_TO_G1   | TBA  |
+|BLS12_MAP_FP2_TO_G2  | TBA  |
 
 ## Motivation
 

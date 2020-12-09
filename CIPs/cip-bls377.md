@@ -12,7 +12,7 @@ created: 2020-12-08
 ## Simple Summary
 This precompile adds operation on BLS12-377 curve (from Zexe paper) as a precompile in a set necessary to *efficiently* perform operations such as BLS signature verification and perform SNARKs verifications. Unique properties of BLS12-377 also later allow to have SNARKs that check BLS12-377 pairing in an efficient way and allow e.g. constant-size BLS signature aggregation.
 
-This document has been copied from the [EIP repository](https://github.com/ethereum/EIPs), EIP-2537.
+This document has been copied from the [EIP repository](https://github.com/ethereum/EIPs), EIP-2539.
 
 ## Abstract
 
@@ -32,13 +32,13 @@ Multiexponentiation operation is included to efficiently aggregate public keys o
 
 |Precompile   |Address   |
 |---|---|
-|BLS12_377_G1ADD          | 0x13  |
-|BLS12_377_G1MUL          | 0x14  |
-|BLS12_377_G1MULTIEXP     | 0x15  |
-|BLS12_377_G2ADD          | 0x16  |
-|BLS12_377_G2MUL          | 0x17  |
-|BLS12_377_G2MULTIEXP     | 0x18  |
-|BLS12_377_PAIRING        | 0x19  |
+|BLS12_377_G1ADD          | TBA  |
+|BLS12_377_G1MUL          | TBA  |
+|BLS12_377_G1MULTIEXP     | TBA  |
+|BLS12_377_G2ADD          | TBA  |
+|BLS12_377_G2MUL          | TBA  |
+|BLS12_377_G2MULTIEXP     | TBA  |
+|BLS12_377_PAIRING        | TBA  |
 
 ## Motivation
 Motivation of this precompile is to add a cryptographic primitive that allows to get 120+ bits of security for operations over pairing friendly curve compared to the existing BN254 precompile that only provides 80 bits of security. In addition it allows efficient one-time recursive proof aggregations, e.g. proofs about existence of BLS12-377 based signature.
