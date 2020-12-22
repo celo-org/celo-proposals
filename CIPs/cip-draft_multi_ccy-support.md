@@ -82,7 +82,7 @@ Add new/existing oracle address to support cEUR. If liquidity of cEUR is conside
 
 ### Miscellaneous
 
-- Similar to the deployment of cUSD and in order to bootstrap initial liquidity of cEUR, there will be a pre-minted amount of cEUR provided.
+- Similar to the deployment of cUSD and in order to bootstrap initial liquidity of cEUR, there will be a pre-minted amount of cEUR provided. The pre-minting procedure and execution will be governed by a dedicated governance proposal.
 - Modify the celocli to include changes.
 - Modify ContractKit to include changes.
 
