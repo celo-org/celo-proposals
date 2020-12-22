@@ -1,14 +1,14 @@
-# CGP [0000]: Title for Governance Proposal
+---
+cgp: <to be assigned>
+title: <CGP title>
+date-created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
+author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
+status: <DRAFT | PROPOSED | EXECUTED | EXPIRED>
+date-executed: [if executed] <date created on, in ISO 8601 (yyyy-mm-dd) format>
+governance-proposal-id: [if submitted]
+---
 
-- Date: 2020-05-11
-- Author(s): @githubhandle
-- Status: DRAFT|PROPOSED|EXECUTED|EXPIRED
-	- DRAFT = Feedback collection
-	- PROPOSED = The governance proposal was submitted to the network
-	- EXECUTED = The governance proposal was executed on the network
-	- EXPIRED = The governance proposal expired
-- Governance Proposal ID #: [if submitted]
-- Date Executed: [if executed]
+
 
 ## Overview
 
@@ -16,6 +16,12 @@ CGP - Celo Governance Proposal
 
 Pick a four digit number subsequent to the latest PR raised and name your file that with the suffic P (for pending).
 Eg. if the latest PR to the CGP folder was [0034], then your PR should be [0035P].
+
+### Status
+- DRAFT = Feedback collection
+- PROPOSED = The governance proposal was submitted to the network
+- EXECUTED = The governance proposal was executed on the network
+- EXPIRED = The governance proposal expired
 
 Describe the issue that motivates this CGP. It should indicate all parameters that are being changed and why doing so is important.
 
