@@ -1,0 +1,44 @@
+---
+cip: <to be assigned>
+title: Mutual Credit Protocol
+author: Duke Jones (@dukejones), Duke Jones <duke@resourcenetwork.co>
+discussions-to: <URL>
+status: Draft
+type: <Standards Track, Meta or Informational>
+category (*only required for Standards Track): <Ring 0, 1, 2, 3>
+created: 2021-01-23
+requires (*optional): <CIP number(s)>
+replaces (*optional): <CIP number(s)>
+license: Apache 2.0
+---
+
+This is the suggested template for new CIPs.
+
+Note that a CIP number will be assigned by an editor. When opening a pull request to submit your CIP, please
+use an abbreviated title in the filename, `cip-draft_title_abbrev.md`.
+
+## Simple Summary
+Provide a mutual credit protocol and reference smart contract for any project on Celo to be able to use.  It will allow a token system that implements ERC20 but behaves and is issued as a mutual credit currency.
+
+## Abstract
+Mutual credit is a powerful primitive for a unique style of monetary system that has not had much traction on the blockchain yet. We propose a protocol wherein a group can participate in a mutual credit system, either by creating their own mutual credit unit of account, or by collateralizing a token to gain the right to issue credit lines in rUSD, which will be interoperable.
+
+## Motivation
+The ERC20 specification permanently altered landscape of cryptocurrency by making token creation easy and accessible to anyone with a basic knowledge of smart contract development. This proposal seeks to be the ERC20 of mutual credit.
+
+## Specification
+Accounts are assigned a credit line by a party assuming responsibility for overall network solvency (the "issuer").  Accounts with a credit line may spend into being some amount of the mutual credit currency (e.g. rUSD) to other wallets/accounts that are whitelisted by the issuer.  When an account having a negative balance receives a payment, the negative balance is repaid in that amount.  If it is fully repaid, the balance rises into the positive. Positive balances implement the ERC20 specification and may be transferred at will.
+
+## Rationale
+There are many discussions about manipulating supply in various ways to maintain the peg of a stablecoin.  However, mutual credit is a simple and direct mechanism wherein the currency is a pure unit of account. Money comes into being as it is needed.  When the system returns to a steady state, the money disappears back into potentiality. No central authority mints or controls issuance of the currency itself.  As a unit of account without the difficulties and frictions of acquiring and using a currency with central issuance, it is ideally situated to become a primary medium of exchange for commerce.
+
+## Implementation
+https://github.com/ReSource-Network/ReSource-contracts/blob/master/contracts/MutualCreditResource.sol
+
+## Security Considerations
+A centralized party, or even a single DAO, that determines the criteria and amount for all credit lines is a single point of failure. 
+ReSource Network has plans to work on a V2 of this spec that utilizes the same fundamental interface but allows multiple issuers to separately offer lines of credit to individual accounts.  This will spread the liability across multiple parties, and decentralize credit risk evaluation / underwriting.
+
+
+## License
+This work is licensed under the Apache License, Version 2.0.
