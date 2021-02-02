@@ -57,36 +57,35 @@ personalization, outputting a `0x20` (32) byte digest.
 Gas for Blake2s will be set equal to SHA256 costs: `60 + (12 * words)`. The
 number of words is calculated without the configuration block (equivalent to
 the total length of the input minus the length of the configuration). If the
-input is less than 32 bytes, it is invalid, and the pricing function MUST
-return `INVALID_CIP20_INPUT_GAS`.
+input is less than the configuration size (32 bytes), it is invalid, and the
+pricing function MUST return `INVALID_CIP20_INPUT_GAS`.
 
 ```python
+EVM_WORD_SIZE: int = 32
+BLAKE2_CONFIG_SIZE: int = 32
+
 def price_word_metered_hash(
 	base: int,
 	per_word: int,
-	word_size: int,
 	input: bytes
 ) -> int:
-    length_ceiling = len(input) + word_size - 1
-    words = length_ceiling // word_size
+    length_ceiling = len(input) + EVM_WORD_SIZE - 1
+    words = length_ceiling // EVM_WORD_SIZE
     return base + words * per_word
 
 def price_blake2s(input: bytes) -> int:
-	if len(input) < 32:
+	if len(input) < BLAKE2_CONFIG_SIZE:
 		return INVALID_CIP20_INPUT_GAS
 	return price_word_metered_hash(
 		60,
 		12,
-		32,
-		input[32:]
+		input[BLAKE2_CONFIG_SIZE:]
 	)
 ```
-
 
 ## Examples
 
 - TODO
-
 
 ## References
 
@@ -95,5 +94,6 @@ def price_blake2s(input: bytes) -> int:
 
 Code snippets above are reproduced from the following blake2 libraries, which
 are dedicated to the public domain:
+
 - [Blake2s lib](https://github.com/dchest/blake2s)
 - [Blake2xs lib](https://github.com/dchest/blake2xs)
