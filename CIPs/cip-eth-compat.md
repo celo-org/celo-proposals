@@ -1,5 +1,5 @@
 ---
-cip: TBD
+cip: 35
 title: Support for Ethereum-compatible transactions
 author: Or Neeman (@oneeman)
 discussions-to: <URL>
