@@ -1,5 +1,5 @@
 ---
-cip: <to be assigned>
+cip: 34
 title: Implement "flash swap" support in Exchange.sol
 author: Zviad Metreveli (@zviadm)
 discussions-to: <URL>
