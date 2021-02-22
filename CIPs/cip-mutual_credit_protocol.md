@@ -1,21 +1,14 @@
 ---
 cip: <to be assigned>
 title: Mutual Credit Protocol
-author: Duke Jones (@dukejones), Duke Jones <duke@resourcenetwork.co>
-discussions-to: <URL>
+author: Duke Jones (@dukejones) <duke@resourcenetwork.co>
+discussions-to: https://github.com/celo-org/celo-proposals/issues/168
 status: Draft
-type: <Standards Track, Meta or Informational>
-category (*only required for Standards Track): <Ring 0, 1, 2, 3>
+type: Standards
+category: Ring 3
 created: 2021-01-23
-requires (*optional): <CIP number(s)>
-replaces (*optional): <CIP number(s)>
 license: Apache 2.0
 ---
-
-This is the suggested template for new CIPs.
-
-Note that a CIP number will be assigned by an editor. When opening a pull request to submit your CIP, please
-use an abbreviated title in the filename, `cip-draft_title_abbrev.md`.
 
 ## Simple Summary
 Provide a mutual credit protocol and reference smart contract for any project on Celo to be able to use.  It will allow a token system that implements ERC20 but behaves and is issued as a mutual credit currency.
