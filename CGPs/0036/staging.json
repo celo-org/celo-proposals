@@ -12,7 +12,7 @@
         "value": "0"
       },
 
-
+    // Add oracles for stableToenEUR
       {
         "contract": "SortedOracles",
         "function": "addOracle",
