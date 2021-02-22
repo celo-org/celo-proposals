@@ -2,10 +2,10 @@
 cip: 34
 title: Implement "flash swap" support in Exchange.sol
 author: Zviad Metreveli (@zviadm)
-discussions-to: <URL>
+discussions-to: https://github.com/celo-org/celo-proposals/issues/167
 status: Draft
 type: Standards Track
-category (*only required for Standards Track): Ring 1
+category: Ring 1
 created: 2021-02-17
 license: Apache 2.0
 ---
