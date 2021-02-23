@@ -1,3 +1,5 @@
+// Wil remove the comments after finishing, with them the json is not valid
+
 [
     {
       "contract": "Freezer",
@@ -12,107 +14,109 @@
         "value": "0"
       },
 
-    // Add oracles for stableToenEUR
+      // oracles
+
       {
         "contract": "SortedOracles",
         "function": "addOracle",
-        "args": ["0x4D169C0Ec17D3dEcB250701Aa64e966bE98a696B"], // stableTokenEUR address
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x4D169C0Ec17D3dEcB250701Aa64e966bE98a696B"],
         "value": "0"
       },
       {
         "contract": "SortedOracles",
         "function": "addOracle",
-        "args": ["0x034217fB0C08dec29a6beA99e75aAC39baf7459A"], // stableTokenEUR address
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x034217fB0C08dec29a6beA99e75aAC39baf7459A"],
         "value": "0"
       },
       {
         "contract": "SortedOracles",
         "function": "addOracle",
-        "args": ["0xD20f803a1489849031725479Df27741c3326eD15"], // stableTokenEUR address
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xD20f803a1489849031725479Df27741c3326eD15"],
         "value": "0"
       },
       {
         "contract": "SortedOracles",
         "function": "addOracle",
-        "args": ["0x26412103865Be3F80152EA10E61E6294ed0e0DC9"], // stableTokenEUR address
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x26412103865Be3F80152EA10E61E6294ed0e0DC9"],
         "value": "0"
       },
       {
         "contract": "SortedOracles",
         "function": "addOracle",
-        "args": ["0x7Ba21D1f769Ae9feCF58dEfB5bD08905Bd3B707B"], // stableTokenEUR address
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x7Ba21D1f769Ae9feCF58dEfB5bD08905Bd3B707B"],
         "value": "0"
       },
 
 
-      // fund the oracles?
+      // fund the oracles
       {
-        "contract": "GovernanceProxy",
+        "contract": "0x4D169C0Ec17D3dEcB250701Aa64e966bE98a696B",
         "function": "",
-        "args": ["0x4D169C0Ec17D3dEcB250701Aa64e966bE98a696B"],
-        "value": "0"
+        "args": [""],
+        "value": "1000"
       },
       {
-        "contract": "GovernanceProxy",
+        "contract": "0x034217fB0C08dec29a6beA99e75aAC39baf7459A",
         "function": "",
-        "args": ["0x034217fB0C08dec29a6beA99e75aAC39baf7459A"],
-        "value": "0"
+        "args": [""],
+        "value": "1000"
       },
       {
-        "contract": "GovernanceProxy",
+        "contract": "0xD20f803a1489849031725479Df27741c3326eD15",
         "function": "",
-        "args": ["0xD20f803a1489849031725479Df27741c3326eD15"],
-        "value": "0"
+        "args": [""],
+        "value": "1000"
       },
       {
-        "contract": "GovernanceProxy",
+        "contract": "0x26412103865Be3F80152EA10E61E6294ed0e0DC9",
         "function": "",
-        "args": ["0x26412103865Be3F80152EA10E61E6294ed0e0DC9"],
-        "value": "0"
+        "args": [""],
+        "value": "1000"
       },
       {
-        "contract": "GovernanceProxy",
+        "contract": "0x7Ba21D1f769Ae9feCF58dEfB5bD08905Bd3B707B",
         "function": "",
-        "args": ["0x7Ba21D1f769Ae9feCF58dEfB5bD08905Bd3B707B"],
-        "value": "0"
+        "args": [""],
+        "value": "1000"
       },
 
+      // I got this functions' ID by placing a console log here: https://github.com/celo-org/celo-monorepo/blob/b32c1eee47d8492a42f2a68c260aabc7b07955a9/packages/protocol/migrations/24_governance.ts#L58
       // sent constitution parameters (for exchange) (same as the ones from governanceConstitution.js in monorepo)
 
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "", "0.9"], // setRegistry
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xa91ee0dc", "0.9"], // setRegistry
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "", "0.8"], // setUpdateFrequency
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0x4a1be6cb", "0.8"], // setUpdateFrequency
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "", "0.8"], // setMinimumReports
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xd404f7f8", "0.8"], // setMinimumReports
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "", "0.8"], // setStableToken
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xdb1bc87b", "0.8"], // setStableToken
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "", "0.8"], // setSpread
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xb66a261c", "0.8"], // setSpread
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "", "0.8"], // setReserveFraction
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0x6a5eaf47", "0.8"], // setReserveFraction
         "value": "0"
       },
 
@@ -121,31 +125,31 @@
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "", "0.9"], // setRegistry
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xa91ee0dc", "0.9"], // setRegistry
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "", "0.6"], // setInflationParameters
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x222836ad", "0.6"], // setInflationParameters
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "", "0.6"], // transfer
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xa9059cbb", "0.6"], // transfer
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "", "0.6"], // transferWithComment
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xe1d6aceb", "0.6"], // transferWithComment
         "value": "0"
       },
       {
         "contract": "GovernanceProxy",
         "function": "setConstitution",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "", "0.6"], // approve
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x095ea7b3", "0.6"], // approve
         "value": "0"
       },
     ]
