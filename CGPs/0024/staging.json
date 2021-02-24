@@ -20,7 +20,13 @@
       {
         "contract": "Reserve",
         "function": "addToken",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"], //StableTokenEUR
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"], // StableTokenEUR
+        "value": "0"
+      },
+      {
+        "contract": "FeeCurrencyWhitelist",
+        "function": "addToken",
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"], // StableTokenEUR
         "value": "0"
       }
 ]
