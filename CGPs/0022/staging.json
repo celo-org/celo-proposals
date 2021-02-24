@@ -74,67 +74,67 @@
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xa91ee0dc", "0.9"],
+    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xa91ee0dc", "900000000000000000000000"], 
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0x4a1be6cb", "0.8"],
+    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0x4a1be6cb", "800000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xd404f7f8", "0.8"],
+    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xd404f7f8", "800000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xdb1bc87b", "0.8"],
+    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xdb1bc87b", "800000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xb66a261c", "0.8"],
+    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0xb66a261c", "800000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0x6a5eaf47", "0.8"],
+    "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C", "0x6a5eaf47", "800000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xa91ee0dc", "0.9"],
+    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xa91ee0dc", "900000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x222836ad", "0.6"],
+    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x222836ad", "600000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xa9059cbb", "0.6"],
+    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xa9059cbb", "600000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xe1d6aceb", "0.6"],
+    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0xe1d6aceb", "600000000000000000000000"],
     "value": "0"
   },
   {
     "contract": "Governance",
     "function": "setConstitution",
-    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x095ea7b3", "0.6"],
+    "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0", "0x095ea7b3", "600000000000000000000000"],
     "value": "0"
   }
 ]
