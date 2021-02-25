@@ -2,31 +2,31 @@
     {
         "contract": "Freezer",
         "function": "unfreeze",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C"], // ExchangeEUR
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C"],
         "value": "0"
       },
       {
         "contract": "Freezer",
         "function": "unfreeze",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"], // StableTokenEUR
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"],
         "value": "0"
       },
       {
         "contract": "Reserve",
         "function": "addExchangeSpender",
-        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C"], // ExchangeEUR
+        "args": ["0x001E515b1902cAdAb233781eC73E9643B6c5012C"],
         "value": "0"
       },
       {
         "contract": "Reserve",
         "function": "addToken",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"], // StableTokenEUR
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"],
         "value": "0"
       },
       {
         "contract": "FeeCurrencyWhitelist",
         "function": "addToken",
-        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"], // StableTokenEUR
+        "args": ["0xcCA78ae41fe8F83eE7F37B0110eb6FAe3E9Ca0F0"],
         "value": "0"
       }
 ]
