@@ -1,0 +1,14 @@
+[
+    {
+        "contract": "Freezer",
+        "function": "freeze",
+        "args": ["REPLACE EXCHANGE ADDRESS"],
+        "value": "0"
+      },
+      {
+        "contract": "Freezer",
+        "function": "freeze",
+        "args": ["REPLACE STABLE TOKEN ADDRESS"],
+        "value": "0"
+      }
+]
