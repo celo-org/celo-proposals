@@ -1,0 +1,69 @@
+[
+    {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE EXCHANGE ADDRESS", "0xa91ee0dc", "900000000000000000000000"], 
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE EXCHANGE ADDRESS", "0x4a1be6cb", "800000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE EXCHANGE ADDRESS", "0xd404f7f8", "800000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE EXCHANGE ADDRESS", "0xdb1bc87b", "800000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE EXCHANGE ADDRESS", "0xb66a261c", "800000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE EXCHANGE ADDRESS", "0x6a5eaf47", "800000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE STABLE TOKEN ADDRESS", "0xa91ee0dc", "900000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE STABLE TOKEN ADDRESS", "0x222836ad", "600000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE STABLE TOKEN ADDRESS", "0xa9059cbb", "600000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE STABLE TOKEN ADDRESS", "0xe1d6aceb", "600000000000000000000000"],
+        "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE STABLE TOKEN ADDRESS", "0x095ea7b3", "600000000000000000000000"],
+        "value": "0"
+      }
+      // TODO add the ones for Reserve
+]
