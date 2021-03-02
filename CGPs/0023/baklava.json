@@ -69,7 +69,7 @@
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["0x70E4F7Bc64d878091cFB8eDF30C3968095178216S", "1000000000000000000000"],
+      "args": ["0x70E4F7Bc64d878091cFB8eDF30C3968095178216", "1000000000000000000000"],
       "value": "0"
     },
     {
