@@ -2,67 +2,67 @@
     {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE EXCHANGE ADDRESS", "0xa91ee0dc", "900000000000000000000000"], 
+        "args": ["0xC200CD8ac71A63e38646C34b51ee3cBA159dB544", "0xa91ee0dc", "900000000000000000000000"], 
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE EXCHANGE ADDRESS", "0x4a1be6cb", "800000000000000000000000"],
+        "args": ["0xC200CD8ac71A63e38646C34b51ee3cBA159dB544", "0x4a1be6cb", "800000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE EXCHANGE ADDRESS", "0xd404f7f8", "800000000000000000000000"],
+        "args": ["0xC200CD8ac71A63e38646C34b51ee3cBA159dB544", "0xd404f7f8", "800000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE EXCHANGE ADDRESS", "0xdb1bc87b", "800000000000000000000000"],
+        "args": ["0xC200CD8ac71A63e38646C34b51ee3cBA159dB544", "0xdb1bc87b", "800000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE EXCHANGE ADDRESS", "0xb66a261c", "800000000000000000000000"],
+        "args": ["0xC200CD8ac71A63e38646C34b51ee3cBA159dB544", "0xb66a261c", "800000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE EXCHANGE ADDRESS", "0x6a5eaf47", "800000000000000000000000"],
+        "args": ["0xC200CD8ac71A63e38646C34b51ee3cBA159dB544", "0x6a5eaf47", "800000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE STABLE TOKEN ADDRESS", "0xa91ee0dc", "900000000000000000000000"],
+        "args": ["0xf9ecE301247aD2CE21894941830A2470f4E774ca", "0xa91ee0dc", "900000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE STABLE TOKEN ADDRESS", "0x222836ad", "600000000000000000000000"],
+        "args": ["0xf9ecE301247aD2CE21894941830A2470f4E774ca", "0x222836ad", "600000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE STABLE TOKEN ADDRESS", "0xa9059cbb", "600000000000000000000000"],
+        "args": ["0xf9ecE301247aD2CE21894941830A2470f4E774ca", "0xa9059cbb", "600000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE STABLE TOKEN ADDRESS", "0xe1d6aceb", "600000000000000000000000"],
+        "args": ["0xf9ecE301247aD2CE21894941830A2470f4E774ca", "0xe1d6aceb", "600000000000000000000000"],
         "value": "0"
       },
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE STABLE TOKEN ADDRESS", "0x095ea7b3", "600000000000000000000000"],
+        "args": ["0xf9ecE301247aD2CE21894941830A2470f4E774ca", "0x095ea7b3", "600000000000000000000000"],
         "value": "0"
       },
       {
