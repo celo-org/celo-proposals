@@ -68,13 +68,13 @@
       {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE RESERVE ADDRESS", "0xf0b7182b", "900000000000000000000000"],
+        "args": ["0x9380fA34Fd9e4Fd14c06305fd7B6199089eD4eb9", "0xf0b7182b", "900000000000000000000000"],
         "value": "0"
       },
             {
         "contract": "Governance",
         "function": "setConstitution",
-        "args": ["REPLACE RESERVE ADDRESS", "0xb003dcf1", "900000000000000000000000"],
+        "args": ["0x9380fA34Fd9e4Fd14c06305fd7B6199089eD4eb9", "0xb003dcf1", "900000000000000000000000"],
         "value": "0"
       }
 ]
