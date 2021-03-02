@@ -64,6 +64,17 @@
         "function": "setConstitution",
         "args": ["REPLACE STABLE TOKEN ADDRESS", "0x095ea7b3", "600000000000000000000000"],
         "value": "0"
+      },
+      {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE RESERVE ADDRESS", "0xf0b7182b", "900000000000000000000000"],
+        "value": "0"
+      },
+            {
+        "contract": "Governance",
+        "function": "setConstitution",
+        "args": ["REPLACE RESERVE ADDRESS", "0xb003dcf1", "900000000000000000000000"],
+        "value": "0"
       }
-      // TODO add the ones for Reserve
 ]
