@@ -1,0 +1,14 @@
+[
+    {
+        "contract": "Freezer",
+        "function": "freeze",
+        "args": ["0xC200CD8ac71A63e38646C34b51ee3cBA159dB544"],
+        "value": "0"
+      },
+      {
+        "contract": "Freezer",
+        "function": "freeze",
+        "args": ["0xf9ecE301247aD2CE21894941830A2470f4E774ca"],
+        "value": "0"
+      }
+]
