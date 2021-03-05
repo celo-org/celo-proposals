@@ -119,5 +119,17 @@
       "function": "transfer",
       "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
       "value": "0"
-    }
+    },
+    {
+        "contract": "Freezer",
+        "function": "freeze",
+        "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS"],
+        "value": "0"
+      },
+      {
+        "contract": "Freezer",
+        "function": "freeze",
+        "args": ["REPLACE WITH EXCHANGE EUR ADDRESS"],
+        "value": "0"
+      }
   ]
