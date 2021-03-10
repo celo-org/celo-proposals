@@ -2,134 +2,134 @@
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0x55E30E5382b990fda05818308918E710a70BEd66"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0x5ADd0eDCe1EB7D6AaF355CC47A877D69AF3cdb92"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0xe2FF9c8F164C588Ad0B392F3ecfA9e666404B2f1"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0xca5Dc5329d29B5B11dD9C20A0bfF16d991bb1AA4"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0x72710d8A8BDc7A2476CDE04050849D29E873591C"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0x5dc07c0aDC7023799632177F721932C0Da35bf97"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0x70aDA3495b01afE860E3af79CA47fB580570D1eb"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0x658d897ED714A250Ebf979DE19788dFB065b52EB"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0xC198CE60d1eD0aEf60cDE4C4E3c85B89aFfB8006"],
       "value": "0"
     },
     {
       "contract": "SortedOracles",
       "function": "addOracle",
-      "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS", "REPLACE WITH ORACLE ADDRESS"],
+      "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F", "0x372a0400D646CF5e5e7fED74755EC87bA9D4b135"],
       "value": "0"
     },
 
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0x55E30E5382b990fda05818308918E710a70BEd66", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0x5ADd0eDCe1EB7D6AaF355CC47A877D69AF3cdb92", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0xe2FF9c8F164C588Ad0B392F3ecfA9e666404B2f1", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0xca5Dc5329d29B5B11dD9C20A0bfF16d991bb1AA4", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0x72710d8A8BDc7A2476CDE04050849D29E873591C", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0x5dc07c0aDC7023799632177F721932C0Da35bf97", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0x70aDA3495b01afE860E3af79CA47fB580570D1eb", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0x658d897ED714A250Ebf979DE19788dFB065b52EB", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0xC198CE60d1eD0aEf60cDE4C4E3c85B89aFfB8006", "100000000000000000000"],
       "value": "0"
     },
     {
       "contract": "GoldToken",
       "function": "transfer",
-      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "args": ["0x372a0400D646CF5e5e7fED74755EC87bA9D4b135", "100000000000000000000"],
       "value": "0"
     },
     {
         "contract": "Freezer",
         "function": "freeze",
-        "args": ["REPLACE WITH STABLE TOKEN EUR ADDRESS"],
+        "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F"],
         "value": "0"
       },
       {
         "contract": "Freezer",
         "function": "freeze",
-        "args": ["REPLACE WITH EXCHANGE EUR ADDRESS"],
+        "args": ["0x997B494F17D3c49E66Fafb50F37A972d8Db9325B"],
         "value": "0"
       }
   ]
