@@ -1,0 +1,32 @@
+[
+    {
+        "contract": "Freezer",
+        "function": "unfreeze",
+        "args": ["0x997B494F17D3c49E66Fafb50F37A972d8Db9325B"],
+        "value": "0"
+      },
+      {
+        "contract": "Freezer",
+        "function": "unfreeze",
+        "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F"],
+        "value": "0"
+      },
+      {
+        "contract": "Reserve",
+        "function": "addExchangeSpender",
+        "args": ["0x997B494F17D3c49E66Fafb50F37A972d8Db9325B"],
+        "value": "0"
+      },
+      {
+        "contract": "Reserve",
+        "function": "addToken",
+        "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F"],
+        "value": "0"
+      },
+      {
+        "contract": "FeeCurrencyWhitelist",
+        "function": "addToken",
+        "args": ["0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F"],
+        "value": "0"
+      }
+]
