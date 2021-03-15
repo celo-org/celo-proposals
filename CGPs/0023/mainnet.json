@@ -1,0 +1,135 @@
+[
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+    {
+      "contract": "SortedOracles",
+      "function": "addOracle",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73", "REPLACE WITH ORACLE ADDRESS"],
+      "value": "0"
+    },
+
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "GoldToken",
+      "function": "transfer",
+      "args": ["REPLACE WITH ORACLE ADDRESS", "100000000000000000000"],
+      "value": "0"
+    },
+    {
+      "contract": "Freezer",
+      "function": "freeze",
+      "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73"],
+      "value": "0"
+    },
+    {
+      "contract": "Freezer",
+      "function": "freeze",
+      "args": ["0xE383394B913d7302c49F794C7d3243c429d53D1d"],
+      "value": "0"
+    }
+  ]
