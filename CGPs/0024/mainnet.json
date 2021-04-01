@@ -28,11 +28,5 @@
         "function": "addToken",
         "args": ["0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73"],
         "value": "0"
-      },
-      {
-        "contract": "ExchangeEUR",
-        "function": "setReserveFraction",
-        "args": ["TODO"],
-        "value": "0"
       }
 ]
