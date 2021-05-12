@@ -20,7 +20,7 @@ use an abbreviated title in the filename, `cip-draft_title_abbrev.md`.
 ## Simple Summary
 > If you can't explain it simply, you don't understand it well enough. Provide a simplified and layman-accessible explanation of the CIP.
 
-Granda Mento is a mechanism to facilitate large `CELO <-> stable token` trades that aren't suitable for Mento or OTC. A new contract is created that has the authorization by Governance to trade a limited amount of `CELO <-> stable token`. Trades via this contract must be approved by a multisig and can be vetoed by Governance.
+Granda Mento is a mechanism to facilitate large CELO <-> stable token trades that aren't suitable for Mento or OTC. A new contract is created that has the authorization by Governance to trade a limited amount of `CELO <-> stable token`. Trades via this contract must be approved by a multisig and can be vetoed by Governance.
 
 ## Abstract
 > A short (~200 word) description of the technical issue being addressed.
@@ -28,7 +28,7 @@ Granda Mento is a mechanism to facilitate large `CELO <-> stable token` trades t
 ## Motivation
 > The motivation is critical for CIPs that want to change the Celo protocol. It should clearly explain why the existing protocol specification is inadequate to address the problem that the CIP solves. CIP submissions without sufficient motivation may be rejected outright.
 
-The existing implementation of Mento is suitable for facilitating low volume trades, e.g. up to tens of thousands at a time, without incurring slippage greater than a few percent. OTC trading satisfies the needs of medium volume trades, eg ~100k for cUSD and likely much less for stable tokens with lower total supply (like cEUR), but is unable to satisfy high volume `CELO <-> stable token trades` on the order of millions.
+The existing implementation of Mento is suitable for facilitating low volume trades, e.g. up to tens of thousands at a time, without incurring slippage greater than a few percent. OTC trading satisfies the needs of medium volume trades, eg ~100k for cUSD and likely much less for stable tokens with lower total supply (like cEUR), but is unable to satisfy high volume CELO <-> stable token trades on the order of millions.
 
 Mento is able to facilitate smaller `CELO <-> stable token` trades with minimal slippage for smaller trade sizes. However, significant slippage of over 2% starts to occur on both Mento and on centralized exchanges at trades sizes of ~$50k+. OTC trading satisfies the needs of medium volume trades, eg ~100k, but similarly takes a hit of around 2-3%.
 
@@ -50,9 +50,9 @@ The proposed implementation is being considered in the short-term for large scal
 
 At a high level, the design involves:
 1. Anyone can submit a trade proposal.
-   1. The size of the trade is required to be sufficiently large.
-   2. The assets being sold in the trade are deposited.
-   3. The current oracle price for the trade is recorded.
+   * The size of the trade is required to be sufficiently large.
+   * The assets being sold in the trade are deposited.
+   * The current oracle price for the trade is recorded.
 2. The proposed trade must be approved by a multisig that has previously been authorized by Governance. At this point, the trade still cannot be executed.
 3. A forced waiting period of X days must elapse before the trade can be executed. During this time, Governance can choose to veto the trade, refunding the trader.
 4. After the waiting period, the trade is executed.
@@ -73,35 +73,35 @@ The contract has the following configurable parameters:
 The contract has the following functions:
 
 1. **Propose trade** - Called by a trader to initiate a trade.
-   1. Callable by anyone.
-   2. Requires the trade to be larger than the minimum stable token buy/sell quantity.
-   3. Deposits the full amount of the asset being sold into the contract.
-   4. Records:
-     1. Which asset is being sold
-     2. The amount of the asset being sold
+   * Callable by anyone.
+   * Requires the trade to be larger than the minimum stable token buy/sell quantity.
+   * Deposits the full amount of the asset being sold into the contract.
+   * Records:
+     * Which asset is being sold
+     * The amount of the asset being sold
 2. **Approve trade proposal** - Approves a proposed trade.
-   1. Only callable by the approver address.
-   2. Marks a proposed trade as approved.
-   3. Records:
-     1. The timestamp at which the approval for the proposed trade occurred.
+   * Only callable by the approver address.
+   * Marks a proposed trade as approved.
+   * Records:
+     * The timestamp at which the approval for the proposed trade occurred.
 3. **Veto an approved trade proposal** - Vetoes a previously approved proposed trade.
    1. Only callable by governance.
    2. Refunds the proposed trade's deposited sell asset.
    3. Records:
      1. The trade as vetoed.
 4. **Execute an approved and ready trade** - Executes a trade.
-   1. Callable by anyone.
-   2. Requires the trade to have been approved.
-   3. Requires the required waiting period for an approved trade to have elapsed since the time it was approved.
-   4. Makes the trade:
-     1. If selling CELO and purchasing stable token:
-       1. The CELO is sent to the Reserve.
-       2. Stable token is minted to the trader according to the rate originally recorded when the trade was proposed.
-     2. If selling stable token and purchasing CELO:
-       1. The stable token is burned.
-       1. CELO is transferred from the Reserve to the trader according to the rate originally recorded when the trade was proposed.
-   5. Records:
-     1. The trade as executed.
+   * Callable by anyone.
+   * Requires the trade to have been approved.
+   * Requires the required waiting period for an approved trade to have elapsed since the time it was approved.
+   * Makes the trade:
+     * If selling CELO and purchasing stable token:
+       * The CELO is sent to the Reserve.
+       * Stable token is minted to the trader according to the rate originally recorded when the trade was proposed.
+     * If selling stable token and purchasing CELO:
+       * The stable token is burned.
+       * CELO is transferred from the Reserve to the trader according to the rate originally recorded when the trade was proposed.
+   * Records:
+     * The trade as executed.
 
 #### Modifications of existing contracts:
 
@@ -113,11 +113,11 @@ The following modifications will be made:
    2. Records:
    3. The new mint/burn allowance for the specified address
 2. **Modification to [mint()](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L224)**
-   1. If `msg.sender` is not the Exchange or `Validators.sol`, require `msg.sender` to have sufficient mint/burn allowance.
-   2. Update the mint/burn allowance of `msg.sender` if appropriate
+   * If `msg.sender` is not the Exchange or `Validators.sol`, require `msg.sender` to have sufficient mint/burn allowance.
+   * Update the mint/burn allowance of `msg.sender` if appropriate
 3. **Modification to [burn()](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L273)**
-   1. If `msg.sender` is not the Exchange, require `msg.sender` to have sufficient mint/burn allowance.
-   2. Update the mint/burn allowance of `msg.sender` if appropriate
+   * If `msg.sender` is not the Exchange, require `msg.sender` to have sufficient mint/burn allowance.
+   * Update the mint/burn allowance of `msg.sender` if appropriate
 
 ## Rationale
 The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.
