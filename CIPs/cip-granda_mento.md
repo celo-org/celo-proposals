@@ -85,10 +85,10 @@ The contract has the following functions:
    * Records:
      * The timestamp at which the approval for the proposed trade occurred.
 3. **Veto an approved trade proposal** - Vetoes a previously approved proposed trade.
-   1. Only callable by governance.
-   2. Refunds the proposed trade's deposited sell asset.
-   3. Records:
-     1. The trade as vetoed.
+   * Only callable by governance.
+   * Refunds the proposed trade's deposited sell asset.
+   * Records:
+     * The trade as vetoed.
 4. **Execute an approved and ready trade** - Executes a trade.
    * Callable by anyone.
    * Requires the trade to have been approved.
@@ -109,9 +109,9 @@ Currently, `StableToken.sol` only allows its `Exchange.sol` or `Validators.sol` 
 
 The following modifications will be made:
 1. **Set mint/burn allowance function** - Sets an allowance for an address to mint or burn an amount of tokens.
-   1. Only callable by governance.
-   2. Records:
-   3. The new mint/burn allowance for the specified address
+   * Only callable by governance.
+   * Records:
+   * The new mint/burn allowance for the specified address
 2. **Modification to [mint()](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L224)**
    * If `msg.sender` is not the Exchange or `Validators.sol`, require `msg.sender` to have sufficient mint/burn allowance.
    * Update the mint/burn allowance of `msg.sender` if appropriate
