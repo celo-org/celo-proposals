@@ -113,11 +113,13 @@ The following modifications will be made:
    * Records:
    * The new mint/burn allowance for the specified address
 2. **Modification to [mint()](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L224)**
-   * If `msg.sender` is not the Exchange or `Validators.sol`, require `msg.sender` to have sufficient mint/burn allowance.
-   * Update the mint/burn allowance of `msg.sender` if appropriate
+   * If `msg.sender` is not the Exchange or `Validators.sol`:
+     * Require `msg.sender` to have sufficient mint/burn allowance.
+     * Subtract the mint/burn allowance of `msg.sender` by the amount minted.
 3. **Modification to [burn()](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L273)**
-   * If `msg.sender` is not the Exchange, require `msg.sender` to have sufficient mint/burn allowance.
-   * Update the mint/burn allowance of `msg.sender` if appropriate
+   * If `msg.sender` is not the Exchange:
+     * Require `msg.sender` to have sufficient mint/burn allowance.
+     * Subtract the mint/burn allowance of `msg.sender` by the amount burned.
 
 ## Rationale
 The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.
