@@ -14,28 +14,28 @@ license: Apache 2.0
 
 ## Simple Summary
 
-Granda Mento is a mechanism to facilitate large CELO <-> stable token exchanges that aren't suitable via Mento or OTC. A new contract is created that has the authorization by Governance to exchange `CELO <-> stable token`. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
+Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX) exchanges that aren't suitable via Mento or OTC. A new contract is created that has the authorization by Governance to exchange `CELO <-> stable token`. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
 
 ## Abstract
 
-There are no existing solutions for making large exchanges ($1m+) involving stable tokens. Apart from cUSD minted for validator payments every epoch, stable tokens can only be minted via Mento. Large volume exchanges via Mento experience high slippage due to the limited bucket sizes in the constant product market maker. Granda Mento is a proposed a mechanism for large-volume stable token exchanges.
+There are no existing solutions for making large exchanges ($1m+) involving stable tokens. Apart from cUSD minted for validator payments every epoch, stable tokens can only be minted via Mento. Large volume exchanges via Mento experience high slippage due to the limited sizes of the constant product market maker buckets. Granda Mento is a proposed a mechanism for large-volume stable token exchanges, primarily to enable minting of large quantities of stable tokens.
 
 ## Motivation
 
 Users looking to make larger exchanges involving stable tokens are faced with 3 options:
 1. Exchange `CELO <-> stable token` via Mento slowly over a longer period of time.
 2. Arrange one or many `XXX <-> stable token` OTC trades.
-3. Create a large limit order of `fiat <-> stable token` on a centralized exchange in hopes it gets filled over time.
+3. Create a large limit order of `fiat <-> stable token` on a centralized exchange in hope it gets filled over time.
 
-The existing implementation of Mento is suitable for facilitating low volume exchanges, e.g. up to thousands of stable tokens at a time, with minimal slippage. However, significant slippage of over 2% starts to occur on both Mento and on centralized exchanges at trades sizes of ~$50k+. OTC trading satisfies the needs of medium volume exchanges, eg ~100k for cUSD and likely much less for stable tokens with lower total supply (like cEUR), but similarly takes a hit of around 2-3%. There are no existing avenues that are able to satisfy high volume stable token exchanges on the order of millions.
+The existing implementation of Mento is suitable for facilitating low volume exchanges, e.g. up to thousands of stable tokens at a time, with minimal slippage. However, significant slippage of over 2% starts to occur on both Mento and on centralized exchange stable token pairs at trade sizes of ~$50k+. OTC trading satisfies the needs of medium volume exchanges, e.g. ~100k for cUSD and likely much lower for stable tokens with lower total supply (like cEUR), but similarly takes a hit of around 2-3%. There are no existing avenues that are able to satisfy high volume stable token exchanges on the order of millions.
 
 Increasing Mento bucket sizes permanently to allow larger exchanges via Mento will reduce slippage, but it puts a more significant portion of the Reserve at risk.
 
 Building a process to exchange large (~$1 million+) amounts of CELO for stable tokens will enable large entities to make significant block purchases of stable tokens at scale. While minting of the stable token is expected to be the main use case, reversibility (ie exchanging `stable token -> CELO`) is desirable to instill higher confidence when exchanging large quantities.
 
-While Granda Mento will help facilitate `CELO <-> stable token` exchanges, this is ultimately meant as a mechanism to help purchasers with fiat (eg USD) who are seeking to own Celo's corresponding stable token (eg cUSD). Purchasers would come to an agreement with a broker (eg the Celo Foundation) who owns an existing amount of CELO. The broker would be the one to make the `CELO -> cUSD` exchange on-chain.
+While Granda Mento will help facilitate `CELO <-> stable token` exchanges, this is ultimately meant as a mechanism to help purchasers with fiat (e.g. USD) who are seeking to own Celo's corresponding stable token (e.g. cUSD). Purchasers would come to an agreement with a broker (e.g. the Celo Foundation) who owns an existing amount of CELO. The broker would be the one to make the `CELO -> cUSD` exchange on-chain.
 
-The proposed implementation is being considered in the medium-term for large scale exchanges until Mento is reworked to support more efficient large-scale minting on a sustained basis.
+The proposed implementation is being considered in the medium-term for large scale exchanges until Mento is possibly reworked to support more efficient large-scale minting on a sustained basis.
 
 ## Specification
 
@@ -46,7 +46,7 @@ At a high level, the design involves:
    * The current oracle price for the exchange is recorded.
 2. The proposed exchange must be approved by a multisig that has previously been authorized by Governance. At this point, the exchange still cannot be executed.
 3. A forced waiting period of X days must elapse before the exchange can be executed. During this time, Governance can choose to veto the exchange, refunding the exchange proposer.
-4. After the waiting period, the exchange is executed.
+4. After the waiting period, the exchange is executed according to the oracle price recorded in step 1.
 
 An exchange can have the following states:
 1. Proposed - The exchange has been proposed, but not yet approved by the approver. The proposer may still cancel their proposal and be refunded their deposit.
@@ -129,13 +129,13 @@ Granda Mento is not intended to undermine the market or provide a way for large 
 
 Some ideas other than the proposed approach include:
 
-1. Exchanges have a delay. Any exchange must be explicitly approved by a governance proposal to be executed.
+1. Exchanges have a delay and require a deposit of the sold asset. Any exchange must be explicitly approved by a governance proposal to be executed.
    * This relies upon the community as the arbiter of what exchanges are "safe."
    * This could exacerbate the already-present voter fatigue.
 2. Large-volume exchanges could be made by anyone without Governance approval.
    * The most compelling approach to this would involve an auction. This is complicated to implement, requires careful design, and was intentionally removed from the original Mento design.
 
-Approach (2) was deemed risky and complicated. Approach (1) felt more in line with the goal of having Granda Mento be simple and safe, but ultimately the involvement of Governance for every exchange felt unsustainable and exhausting for voters. The proposed implementation involving an exchange delay, a multisig for approvals, and Governance in the (likely) rare event the community wishes to veto an exchange, aims to relieve voter exhaustion while still providing the security of community scrutiny.
+Approach (2) was deemed risky and complicated. Approach (1) felt more in line with the goal of having Granda Mento be simple and safe, but ultimately the involvement of Governance for every exchange felt unsustainable and exhausting for voters. The proposed implementation involving an exchange delay, a multisig for approvals, and Governance in the (likely rare) event the community wishes to veto an exchange, aims to relieve voter exhaustion while still providing the security of community scrutiny.
 
 The proposed implementation prohibits the proposer from cancelling their own exchange proposal after it has been approved. This is to prevent Granda Mento from being used as a "free option," where the proposer can decide against the exchange late in the process if the price of the exchange is no longer favorable.
 
@@ -153,7 +153,7 @@ The proposed implementation prohibits the proposer from cancelling their own exc
    * Involves smart contract changes to have the TWAP available on chain.
    * Exchanger doesn't know the price at the proposal time.
 
-It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade.
+It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a maniuplated price being executed.
 
 Another question is whether Granda Mento should have an "allowance" that must be granted by Governance indicating how many stable tokens it can mint/burn. Each exchange through Granda Mento would "spend" some of that allowance, and eventually a top-up would be required. This allows reasoning about the worst-case scenario if the approver multisig is compromised and Governance is unable to rally in time. Because this would involve more active involvement from Governance for top-ups and some additional implementation complexity, instead a configurable value in Granda Mento is proposed to restrict how many stable tokens a single exchange can mint/burn.
 
