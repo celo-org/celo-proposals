@@ -12,21 +12,15 @@ replaces (*optional): <CIP number(s)>
 license: Apache 2.0
 ---
 
-This is the suggested template for new CIPs.
-
-Note that a CIP number will be assigned by an editor. When opening a pull request to submit your CIP, please
-use an abbreviated title in the filename, `cip-draft_title_abbrev.md`.
-
 ## Simple Summary
-> If you can't explain it simply, you don't understand it well enough. Provide a simplified and layman-accessible explanation of the CIP.
 
-Granda Mento is a mechanism to facilitate large CELO <-> stable token exchanges that aren't suitable via Mento or OTC. A new contract is created that has the authorization by Governance to exchange a limited amount of `CELO <-> stable token`. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
+Granda Mento is a mechanism to facilitate large CELO <-> stable token exchanges that aren't suitable via Mento or OTC. A new contract is created that has the authorization by Governance to exchange `CELO <-> stable token`. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
 
 ## Abstract
-> A short (~200 word) description of the technical issue being addressed.
+
+There are no existing solutions for making large exchanges ($1m+) involving stable tokens. Apart from cUSD minted for validator payments every epoch, stable tokens can only be minted via Mento. Large volume exchanges via Mento experience high slippage due to the limited bucket sizes in the constant product market maker. Granda Mento is a proposed a mechanism for large-volume stable token exchanges.
 
 ## Motivation
-> The motivation is critical for CIPs that want to change the Celo protocol. It should clearly explain why the existing protocol specification is inadequate to address the problem that the CIP solves. CIP submissions without sufficient motivation may be rejected outright.
 
 Users looking to make larger exchanges involving stable tokens are faced with 3 options:
 1. Exchange `CELO <-> stable token` via Mento slowly over a longer period of time.
@@ -44,7 +38,6 @@ While Granda Mento will help facilitate `CELO <-> stable token` exchanges, this 
 The proposed implementation is being considered in the medium-term for large scale exchanges until Mento is reworked to support more efficient large-scale minting on a sustained basis.
 
 ## Specification
-> The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow for an implementation on the Celo platform (go-celo).
 
 At a high level, the design involves:
 1. Anyone can submit an exchange proposal.
@@ -166,7 +159,6 @@ It's desirable for both the exchanger and for the Celo community to know what pr
 Another question is whether Granda Mento should have an "allowance" that must be granted by Governance indicating how many stable tokens it can mint/burn. Each exchange through Granda Mento would "spend" some of that allowance, and eventually a top-up would be required. This allows reasoning about the worst-case scenario if the approver multisig is compromised and Governance is unable to rally in time. Because this would involve more active involvement from Governance for top-ups and some additional implementation complexity, instead a configurable value in Granda Mento is proposed to restrict how many stable tokens a single exchange can mint/burn.
 
 ## Backwards Compatibility
->All CIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CIP must explain how the author proposes to deal with these incompatibilities. CIP submissions without a sufficient backwards compatibility treatise may be rejected outright.
 
 The proposal is largely additive, and includes very small changes to existing contracts. Changes are expected to be entirely backward compatible.
 
@@ -177,7 +169,6 @@ N/A
 TBD
 
 ## Security Considerations
->All CIPs must contain a section that discusses the security implications/considerations relevant to the proposed change. Include information that might be important for security discussions, surfaces risks and can be used throughout the life cycle of the proposal. E.g. include security-relevant design decisions, concerns, important discussions, implementation-specific guidance and pitfalls, an outline of threats and risks and how they are being addressed. CIP submissions missing the "Security Considerations" section will be rejected. A CIP cannot proceed to status "Final" without a Security Considerations discussion deemed sufficient by the reviewers.
 
 Implementation Risks:
 * Modifications to logic in `StableToken.sol` around which addresses can mint/burn.
