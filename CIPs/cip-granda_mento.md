@@ -124,7 +124,6 @@ The contract has the following functions:
      * The exchange as in the Executed state.
 
 ## Rationale
->The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.
 
 Granda Mento is not intended to undermine the market or provide a way for large players to "dump" CELO for cUSD. It's also not intended to be an exceptionally elegant or complicated solution-- instead, this is looking to be something that is simple, straightforward, and works alongside the existing implementation of Mento. Any larger-scale Mento design modifications to facilitate large stable token mints are out of scope, and should be considered for a medium/long term design change to the stability protocol. The proposed implementation attempts to navigate the tradeoffs of complexity, centralization, economic safety, and ease of use for all actors in the Celo ecosystem.
 
