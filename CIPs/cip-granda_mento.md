@@ -18,16 +18,16 @@ Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX
 
 ## Abstract
 
-There are no existing solutions for making large exchanges ($1m+) involving stable tokens. Apart from cUSD minted for validator payments every epoch, stable tokens can only be minted via Mento. Large volume exchanges via Mento experience high slippage due to the limited sizes of the constant product market maker buckets. Granda Mento is a proposed a mechanism for large-volume stable token exchanges, primarily to enable minting of large quantities of stable tokens.
+There are no existing solutions for making large exchanges ($1m+) involving stable tokens. Apart from cUSD minted for validator payments every epoch, stable tokens can only be minted via Mento. Large volume exchanges ($50k+) via Mento experience higher slippage (1-2%) due to the limited sizes of the constant product market maker buckets. Granda Mento is a proposed a mechanism for large volume stable token exchanges, primarily to enable minting of large quantities of stable tokens.
 
 ## Motivation
 
-Users looking to make larger exchanges involving stable tokens are faced with 3 options:
+There are no existing avenues that are able to satisfy high volume stable token exchanges on the order of millions. Users looking to make larger exchanges involving stable tokens are faced with 3 options:
 1. Exchange `CELO <-> stable token` via Mento slowly over a longer period of time.
 2. Arrange one or many `XXX <-> stable token` OTC trades.
 3. Create a large limit order of `fiat <-> stable token` on a centralized exchange in hope it gets filled over time.
 
-The existing implementation of Mento is suitable for facilitating low volume exchanges, e.g. up to thousands of stable tokens at a time, with minimal slippage. However, significant slippage of over 2% starts to occur on both Mento and on centralized exchange stable token pairs at trade sizes of ~$50k+. OTC trading satisfies the needs of medium volume exchanges, e.g. ~100k for cUSD and likely much lower for stable tokens with lower total supply (like cEUR), but similarly takes a hit of around 2-3%. There are no existing avenues that are able to satisfy high volume stable token exchanges on the order of millions.
+The existing implementation of Mento is suitable for facilitating low volume exchanges, e.g. up to thousands of stable tokens at a time, with minimal slippage. For cUSD, slippage of over 2% starts to occur on both Mento and on centralized exchanges at trade sizes of ~$50k+. OTC trading satisfies the needs of medium volume exchanges, e.g. ~$100k, but similarly takes a hit of around 2-3%. For lower total supply stable tokens with lower liquidity, larger OTC trades or centralized exchange orders may not be possible.
 
 Increasing Mento bucket sizes permanently to allow larger exchanges via Mento will reduce slippage, but it puts a more significant portion of the Reserve at risk.
 
@@ -42,7 +42,7 @@ The proposed implementation is being considered in the medium-term for large sca
 At a high level, the design involves:
 1. Anyone can submit an exchange proposal.
    * The amount of stable tokens being bought/sold in the exchange is required to be within a governable range.
-   * The assets being sold in the exchange are deposited.
+   * The assets being sold (ie either the stable token or CELO) in the exchange are deposited.
    * The current oracle price for the exchange is recorded.
 2. The proposed exchange must be approved by a multisig that has previously been authorized by Governance. At this point, the exchange still cannot be executed.
 3. A forced waiting period of X days must elapse before the exchange can be executed. During this time, Governance can choose to veto the exchange, refunding the exchange proposer.
@@ -72,11 +72,11 @@ The following modifications will be made:
 
 ##### `GrandaMento.sol`
 
-A new contract, `GrandaMento.sol`, is created. One deployment of `GrandaMento` exists per stable token. It must have the ability to mint/burn the corresponding stable token and be a spender of `Reserve.sol`.
+A new contract, `GrandaMento.sol`, is created. One deployment of `GrandaMento` exists per stable token-- that is, a specific deployment will only be able to exchange between CELO and a particular stable token. It must have the ability to mint/burn the corresponding stable token and be a spender of `Reserve.sol`.
 
 The contract is owned Governance, is freezable, and has the following configurable parameters:
 
-1. **`address public approver;`** - Set by governance. Intended to be a multisig and has the authority to approve exchanges.
+1. **`address public approver;`** - Set by governance. Intended to be a multisig and has the authority to approve exchanges. The signers for the multisig are at the discretion of Governance, but it would comprise of community members or members on behalf of organizations that are aligned with the Celo network/ecosystem.
 2. **`uint256 public minStableExchangeAmount;`** - Set by governance. Minimum amount of the stable token an exchange can buy/sell.
 3. **`uint256 public maxStableExchangeAmount;`** - Set by governance. Maximum amount of the stable token an exchange can buy/sell.
 4. **`uint256 public exchangeWaitPeriod;`** - Set by governance. The minimum amount of time that must elapse between a proposed exchange being approved and when the exchange can be executed. Should give sufficient time for Governance to veto an approved exchange.
@@ -86,6 +86,7 @@ The contract has the following functions:
 
 1. **`function proposeExchange(uint256 amount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
    * Callable by anyone.
+   * If `sellCelo` is true, CELO is the asset being sold and the stable token is the asset being bought. If `sellCelo` is false, the stable token is the asset being sold and CELO is the asset being bought.
    * Requires the amount of stable token being bought/sold to be within the range `[minStableExchangeAmount, maxStableExchangeAmount]`.
    * Deposits the full amount of the asset being sold into the contract.
    * Records:
@@ -153,9 +154,7 @@ The proposed implementation prohibits the proposer from cancelling their own exc
    * Involves smart contract changes to have the TWAP available on chain.
    * Exchanger doesn't know the price at the proposal time.
 
-It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a maniuplated price being executed.
-
-Another question is whether Granda Mento should have an "allowance" that must be granted by Governance indicating how many stable tokens it can mint/burn. Each exchange through Granda Mento would "spend" some of that allowance, and eventually a top-up would be required. This allows reasoning about the worst-case scenario if the approver multisig is compromised and Governance is unable to rally in time. Because this would involve more active involvement from Governance for top-ups and some additional implementation complexity, instead a configurable value in Granda Mento is proposed to restrict how many stable tokens a single exchange can mint/burn.
+It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a manipulated price being executed. [NOTE - LOOKING FOR FEEDBACK ON approach 1 vs. 2].
 
 ## Backwards Compatibility
 
