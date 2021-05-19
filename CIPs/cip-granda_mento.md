@@ -72,6 +72,10 @@ The following modifications will be made:
 
 A new contract, `GrandaMento.sol`, is created. One deployment of `GrandaMento` exists per stable token-- that is, a specific deployment will only be able to exchange between CELO and a particular stable token. It must have the ability to mint/burn the corresponding stable token and be a spender of `Reserve.sol`.
 
+Following the pattern of the registry identifiers for cEUR's StableToken and Exchange contracts, GrandaMento will be registered in the Registry with the identifier:
+* For cUSD, `GrandaMento`.
+* For any cXXX, `GrandaMentoXXX` (e.g. `GrandaMentoEUR` for cEUR).
+
 The contract is owned Governance, is freezable, and has the following configurable parameters:
 
 1. **`address public approver;`** - Set by governance. Intended to be a multisig and has the authority to approve exchanges. The signers for the multisig are at the discretion of Governance, but it would comprise of community members or members on behalf of organizations that are aligned with the Celo network/ecosystem.
