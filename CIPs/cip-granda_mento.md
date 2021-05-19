@@ -14,7 +14,7 @@ license: Apache 2.0
 
 ## Simple Summary
 
-Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX) exchanges that aren't suitable via Mento or OTC. A new contract is created that has the authorization by Governance to exchange `CELO <-> stable token`. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
+Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX) exchanges that aren't suitable via Mento or OTC. A new contract is created for each existing stable token (cUSD and cEUR at the time of writing) and every future stable token that has the authorization by Governance to exchange `CELO <-> stable token`. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
 
 ## Abstract
 
@@ -126,7 +126,7 @@ The contract has the following functions:
 
 ## Rationale
 
-Granda Mento is not intended to undermine the market or provide a way for large players to "dump" CELO for cUSD. It's also not intended to be an exceptionally elegant or complicated solution-- instead, this is looking to be something that is simple, straightforward, and works alongside the existing implementation of Mento. Any larger-scale Mento design modifications to facilitate large stable token mints are out of scope, and should be considered for a medium/long term design change to the stability protocol. The proposed implementation attempts to navigate the tradeoffs of complexity, centralization, economic safety, and ease of use for all actors in the Celo ecosystem.
+Granda Mento is not intended to undermine the market or provide a way for large players to "dump" CELO for cXXX. It's also not intended to be an exceptionally elegant or complicated solution-- instead, this is looking to be something that is simple, straightforward, and works alongside the existing implementation of Mento. Any larger-scale Mento design modifications to facilitate large stable token mints are out of scope, and should be considered for a medium/long term design change to the stability protocol. The proposed implementation attempts to navigate the tradeoffs of complexity, centralization, economic safety, and ease of use for all actors in the Celo ecosystem.
 
 Some ideas other than the proposed approach include:
 
@@ -154,7 +154,7 @@ The proposed implementation prohibits the proposer from cancelling their own exc
    * Involves smart contract changes to have the TWAP available on chain.
    * Exchanger doesn't know the price at the proposal time.
 
-It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a manipulated price being executed. [NOTE - LOOKING FOR FEEDBACK ON approach 1 vs. 2].
+It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a manipulated price being executed. Because there is not a strong user need behind (2), (1) has been chosen.
 
 ## Backwards Compatibility
 
