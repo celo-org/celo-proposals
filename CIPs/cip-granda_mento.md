@@ -12,7 +12,7 @@ license: Apache 2.0
 
 ## Simple Summary
 
-Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX) exchanges that aren't suitable via Mento or OTC. A new contract is created for each existing stable token (cUSD and cEUR at the time of writing) and every future stable token that has the authorization by Governance to exchange `CELO <-> stable token`. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
+Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX) exchanges that aren't suitable via Mento or OTC. A new contract is created authorization by Governance to exchange `CELO <-> stable token` for any stable token Governance explicitly enables. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
 
 ## Abstract
 
