@@ -70,32 +70,28 @@ The following modifications will be made:
 
 ##### `GrandaMento.sol`
 
-A new contract, `GrandaMento.sol`, is created. One deployment of `GrandaMento` exists per stable token-- that is, a specific deployment will only be able to exchange between CELO and a particular stable token. It must have the ability to mint/burn the corresponding stable token and be a spender of `Reserve.sol`.
+A new contract, `GrandaMento.sol`, is created, added to the Registry with the identifier `GrandaMento`, and owned by Governance. `GrandaMento` is a singleton contract that is capable of facilitating exchanges for multiple stable tokens-- that is, with the approval of Governance, `GrandaMento` could support `CELO <-> cUSD`, `CELO <-> cEUR`, and future `CELO <-> cXXX` exchanges. `GrandaMento` must be a spender of `Reserve.sol`, and supported stable tokens must allow `GrandaMento` to mint/burn them.
 
-Following the pattern of the registry identifiers for cEUR's StableToken and Exchange contracts, GrandaMento will be registered in the Registry with the identifier:
-* For cUSD, `GrandaMento`.
-* For any cXXX, `GrandaMentoXXX` (e.g. `GrandaMentoEUR` for cEUR).
+The contract has the following configurable parameters:
 
-The contract is owned Governance, is freezable, and has the following configurable parameters:
-
-1. **`address public approver;`** - Set by governance. Intended to be a multisig and has the authority to approve exchanges. The signers for the multisig are at the discretion of Governance, but it would comprise of community members or members on behalf of organizations that are aligned with the Celo network/ecosystem.
-2. **`uint256 public minStableExchangeAmount;`** - Set by governance. Minimum amount of the stable token an exchange can buy/sell.
-3. **`uint256 public maxStableExchangeAmount;`** - Set by governance. Maximum amount of the stable token an exchange can buy/sell.
-4. **`uint256 public exchangeWaitPeriod;`** - Set by governance. The minimum amount of time that must elapse between a proposed exchange being approved and when the exchange can be executed. Should give sufficient time for Governance to veto an approved exchange.
-5. **`uint256 public spread;`** - Set by governance. The percent fee imposed upon an exchange execution.
+1. **`address public approver;`** - Set by Governance. Intended to be a multisig and has the authority to approve exchanges. The signers for the multisig are at the discretion of Governance, but it would comprise of community members or members on behalf of organizations that are aligned with the Celo network/ecosystem.
+2. **`mapping(address => ExchangeLimits) stableTokenExchangeLimits`** - Set by Governance via `setStableTokenExchangeLimits`. A mapping of stable token address to a struct containing two `uint256`s, `minExchangeAmount` and `maxExchangeAmount`.
+3. **`uint256 public exchangeWaitPeriod;`** - Set by Governance. The minimum amount of time that must elapse between a proposed exchange being approved and when the exchange can be executed. Should give sufficient time for Governance to veto an approved exchange.
+4. **`uint256 public spread;`** - Set by Governance. The percent fee imposed upon an exchange execution.
 
 The contract has the following functions:
 
-1. **`function proposeExchange(uint256 amount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
+1. **`function proposeExchange(address stableToken, uint256 amount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
    * Callable by anyone.
-   * If `sellCelo` is true, CELO is the asset being sold and the stable token is the asset being bought. If `sellCelo` is false, the stable token is the asset being sold and CELO is the asset being bought.
-   * Requires the amount of stable token being bought/sold to be within the range `[minStableExchangeAmount, maxStableExchangeAmount]`.
+   * If `sellCelo` is true, CELO is the asset being sold and `stableToken` is the asset being bought. If `sellCelo` is false, `stableToken` is the asset being sold and CELO is the asset being bought.
+   * Requires the amount of `stableToken` being bought/sold to be within the token-specific range `[stableTokenExchangeLimits[stableToken].minExchangeAmount, stableTokenExchangeLimits[stableToken].maxExchangeAmount]` that is set by Governance via `setStableTokenExchangeLimits` (described later).
    * Deposits the full amount of the asset being sold into the contract.
    * Records:
      * The exchange as in the Proposed state.
      * A struct with the following info is stored in a mapping with an `id` key:
-       * Which asset is being sold.
+       * The stable token address.
        * The amount of the asset being sold.
+       * Whether CELO is being sold.
    * Returns:
      * The `id` of the struct in the mapping.
 2. **`function approveExchangeProposal(uint256 id) external`** - Approves a proposed exchange.
@@ -125,6 +121,11 @@ The contract has the following functions:
        * CELO is transferred from the Reserve to the exchange proposer according to the rate originally recorded when the exchange was proposed.
    * Records:
      * The exchange as in the Executed state.
+5. **`function setStableTokenExchangeLimits(address stableToken, uint256 minExchangeAmount, uint256 maxExchangeAmount) external`**
+   * Only callable by Governance.
+   * Sets the minimum and maximum amounts of stable token that can be minted/burned in an exchange by updating `stableTokenExchangeLimits[stableToken]`.
+     * Effectively "enables" exchanging a stable token if the min & max amounts were previously 0.
+     * Effectively "disables" exchanging a stable token if setting the min & max amounts to 0.
 
 ## Rationale
 
