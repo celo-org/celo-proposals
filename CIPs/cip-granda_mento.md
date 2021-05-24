@@ -75,13 +75,13 @@ A new contract, `GrandaMento.sol`, is created, added to the Registry with the id
 The contract has the following configurable parameters:
 
 1. **`address public approver;`** - Set by Governance. Intended to be a multisig and has the authority to approve exchanges. The signers for the multisig are at the discretion of Governance, but it would comprise of community members or members on behalf of organizations that are aligned with the Celo network/ecosystem.
-2. **`mapping(address => ExchangeLimits) stableTokenExchangeLimits`** - Set by Governance via `setStableTokenExchangeLimits`. A mapping of stable token address to a struct containing two `uint256`s, `minExchangeAmount` and `maxExchangeAmount`.
-3. **`uint256 public exchangeWaitPeriod;`** - Set by Governance. The minimum amount of time that must elapse between a proposed exchange being approved and when the exchange can be executed. Should give sufficient time for Governance to veto an approved exchange.
-4. **`uint256 public spread;`** - Set by Governance. The percent fee imposed upon an exchange execution.
+2. **`uint256 public exchangeWaitPeriodSeconds;`** - Set by Governance. The minimum amount of time in seconds that must elapse between a proposed exchange being approved and when the exchange can be executed. Should give sufficient time for Governance to veto an approved exchange.
+3. **`FixidityLib.Fraction public spread;`** - Set by Governance. The percent fee imposed upon an exchange execution.
+4. **`mapping(address => ExchangeLimits) stableTokenExchangeLimits`** - Set by Governance via `setStableTokenExchangeLimits`. A mapping of stable token address to a struct containing two `uint256`s, `minExchangeAmount` and `maxExchangeAmount`.
 
 The contract has the following functions:
 
-1. **`function proposeExchange(address stableToken, uint256 amount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
+1. **`function proposeExchange(address stableToken, uint256 sellAmount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
    * Callable by anyone.
    * If `sellCelo` is true, CELO is the asset being sold and `stableToken` is the asset being bought. If `sellCelo` is false, `stableToken` is the asset being sold and CELO is the asset being bought.
    * Requires the amount of `stableToken` being bought/sold to be within the token-specific range `[stableTokenExchangeLimits[stableToken].minExchangeAmount, stableTokenExchangeLimits[stableToken].maxExchangeAmount]` that is set by Governance via `setStableTokenExchangeLimits` (described later).
