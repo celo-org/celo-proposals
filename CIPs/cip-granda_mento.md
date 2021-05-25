@@ -48,7 +48,7 @@ At a high level, the design involves:
 
 An exchange can have the following states:
 1. Proposed - The exchange has been proposed, but not yet approved by the approver. The proposer may still cancel their proposal and be refunded their deposit.
-2. Approved - The exchange has been proposed and approved by the approver, but not yet executed or vetoed. The proposer may not cancel their proposal.
+2. Approved - The exchange has been proposed and approved by the approver, but not yet executed or vetoed. The proposer may no longer cancel their proposal at this point.
 3. Executed - The exchange has been proposed, approved by the approver, and executed.
 4. Cancelled - The exchange has been cancelled by the proposer when it was in the Proposed state, or it has been vetoed by Governance when it was in the Approved stage.
 
