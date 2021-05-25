@@ -12,7 +12,7 @@ license: Apache 2.0
 
 ## Simple Summary
 
-Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX) exchanges that aren't suitable via Mento or OTC. A new contract is created authorization by Governance to exchange `CELO <-> stable token` for any stable token Governance explicitly enables. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
+Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX) exchanges that aren't suitable via Mento or OTC. A new contract is created that can exchange `CELO <-> stable token` for any stable token Governance explicitly enables. Exchanges via this contract must be approved by a multisig and can be vetoed by Governance.
 
 ## Abstract
 
@@ -44,7 +44,7 @@ At a high level, the design involves:
    * The current oracle price for the exchange is recorded.
 2. The proposed exchange must be approved by a multisig that has previously been authorized by Governance. At this point, the exchange still cannot be executed.
 3. A forced waiting period of X days must elapse before the exchange can be executed. During this time, Governance can choose to veto the exchange, refunding the exchange proposer.
-4. After the waiting period, the exchange is executed according to the oracle price recorded in step 1.
+4. After the waiting period, the exchange is executed according to the oracle price recorded in step 1. A fee is imposed upon the exchange through the use of a "spread".
 
 An exchange can have the following states:
 1. Proposed - The exchange has been proposed, but not yet approved by the approver. The proposer may still cancel their proposal and be refunded their deposit.
@@ -62,9 +62,9 @@ Currently, `StableToken.sol` only allows its `Exchange.sol` or `Validators.sol` 
 
 The following modifications will be made:
 1. **Modification to [mint()](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L224)**
-   * Allow `msg.sender` to be the stable token's `GrandaMento` in addition to the existing permitted senders, Exchange and `Validators.sol`.
+   * Allow `msg.sender` to be `GrandaMento` in addition to the existing permitted senders, Exchange and `Validators.sol`.
 2. **Modification to [burn()](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L273)**
-   * Allow `msg.sender` to be the stable token's `GrandaMento` in addition to the existing permitted sender, the Exchange.
+   * Allow `msg.sender` to be `GrandaMento` in addition to the existing permitted sender, the Exchange.
 
 #### New contracts:
 
@@ -157,7 +157,7 @@ The proposed implementation prohibits the proposer from cancelling their own exc
    * Involves smart contract changes to have the TWAP available on chain.
    * Exchanger doesn't know the price at the proposal time.
 
-It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a manipulated price being executed. Because there is not a strong user need behind (2), (1) has been chosen.
+It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a manipulated price being executed. Because there is not a strong user need behind (2), (1) has been chosen. While the use of a TWAP for the price may be nice, the implementation complexity of implementing a TWAP on-chain is high, and the benefit is slim.
 
 ## Backwards Compatibility
 
