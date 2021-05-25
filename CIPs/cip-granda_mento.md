@@ -91,6 +91,7 @@ The contract has the following functions:
      * A struct with the following info is stored in a mapping with an `id` key:
        * The stable token address.
        * The amount of the asset being sold.
+         * Behind the scenes, StableToken keeps track of balances via "units," which do not change with time. However, the value returned by a call to `balanceOf` is the "value," which can change with time due to the inflation/demurrage feature. Because GrandaMento must refund a deposit for a Cancelled exchange proposal, GrandaMento should be sure to refund the correct amount adjusted by any inflation that has been incurred. To account for this, the amount of the StableToken being sold is stored in "units," and the "value" at a given time is calculated using [StableToken.unitsToValue](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L415).
        * Whether CELO is being sold.
    * Returns:
      * The `id` of the struct in the mapping.
