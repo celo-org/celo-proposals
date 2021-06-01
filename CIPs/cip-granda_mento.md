@@ -42,6 +42,7 @@ At a high level, the design involves:
    * The amount of stable tokens being bought/sold in the exchange is required to be within a governable range.
    * The assets being sold (ie either the stable token or CELO) in the exchange are deposited.
    * The current oracle price for the exchange is recorded.
+   * Off-chain, each proposal should be shared with the community in a forum post. For transparency, the post should share where the token being sold is coming from, when it was acquired, and at what price it was acquired.
 2. The proposed exchange must be approved by a multisig that has previously been authorized by Governance. At this point, the exchange still cannot be executed.
 3. A forced waiting period of X days must elapse before the exchange can be executed. During this time, Governance can choose to veto the exchange, refunding the exchange proposer.
 4. After the waiting period, the exchange is executed according to the oracle price recorded in step 1. A fee is imposed upon the exchange through the use of a "spread".
@@ -100,7 +101,7 @@ The contract has the following functions:
    * Marks the proposed exchange with the given `id` as approved.
    * Records:
      * The exchange as in the Approved state.
-     * The timestamp at which the approval occurred (ie `block.timestamp`).
+     * The timestamp at which the approval occurred (ie `block.timestamp`). This is used to enforce that enough time has elapsed since approval at the time of execution.
 3. **`function cancelExchangeProposal(uint256 id) external`** - Cancels a proposed exchange.
    * The permitted caller depends upon the state of the exchange proposal:
      * If in the Proposed state, can only be called by the proposer.
