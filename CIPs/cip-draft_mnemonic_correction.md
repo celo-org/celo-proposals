@@ -2,7 +2,7 @@
 cip: <to be assigned>
 title: Error correction for BIP-39 mnemonic phrases
 author: Victor Graf <@nategraf>
-discussions-to: <URL>
+discussions-to: https://github.com/celo-org/celo-proposals/issues/225
 status: Draft
 type: Standards Track
 category: 3
