@@ -121,6 +121,10 @@ with another valid BIP-39 word). This is a result of the
 | 24 | 18 |            190 |                          3 |                            6 |
 | 24 | 21 |            223 |                          1 |                            3 |
 
+Note that the entropy available for a given `N` and `K` is slightly less (up to 4 bits) than a
+comparable BIP-39 phrase with `K` words. This is because of the reduction in message space given the
+requirement that the resulting phrase much have a valid BIP-39 checksum.
+
 #### Generation
 
 Generation of a compliant mnemonic phrase with error correction may be done as follows:
@@ -136,10 +140,6 @@ Generation of a compliant mnemonic phrase with error correction may be done as f
 Note that implementations MAY use an alternate generation procedure as long as:
 1. It results in a valid BIP-39 mnemonic phrase.
 2. If re-encoded using the `RS(N, K)` codec described above, the same phrase is constructed,
-
-Also note that although `11 * K` bits of entropy are used as input, the resulting phrase has `11 * K - N/3`
-bits of entropy, as the requirement of a valid BIP-39 checksum reduces the space of valid phrases by
-a factor of `2^{N/3}`.
 
 #### Error correction
 
