@@ -80,13 +80,20 @@ redundant information to the remaining words.
 
 A mnemonic phrase generated in this scheme is interpreted as a
 [Reed-Solomon](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) codeword with
-`N` 11-bit symbols (i.e. BIP-39 words), of which `K` symbols form the message. The remaining `N-K`
-symbols are considered the "error correcting" words. This is often written as an `RS(N, K)` code.
+`N` 11-bit symbols (i.e. BIP-39 words), of which `K` symbols form the message (i.e. the underlying
+entropy).
 
-<!-- TODO(victor): Specify parameters needed to ensure that a given message produces a deterministic code word -->
+<!-- TODO(victor): Is this the best instantiating to use here? It is very classical, but not
+  necessarily efficient or commonly implemented.-->
+Specifically, the Reed-Solomon codec in this proposal, `RS(N, K)`, is defined to as a bijective map from a `K`
+symbol message to an `N` symbol codeword. Symbols are members of the finite field `GF(2^11)`.
+Messages are viewed as a vector of coefficients to an `K-1` degree polynomial, `m = (m_0, m_1, ...
+m_K-1) => p(X) m_0 + m_1X + ... + m_K-1X^K-1`. Code words are the evaluation of this polynomial at
+points `a_0, a_1, ..., a_N-1 = 0, 1, ..., N-1` in `GF(2^11)`.
+
 Each word in the phrase is coded as a symbol equal its index in the BIP-39 word list for the
-phrase's language, cast to `GF(2^11)`. Codewords are serialized as BIP-39 phrases and MUST have a
-valid BIP-39 checksum to be considered valid under this proposal.
+phrase's language. Codewords are serialized as BIP-39 phrases and MUST have a valid BIP-39 checksum
+to be considered valid under this proposal.
 
 <!-- TODO(victor): Should the requirement for K to be a multiple of 3 be relaxed? -->
 `N` and `K` MAY be chosen by the user or application developer when generating a phrase. `N` MUST be
@@ -100,6 +107,19 @@ locations (i.e. when the provided token is not a valid BIP-39 word, or is indica
 up to `floor(N-K/2)` symbols at known locations (e.g. when word orderings are swapped, or replaced
 with another valid BIP-39 word). This is a result of the
 [Singleton bound](https://en.wikipedia.org/wiki/Singleton_bound).
+
+| N  | K  | entropy (bits) | correctable errors (words) | correctable erasures (words) |
+| -- | -- | -------------- | -------------------------- | ---------------------------- |
+| 15 | 12 |            127 |                          1 |                            3 |
+| 18 | 12 |            126 |                          3 |                            6 |
+| 18 | 15 |            159 |                          1 |                            3 |
+| 21 | 12 |            125 |                          4 |                            9 |
+| 21 | 15 |            158 |                          3 |                            6 |
+| 21 | 18 |            191 |                          1 |                            3 |
+| 24 | 12 |            124 |                          6 |                           12 |
+| 24 | 15 |            157 |                          4 |                            9 |
+| 24 | 18 |            190 |                          3 |                            6 |
+| 24 | 21 |            223 |                          1 |                            3 |
 
 #### Generation
 
