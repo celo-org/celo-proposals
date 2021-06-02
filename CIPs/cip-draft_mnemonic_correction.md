@@ -108,7 +108,7 @@ Generation of a compliant mnemonic phrase with error correction may be done as f
 2. Encode the message `E` using the Reed-Solomon codec, `RS(N, K)`, described above. The resulting
    codeword `C` is a vector of `N` 11-bit symbols.
 3. Serialize the codeword `C` to a BIP-39 phrase by using each element as an index into the BIP-39
-   word list of the desired language.
+   word list of the phrase language.
 4. Verify the checksum of the resulting BIP-39 phrase, [as specified in that
    standard](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki#generating-the-mnemonic).
 5. If the checksum verifies, return the resulting phrase. If not, return to step 1.
@@ -117,9 +117,24 @@ Note that implementations MAY use an alternate generation procedure as long as:
 1. It results in a valid BIP-39 mnemonic phrase.
 2. If re-encoded using the `RS(N, K)` codec described above, the same phrase is constructed,
 
+Also note that although `11 * K` bits of entropy are used as input, the resulting phrase has `11 * K - N/3`
+bits of entropy, as the requirement of a valid BIP-39 checksum reduces the space of valid phrases by
+a factor of `2^{N/3}`.
+
 #### Error correction
 
-WIP
+<!-- TODO: Include some thoughts on how to handle different choices of K -->
+
+Error correction of a mnemonic phrase may be accomplished as follows:
+1. Derive the codeword representation `C` as the vector of indices into the BIP-39 word list.
+   * Any words in the given phrase that are not valid BIP-39 words should be marked as erasures.
+2. Attempt to decode the codeword `C` to get the message `E`.
+   * If decoding fails, return an error.
+3. Re-encode `E` to obtain `C'`, and serialize the codeword as a phrase by using each element as an
+   index into the BIP-39 wordlist of the phrase language.
+4. Check the BIP-39 checksum of the resulting phrase.
+   * If the checksum is invalid, return an error.
+5. Return the corrected phrase.
 
 #### Acceptance of BIP-39 phrases by applications
 
