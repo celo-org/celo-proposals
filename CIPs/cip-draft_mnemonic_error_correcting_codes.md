@@ -210,9 +210,9 @@ y) ^ ((N - e) choose ceil((N + K - e) / 2))) * (2^(-N/3))`.
 Given a correct 15-word plain BIP-39 phrase, the probability of mistaking it for a CIP-# phrase is
 roughly 1 in 10 million. If the 15-word phrase has an invalid word (i.e. an erasure), it will be
 mistaken for a CIP-# phrase with probability roughly 2 in 10,000. For all larger values of `N` and
-`K`, and with any number of erasures, the probability is exponentially lower. In most cases this is
-negligible, but does reinforce the recommendation that the application inform users before
-proceeding with a phrase altered by error correction.
+`K`, and with any number of erasures, the probability is lower. In most cases this is negligible,
+but does reinforce the recommendation that the application inform users before proceeding with a
+phrase altered by error correction.
 
 ## Backwards Compatibility
 
