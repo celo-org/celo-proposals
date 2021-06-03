@@ -18,7 +18,7 @@ described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
 ## Simple Summary
 
 A scheme for mnemonic phrases with integrated error correction codes as a subset of BIP-39, enabling
-for guaranteed recovery of mnemonic phrases with a limited number of arbitrary errors.
+guaranteed recovery of mnemonic phrases with a limited number of arbitrary errors.
 
 ## Abstract
 
