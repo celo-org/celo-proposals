@@ -77,7 +77,7 @@ phrases are chosen uniformly at random*, we can make the following adjustments.
 
 ![eq2](https://latex.codecogs.com/svg.latex?P%28%5Cbold%7Bh%7D%5Cmid%5Cbold%7Bo%7D%29%20%3D%20%5Cfrac%7BP%28%5Cbold%7Bo%7D%5Cmid%5Cbold%7Bh%7D%29P%28%5Cbold%7Bh%7D%29%7D%7BP%28%5Cbold%7Bo%7D%29%7D%20%3D%20%5Cfrac%7BP%28%5Cbold%7Bo%7D%5Cmid%5Cbold%7Bh%7D%29P%28%5Cbold%7Bh%7D%29%7D%7B%5Csum_%7B%5Cbold%7B%5Chat%7Bh%7D%7D%5Cin%5Cbold%7BH%7D%7D%7BP%28%5Cbold%7Bo%7D%5Cmid%5Cbold%7B%5Chat%7Bh%7D%7D%29%7DP%28%5Cbold%7B%5Chat%7Bh%7D%7D%29%7D%3D%5Cfrac%7BP%28%5Cbold%7Bo%7D%5Cmid%5Cbold%7Bh%7D%29%7D%7B%5Csum_%7B%5Cbold%7B%5Chat%7Bh%7D%7D%5Cin%5Cbold%7BH%7D%7D%7BP%28%5Cbold%7Bo%7D%5Cmid%5Cbold%7B%5Chat%7Bh%7D%7D%29%7D%7D)
 
-Where _H_ is the set of all hypothesis (e.g. all valid mnemonic phrases).
+Where _H_ is the set of all hypotheses (e.g. all valid mnemonic phrases).
 
 With this we can see that the only quantity we need to estimate is the probability of the observed
 phrase, assuming that a our hypothesis is correct. Furthermore, because the denominator in the
@@ -124,6 +124,10 @@ rewrite the equation above as:
 Taking the log probability is a common transform in language modeling, and makes computation easier.
 It also simplifies the overall expressions when the underlying distribution is exponential, as is
 often the case here.
+
+### Edit-distance based instantiation
+
+WIP
 
 ## Rationale
 
