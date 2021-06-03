@@ -1,6 +1,6 @@
 ---
 cip: <to be assigned>
-title: Mnemonic Phrases with Error Correcting Codes
+title: Mnemonic phrases with error correcting codes
 author: Victor Graf <@nategraf>
 discussions-to: https://github.com/celo-org/celo-proposals/issues/225
 status: Draft
@@ -16,14 +16,9 @@ The key words "MUST", "MUST NOT", "SHOULD", and "MAY" in this document are to be
 described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
 
 ## Simple Summary
-Proposed in this CIP are two methods for providing error correction to mnemonic phrases in the
-context of account recovery:
 
-* In context where a new phrase is being generated, a backward-compatible extension to BIP-39 is
-  proposed to add error correction information for guaranteed correction of a fixed number of error
-  words.
-* Additionally, a heuristic-based approach is discussed, including an edit-distance based
-  instantiation and theoretical framework for extension to include improved rules.
+A scheme for mnemonic phrases with integrated error correction codes as a subset of BIP-39, enabling
+for guaranteed recovery of mnemonic phrases with a limited number of arbitrary errors.
 
 ## Abstract
 
@@ -31,23 +26,15 @@ context of account recovery:
 used as the seed for account generation in the crypto ecosystem, and a pen-and-paper backup is the
 most commonly recommended way to store these phrases to enable account recovery.
 
-In the case that the user has a copy of their phrase with errors, it is possible to recovery the
-original phrase as long as the errors are relatively small. This CIP introduces a proposed standard
-and framework for correcting errors based on the "noisy channel" model which is commonly used in
-[spelling correction programs](https://norvig.com/spell-correct.html) to generate suggested
-correction. An instantiation of this standard is described using Levenshtein distance, and assuming
-a number of independent random errors are introduced to the mnemonic phrase.
+Adding error correcting codes to the mnemonic phrase would allow for correction of a limited number
+of arbitrary errors. This CIP proposes a fully-compatible extension to BIP-39 in which some of the
+random words are replaced with "error correcting" words to produce an instance of
+[Reed-Solomon](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) coding. It is
+constructed as a subset of BIP-39, allowing CIP-# and plain BIP-39 phrases to be used
+interchangeable in existing and new applications.
 
-Another approach is to add error correcting codes to the mnemonic phrase, which would allow for
-correction of a limited number of arbitrary errors. This CIP proposes a fully-compatible extension
-to BIP-39 in which some of the random words are replaced with "error correcting" words to produce an
-instance of [Reed-Solomon](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction)
-coding. It is constructed to be interchangeable in applications that support BIP-39, whether or not
-they support this proposal.
-
-Note that neither of these ideas are entirely new, and have been discussed at various points in the
-crypto community. This CIP aims to provide a standard and implementation to put these ideas into
-production.
+Complimentary to this proposal is CIP-$, which proposes a method for and framework for probabilistic
+error correction of mnemonic phrases.
 
 ## Motivation
 
@@ -62,12 +49,12 @@ to paper, during storage (e.g. water damage, dog nibbled on it), or when typing 
 wallet application, the raw data (i.e. entropy) may still be available in the key, but has been
 obscured by the introduced errors. Given expertise and time, a user may being able to manually
 locate and remove any errors present in the phrase. Most users don't have the required expertise or
-time. This CIP aims to provide a standard way to remove these errors automatically.
+time. CIP-$ aims to provide a standard way to remove these errors automatically.
 
 When information is lost from the phrase (e.g. some of the words are entirely missing), or when the
-heuristic does not do appropriately model a particular error, the heuristic based approach may fail.
-The introduction of error correcting codes can allow for recovering phases with a number of
-arbitrary errors, covering many cases that heuristic based approaches cannot.
+heuristic does not do appropriately model a particular error, heuristics based approaches may fail.
+Proposed here is the introduction of error correcting codes, which can recover phases with a number
+of arbitrary errors, covering many cases that model based approaches cannot.
 
 ## Specification
 
@@ -233,10 +220,6 @@ BIP-39 implementations will accept mnemonic phrases generated with error correct
 proposal, as described above. Clients implementing this proposal are also able to support plain
 BIP-39 phrases, as described above.
 
-Heuristic-based error correction described above does not introduce any concerns with backwards
-compatibility. Implementations of this model also need not be deterministic, or otherwise return
-results consistent with each other.
-
 ## Test Cases
 
 WIP
@@ -245,7 +228,6 @@ WIP
 
 * A proof-of-concept implementation of phrases with error-correcting codes: [nategraf/cip39](https://github.com/nategraf/cip39)
   * Note, the Reed-Solomon implementation used in this PoC is currently not compliant with this standard.
-* An implementation of heuristic-based mnemonic phrase correction is implemented in [celo-org/celo-monorepo/pull/8034](https://github.com/celo-org/celo-monorepo/pull/8034)
 
 ## Security Considerations
 
