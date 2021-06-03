@@ -1,6 +1,6 @@
 ---
 cip: <to be assigned>
-title: Error correction for BIP-39 mnemonic phrases
+title: Mnemonic Phrases with Error Correcting Codes
 author: Victor Graf <@nategraf>
 discussions-to: https://github.com/celo-org/celo-proposals/issues/225
 status: Draft
@@ -27,7 +27,6 @@ context of account recovery:
 
 ## Abstract
 
-<!-- TODO(victor) Possibly a bit long for an abstract -->
 [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) mnemonic phrases are widely
 used as the seed for account generation in the crypto ecosystem, and a pen-and-paper backup is the
 most commonly recommended way to store these phrases to enable account recovery.
@@ -95,7 +94,6 @@ Each word in the phrase is coded as a symbol equal its index in the BIP-39 word 
 phrase's language. Codewords are serialized as BIP-39 phrases and MUST have a valid BIP-39 checksum
 to be considered valid under this proposal.
 
-<!-- TODO(victor): Should the requirement for K to be a multiple of 3 be relaxed? -->
 `N` and `K` MAY be chosen by the user or application developer when generating a phrase. `N` MUST be
 a multiple of 3 between 12 and 24 inclusive (i.e. It must be a valid number of words for BIP-39).
 `K` MUST be a multiple of 3 between 12 and 24 inclusive, less than or equal to `N`. Note that when
@@ -128,6 +126,7 @@ requirement that the resulting phrase much have a valid BIP-39 checksum.
 #### Generation
 
 Generation of a compliant mnemonic phrase with error correction may be done as follows:
+
 1. Generate `11 * K` bits of entropy, splitting it into a vector `E` of `K` 11-bit values.
 2. Encode the message `E` using the Reed-Solomon codec, `RS(N, K)`, described above. The resulting
    codeword `C` is a vector of `N` 11-bit symbols.
@@ -141,11 +140,12 @@ Note that implementations MAY use an alternate generation procedure as long as:
 1. It results in a valid BIP-39 mnemonic phrase.
 2. If re-encoded using the `RS(N, K)` codec described above, the same phrase is constructed,
 
-#### Error correction
+#### Validity and error correction
 
-<!-- TODO: Include some thoughts on how to handle different choices of K -->
+<!-- TODO(victor): Include some thoughts on how to handle different choices of K -->
 
 Error correction of a mnemonic phrase may be accomplished as follows:
+
 1. Derive the codeword representation `C` as the vector of indices into the BIP-39 word list.
    * Any words in the given phrase that are not valid BIP-39 words should be marked as erasures.
 2. Attempt to decode the codeword `C` to get the message `E`.
@@ -156,7 +156,29 @@ Error correction of a mnemonic phrase may be accomplished as follows:
    * If the checksum is invalid, return an error.
 5. Return the corrected phrase.
 
-#### Acceptance of BIP-39 phrases by applications
+This error correction procedure SHOULD also be used to determine is a given phrase is a valid
+mnemonic with error correction:
+
+* If the result of error correction is the same phrase, then the given phrase contains no errors.
+* If the result of error correction is a different phrase, then the given phrase contained at least
+  one error, but was recovered successfully. 
+  * Note that error correction will change at most `floor((N - K) / 2)` unknown positions.
+* If error correction fails, then the phrase is either not a CIP-# phrase, or has too many errors to
+  fix.
+
+<!-- TODO(victor) Analyse the probability of this kind of failure. Its likely similar to the issue
+of mistakenly identifying a plain BIP-39 phrase as a CIP-# phrase, which is described below. -->
+Note that if the given phrase contains more than `floor((N - K) / 2)`, then there is a small
+probability that error correction will report success and return a phrase different than the true
+source phrase. Given the chance of mistaken "correction" of a phrase, applications SHOULD inform
+the user before proceeding with a phrase altered by this error correction procedure.
+
+#### Acceptance of plain BIP-39 phrases by CIP-# applications
+
+Applications that implement this proposal SHOULD also accept plain BIP-39 phrases. A phrase SHOULD
+be treated as a plain BIP-39 phrase if error correction fails and the given phrase has a valid
+BIP-39 checksum. Although it is technically possible that a plain BIP-39 phrase may pass error
+correction, it is very unlikely.
 
 ### Heuristic-based correction
 
@@ -167,13 +189,49 @@ cases where the error is not well modeled, or reduce the information content of 
 significant extent, it may not be possible to recovery the original phrase.
 
 ## Rationale
-The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.
+
+### Probability of mistaken identification of a plain BIP-39 phrase as a CIP-# phrase
+
+Described above, error correction and a checksum validation are used to determine if error
+correction is available. It is techically possible, but unlikely, for this to mistake a plain BIP-39
+phrase for a CIP-# phrase. Specifically, given a plain BIP-39 phrase of `N` words, `e` of which are
+invalid (i.e. erasures), the probability that the phrase will pass error correction is equal to the
+probability that:
+
+* A "quorum" subset of symbols (i.e. points) are consistent with some `K-1` degree polynomial.
+* And the re-encoded codeword contains a valid BIP-39 checksum.
+
+<!-- TOOD(victor) Refactor the math in this section. It is _not_ easy to read -->
+
+In this case, the quorum of points required is the number of points available minus the number of
+acceptable unknown errors :`(N - e) - floor((N - K - e) / 2) = ceil((N + K - e) / 2)`. Given a
+particular quorum, it is consistent with some `K-1` degree polynomial if and only if, taking any `K`
+points, the remaining `ceil((N - K - e) / 2)` points are consistent with the polynomial interpolated
+from those `K` points. When  the points are uniformly random and independent of each other the
+probability that this is true is `y = 2 ^ (-11 * ceil((N - K - e) / 2))`. (11 because the points are
+in `GF(2^11)`)
+
+In a given phrase, there are `(N - e) choose ceil((N + K - e) / 2)` quorums. When the words of the
+phrase are chosen independently and at random, The overall chance of decoding a plain BIP-39 phrase
+is `1 - (1 - y) ^ ((N - e) choose ceil((N + K - e) / 2))`, with `y` defined above.
+
+If the phrase decodes, it will then be re-encoded and the checksum will be verified. Assuming the
+phrase was modified by the re-encoding procedure, the probability that the checksum will verify is
+`2^(-N/3)`. Overall the chance of mistaking a plain BIP-39 phrase for a CIP-# phrase is `(1 - (1 -
+y) ^ ((N - e) choose ceil((N + K - e) / 2))) * (2^(-N/3))`.
+
+Given a correct 15-word plain BIP-39 phrase, the probability of mistaking it for a CIP-# phrase is
+roughly 1 in 10 million. If the 15-word phrase has an invalid word (i.e. an erasure), it will be
+mistaken for a CIP-# phrase with probability roughly 2 in 10,000. For all larger values of `N` and
+`K`, and with any number of erasures, the probability is exponentially lower. In most cases this is
+negligible, but does reinforce the recommendation that the application inform users before
+proceeding with a phrase altered by error correction.
 
 ## Backwards Compatibility
 
 BIP-39 implementations will accept mnemonic phrases generated with error correction under this
-proposal, as described above. Compatibility of clients implementing this proposal with existing
-BIP-39 phrases is described above.
+proposal, as described above. Clients implementing this proposal are also able to support plain
+BIP-39 phrases, as described above.
 
 Heuristic-based error correction described above does not introduce any concerns with backwards
 compatibility. Implementations of this model also need not be deterministic, or otherwise return
@@ -185,14 +243,17 @@ WIP
 
 ## Implementation
 
-WIP
-
 * A proof-of-concept implementation of phrases with error-correcting codes: [nategraf/cip39](https://github.com/nategraf/cip39)
+  * Note, the Reed-Solomon implementation used in this PoC is currently not compliant with this standard.
 * An implementation of heuristic-based mnemonic phrase correction is implemented in [celo-org/celo-monorepo/pull/8034](https://github.com/celo-org/celo-monorepo/pull/8034)
 
 ## Security Considerations
 
-WIP
+* As with any proposal handling the source material for key generation, mistakes in implementation
+  can lead to loss of funds or leakage of key material.
+* Users understanding BIP-39 security levels may misinterpret an `N` word CIP-# phrase to have a
+  higher security level than it actually does. (I.e. Assuming a 24-word CIP-# phrase has 256 bits
+  of entropy, when it may have between 124 and 223 bits, depending on selection of `K`)
 
 ## License
 This work is licensed under the Apache License, Version 2.0.
