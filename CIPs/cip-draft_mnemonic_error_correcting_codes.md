@@ -125,7 +125,7 @@ Generation of a compliant mnemonic phrase with error correction may be done as f
 
 Note that implementations MAY use an alternate generation procedure as long as:
 1. It results in a valid BIP-39 mnemonic phrase.
-2. If re-encoded using the `RS(N, K)` codec described above, the same phrase is constructed,
+2. If re-encoded using the `RS(N, K)` codec described above, the same phrase is constructed.
 
 #### Validity and error correction
 
