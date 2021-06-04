@@ -167,14 +167,6 @@ be treated as a plain BIP-39 phrase if error correction fails and the given phra
 BIP-39 checksum. Although it is technically possible that a plain BIP-39 phrase may pass error
 correction, it is very unlikely.
 
-### Heuristic-based correction
-
-WIP
-
-Heuristic based approaches can correct a errors which are well-modeled by the "noisy channel". In
-cases where the error is not well modeled, or reduce the information content of the phrase to a
-significant extent, it may not be possible to recovery the original phrase.
-
 ## Rationale
 
 ### Probability of mistaken identification of a plain BIP-39 phrase as a CIP-# phrase
