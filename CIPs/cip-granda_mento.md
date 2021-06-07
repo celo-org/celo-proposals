@@ -82,27 +82,27 @@ The contract has the following configurable parameters:
 
 The contract has the following functions:
 
-1. **`function proposeExchange(address stableToken, uint256 sellAmount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
+1. **`function createExchangeProposal(address stableToken, uint256 sellAmount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
    * Callable by anyone.
    * If `sellCelo` is true, CELO is the asset being sold and `stableToken` is the asset being bought. If `sellCelo` is false, `stableToken` is the asset being sold and CELO is the asset being bought.
    * Requires the amount of `stableToken` being bought/sold to be within the token-specific range `[stableTokenExchangeLimits[stableToken].minExchangeAmount, stableTokenExchangeLimits[stableToken].maxExchangeAmount]` that is set by Governance via `setStableTokenExchangeLimits` (described later).
    * Deposits the full amount of the asset being sold into the contract.
    * Records:
      * The exchange as in the Proposed state.
-     * A struct with the following info is stored in a mapping with an `id` key:
+     * A struct with the following info is stored in a mapping with an `proposalId` key:
        * The stable token address.
        * The amount of the asset being sold.
          * Behind the scenes, StableToken keeps track of balances via "units," which do not change with time. However, the value returned by a call to `balanceOf` is the "value," which can change with time due to the inflation/demurrage feature. Because GrandaMento must refund a deposit for a Cancelled exchange proposal, GrandaMento should be sure to refund the correct amount adjusted by any inflation that has been incurred. To account for this, the amount of the StableToken being sold is stored in "units," and the "value" at a given time is calculated using [StableToken.unitsToValue](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L415).
        * Whether CELO is being sold.
    * Returns:
-     * The `id` of the struct in the mapping.
-2. **`function approveExchangeProposal(uint256 id) external`** - Approves a proposed exchange.
+     * The `proposalId` of the struct in the mapping.
+2. **`function approveExchangeProposal(uint256 proposalId) external`** - Approves a proposed exchange.
    * Only callable by the approver address.
-   * Marks the proposed exchange with the given `id` as approved.
+   * Marks the proposed exchange with the given `proposalId` as approved.
    * Records:
      * The exchange as in the Approved state.
      * The timestamp at which the approval occurred (ie `block.timestamp`). This is used to enforce that enough time has elapsed since approval at the time of execution.
-3. **`function cancelExchangeProposal(uint256 id) external`** - Cancels a proposed exchange.
+3. **`function cancelExchangeProposal(uint256 proposalId) external`** - Cancels a proposed exchange.
    * The permitted caller depends upon the state of the exchange proposal:
      * If in the Proposed state, can only be called by the proposer.
      * If in the Approved state, can only be called by Governance.
@@ -110,7 +110,7 @@ The contract has the following functions:
    * Refunds the proposed exchange's deposited sell asset to the proposer.
    * Records:
      * The exchange as in the Cancelled state.
-4. **`function executeExchange(uint256 id) external`** - Executes an exchange.
+4. **`function executeExchangeProposal(uint256 proposalId) external`** - Executes an exchange.
    * Callable by anyone.
    * Requires the exchange proposal to have been approved.
    * Requires the required waiting period for an approved exchange to have elapsed since the time it was approved (ie `block.timestamp - approval timestamp >= exchangeWaitPeriod`)
