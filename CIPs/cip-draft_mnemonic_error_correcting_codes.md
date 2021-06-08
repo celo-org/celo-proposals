@@ -95,8 +95,8 @@ words.
 With a given selection of `N` and `K`, it will be possible to correct `N-K` symbols at known
 locations (i.e. when the provided token is not a valid BIP-39 word, or is indicated as missing) and
 up to `floor(N-K/2)` symbols at unknown locations (e.g. when word orderings are swapped, or replaced
-with another valid BIP-39 word). This is a result of the
-[Singleton bound](https://en.wikipedia.org/wiki/Singleton_bound).
+with another valid BIP-39 word). Errors at known locations are described as "erasures", from the
+fact that they are equivalent to the information at that location being erased.
 
 | N  | K  | entropy (bits) | correctable errors (words) | correctable erasures (words) |
 | -- | -- | -------------- | -------------------------- | ---------------------------- |
@@ -113,7 +113,15 @@ with another valid BIP-39 word). This is a result of the
 
 Note that the entropy available for a given `N` and `K` is slightly less (up to 4 bits) than a
 comparable BIP-39 phrase with `K` words. This is because of the reduction in message space given the
-requirement that the resulting phrase much have a valid BIP-39 checksum.
+requirement that the resulting phrase much have a valid BIP-39 checksum. To see this, first note
+that of the `N` words, any `K` uniquely determine the remaining `N-K`. Of the possible selections of
+`K` words, only a portion will produce a phrase with a valid BIP-39 checksum after being encoded.
+Each BIP-39 phrase has 1 bit of checksum per three words, and is a uniform random function of the
+phrase. As a result, each selection of `K` words has a probability of `2^(-N/3)` producing a valid
+checksum, effectively reducing the set of possible phrases by that factor. Therefore, there are a
+total of `2^(11*K - N/3)` valid phrases in the set of CIP-# phrases with a fixed `N` and `K`. When
+generating a phrase, one of these is chosen with uniform random probabilty, resulting in `11*K -
+N/3` bits of entropy, which is up to 4 bits less than a BIP-39 phrase of length `K`.
 
 #### Generation
 
@@ -177,7 +185,7 @@ correction, it is very unlikely.
 ### Probability of mistaken identification of a plain BIP-39 phrase as a CIP-# phrase
 
 Described above, error correction and a checksum validation are used to determine if error
-correction is available. It is techically possible, but unlikely, for this to mistake a plain BIP-39
+correction is available. It is technically possible, but unlikely, for this to mistake a plain BIP-39
 phrase for a CIP-# phrase. Specifically, given a plain BIP-39 phrase of `N` words, `e` of which are
 invalid (i.e. erasures), the probability that the phrase will pass error correction is equal to the
 probability that:
@@ -188,21 +196,23 @@ probability that:
 <!-- TOOD(victor) Refactor the math in this section. It is _not_ easy to read -->
 
 In this case, the quorum of points required is the number of points available minus the number of
-acceptable unknown errors :`(N - e) - floor((N - K - e) / 2) = ceil((N + K - e) / 2)`. Given a
-particular quorum, it is consistent with some `K-1` degree polynomial if and only if, taking any `K`
-points, the remaining `ceil((N - K - e) / 2)` points are consistent with the polynomial interpolated
-from those `K` points. When  the points are uniformly random and independent of each other the
-probability that this is true is `y = 2 ^ (-11 * ceil((N - K - e) / 2))`. (11 because the points are
-in `GF(2^11)`)
+acceptable unknown errors: `(N - e) - floor((N - K - e) / 2) = ceil((N + K - e) / 2)`. Once a `K-1`
+degree polynomial is interpolated from any `K` points in the quorum, the remaining evaluations of
+that polynomial are fixed. Each of the remaining `ceil((N - K - e) / 2)` points must equal those
+fixed evaluations. When the points are uniformly random and independent of each other, the
+probability that any given points agrees with the polynomial is `2^-11`. (11 because the points are
+in `GF(2^11)`) The probability that the entire quorum is `y = 2 ^ (-11 * ceil((N - K - e) / 2))`. 
 
 In a given phrase, there are `(N - e) choose ceil((N + K - e) / 2)` quorums. When the words of the
-phrase are chosen independently and at random, The overall chance of decoding a plain BIP-39 phrase
-is `1 - (1 - y) ^ ((N - e) choose ceil((N + K - e) / 2))`, with `y` defined above.
+phrase are chosen independently and at random, the overall chance of decoding a plain BIP-39 phrase
+is is the chance that at least one quorum forms a consistent polynomial (i.e. at least one trial of
+the random event mentioned above succeeds). This probability is `1 - (1 - y) ^ ((N - e) choose ceil((N + K - e) / 2))`,
+with `y` defined above.
 
 If the phrase decodes, it will then be re-encoded and the checksum will be verified. Assuming the
 phrase was modified by the re-encoding procedure, the probability that the checksum will verify is
 `2^(-N/3)`. Overall the chance of mistaking a plain BIP-39 phrase for a CIP-# phrase is `(1 - (1 -
-y) ^ ((N - e) choose ceil((N + K - e) / 2))) * (2^(-N/3))`.
+y) ^ ((N - e) choose ceil((N + K - e) / 2))) * 2^(-N/3)`.
 
 Given a correct 15-word plain BIP-39 phrase, the probability of mistaking it for a CIP-# phrase is
 roughly 1 in 10 million. If the 15-word phrase has an invalid word (i.e. an erasure), it will be
