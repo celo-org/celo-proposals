@@ -79,7 +79,7 @@ entropy).
 Specifically, the Reed-Solomon codec in this proposal, `RS(N, K)`, is defined to as a bijective map from a `K`
 symbol message to an `N` symbol codeword. Symbols are members of the finite field `GF(2^11)`.
 Messages are viewed as a vector of coefficients to an `K-1` degree polynomial, `m = (m_0, m_1, ...
-m_K-1) => p(X) m_0 + m_1X + ... + m_K-1X^K-1`. Code words are the evaluation of this polynomial at
+m_K-1) => p(X) = m_0 + m_1X + ... + m_K-1X^K-1`. Code words are the evaluation of this polynomial at
 points `a_0, a_1, ..., a_N-1 = 0, 1, ..., N-1` in `GF(2^11)`.
 
 Each word in the phrase is coded as a symbol equal its index in the BIP-39 word list for the
@@ -94,7 +94,7 @@ words.
 
 With a given selection of `N` and `K`, it will be possible to correct `N-K` symbols at known
 locations (i.e. when the provided token is not a valid BIP-39 word, or is indicated as missing) and
-up to `floor(N-K/2)` symbols at known locations (e.g. when word orderings are swapped, or replaced
+up to `floor(N-K/2)` symbols at unknown locations (e.g. when word orderings are swapped, or replaced
 with another valid BIP-39 word). This is a result of the
 [Singleton bound](https://en.wikipedia.org/wiki/Singleton_bound).
 
