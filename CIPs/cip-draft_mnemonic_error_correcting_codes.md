@@ -1,7 +1,7 @@
 ---
 cip: <to be assigned>
 title: Mnemonic phrases with error correcting codes
-author: Victor Graf <@nategraf>
+author: Victor Graf <victor@clabs.co>
 discussions-to: https://github.com/celo-org/celo-proposals/issues/225
 status: Draft
 type: Standards Track
@@ -33,9 +33,6 @@ random words are replaced with "error correcting" words to produce an instance o
 constructed as a subset of BIP-39, allowing CIP-# and plain BIP-39 phrases to be used
 interchangeable in existing and new applications.
 
-Complimentary to this proposal is CIP-$, which proposes a method for and framework for probabilistic
-error correction of mnemonic phrases.
-
 ## Motivation
 
 Mnemonic phrase backups are a powerful tool, but also place a large responsibility on the user to
@@ -49,12 +46,20 @@ to paper, during storage (e.g. water damage, dog nibbled on it), or when typing 
 wallet application, the raw data (i.e. entropy) may still be available in the key, but has been
 obscured by the introduced errors. Given expertise and time, a user may being able to manually
 locate and remove any errors present in the phrase. Most users don't have the required expertise or
-time. CIP-$ aims to provide a standard way to remove these errors automatically.
+time. Hueristic-based techinques, such as suggesting phrases that have a low edit distance from the
+origonal, provide an option to correct phrases with common errors such as typos or substitution for
+simmilar words. https://github.com/celo-org/celo-monorepo/pull/8034 provides an example of how to do
+this.
 
 When information is lost from the phrase (e.g. some of the words are entirely missing), or when the
 heuristic does not do appropriately model a particular error, heuristics based approaches may fail.
 Proposed here is the introduction of error correcting codes, which can recover phases with a number
 of arbitrary errors, covering many cases that model based approaches cannot.
+
+Compared to heursistc based methods, this method can handle a larger class of errors without making
+modelling assumptions, such as assuming phrase are mutated by a small set of edit operations. It can
+also be used complimentary to heuristic based approaches. As a cost for this benefit is higher
+complexity in implementation and the fact that this method can only be applied to new phrases.
 
 ## Specification
 
@@ -218,6 +223,8 @@ WIP
 
 ## Implementation
 
+<!-- TODO(victor): Once a standard "view" is nailed down in the specifications section, this
+      implementation can be reworked to use that "view"-->
 * A proof-of-concept implementation of phrases with error-correcting codes: [nategraf/cip39](https://github.com/nategraf/cip39)
   * Note, the Reed-Solomon implementation used in this PoC is currently not compliant with this standard.
 
