@@ -4,8 +4,7 @@ title: Probabilistic error correction for mnemonic phrases
 author: Victor Graf <@nategraf>
 discussions-to: https://github.com/celo-org/celo-proposals/issues/227
 status: Draft
-type: Standards Track
-category: 3
+type: Informational
 created: 2021-06-01
 license: Apache 2.0
 ---
@@ -127,7 +126,53 @@ often the case here.
 
 ### Edit-distance based instantiation
 
-WIP
+Edit distance is the most common metric used in the noisy channel model for spelling correction.
+Intuitively, when given a source word a user may make a number of small mistakes when copying down
+the word, or when typing it back in. Edit distance models these mistakes as edit operations, such as
+a character insertion, deletion, substitution, or swap with a neighbor. Given a misspelled word, and
+a hypothesis for what it was supposed to be (e.g. "tomato" and "tornado"), we can find the smallest
+number of operations needed to convert the observed word into the hypothesis (e.g. three operations:
+one insertion and two substitutions). A hypothesis with lower edit distance to the misspelled word is
+considered more likely.
+
+In order to instantiate a phrase correction model, we take the [Levenshtein
+distance](https://en.wikipedia.org/wiki/Levenshtein_distance) metric and assume the following:
+
+* Edit operations provided by the edit distance metric as a good approximation for user mistakes.
+  * In the case of Levenshtein distance, that is insertion, deletion, and substitution.
+  * Phrase-level modifications, such as word swaps, are not modeled.
+* The number of errors in a given word follows a [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution) with respect to its length.
+  * Intuitively, this means when copying a word each character is considered an independent opportunity to insert an error.
+  * E.g. When typing "bango", errors when typing the "a" and the "g" might result in "bnjo".
+* Given a number of errors, the number of results is exponential and the probability of each is uniform.
+  * Intuitively, this is a result of considering the possible strings forming a tree, with the
+    source word at the root and the mutated strings at each level with a number of errors equal to
+    their depth. A uniform distribution over an exponential space is obtained by random traversals
+    of this tree.
+  * E.g. "cat" may become "aat", "bat", "dat", "eat", etc with equal probability. The same process
+    is applied to each character.
+
+Note that this is one possible set of assumptions and results in a particular ordering of suggested
+corrections to a phrase. It is by not means the only possibility.
+
+With these assumptions, we get the following noisy channel model for a single word with parameters
+_γ_ and _ε_ corresponding to the error probability for a single character and the state expansion
+factor, which is roughly how many possible edits there are to a single character:
+
+![eq5](https://latex.codecogs.com/svg.latex?P_w%28o_i%7Ch_i%29%3DP%28o_i%7Ch_i%2CD%29P%28D%7Ch_i%29%3D%28%5Cepsilon%5E%7B-D%7D%29%28%5Cbinom%7B%7Ch_i%7C%7D%7BD%7D%5Cgamma%5ED%281-%5Cgamma%29%5E%7B%7Ch_i%7C-D%7D%29)
+
+Where _D_ is the edit distance between the observed word and the hypothesis word.
+
+In order to use the model, we first select values for _γ_ and _ε_. Assuming an error rate of 1 in 20
+characters leading to a mistake, we can set _γ_ to 0.05. Assuming the set of possible errors with
+each error expands by the number of distinct edits we can set _ε_ to roughly 50. (It turns out that
+the ordering function is not sensitive to the selection of _ε_, so this very rough value is used.)
+
+Over an observed phrase, the model is applied to each observed word with each hypothesis word (i.e.
+all the words in the BIP-39 word list) to get a matrix of `N x 2048` suggestions where `N` is the
+number of words in the phrase.
+
+WIP: See note on PR
 
 ## Rationale
 
