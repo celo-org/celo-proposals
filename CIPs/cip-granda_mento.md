@@ -78,7 +78,7 @@ The contract has the following configurable parameters:
 1. **`address public approver;`** - Set by Governance. Intended to be a multisig and has the authority to approve exchanges. The signers for the multisig are at the discretion of Governance, but it would comprise of community members or members on behalf of organizations that are aligned with the Celo network/ecosystem.
 2. **`uint256 public exchangeWaitPeriodSeconds;`** - Set by Governance. The minimum amount of time in seconds that must elapse between a proposed exchange being approved and when the exchange can be executed. Should give sufficient time for Governance to veto an approved exchange.
 3. **`FixidityLib.Fraction public spread;`** - Set by Governance. The percent fee imposed upon an exchange execution.
-4. **`mapping(address => ExchangeLimits) stableTokenExchangeLimits`** - Set by Governance via `setStableTokenExchangeLimits`. A mapping of stable token address to a struct containing two `uint256`s, `minExchangeAmount` and `maxExchangeAmount`.
+4. **`mapping(bytes32 => ExchangeLimits) stableTokenExchangeLimits`** - Set by Governance via `setStableTokenExchangeLimits`. A mapping of the keccak'd stable token registry ID to a struct containing two `uint256`s, `minExchangeAmount` and `maxExchangeAmount`.
 
 The contract has the following functions:
 
@@ -124,9 +124,9 @@ The contract has the following functions:
        * CELO is transferred from the Reserve to the exchange proposer according to the rate originally recorded when the exchange was proposed.
    * Records:
      * The exchange as in the Executed state.
-5. **`function setStableTokenExchangeLimits(address stableToken, uint256 minExchangeAmount, uint256 maxExchangeAmount) external`**
+5. **`function setStableTokenExchangeLimits(string calldata stableTokenRegistryId, uint256 minExchangeAmount, uint256 maxExchangeAmount) external`**
    * Only callable by Governance.
-   * Sets the minimum and maximum amounts of stable token that can be minted/burned in an exchange by updating `stableTokenExchangeLimits[stableToken]`.
+   * Sets the minimum and maximum amounts of the stable token that can be minted/burned in an exchange by updating the relevant `stableTokenExchangeLimits` value.
      * Effectively "enables" exchanging a stable token if the min & max amounts were previously 0.
      * Effectively "disables" exchanging a stable token if setting the min & max amounts to 0.
 
