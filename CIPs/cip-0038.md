@@ -1,5 +1,5 @@
 ---
-cip: <to be assigned>
+cip: 38
 title: Granda Mento
 author: Trevor Porter (@tkporter), Albert Wang (@albertclabs)
 discussions-to: https://forum.celo.org/t/discussion-on-granda-mento-enabling-larger-stablecoin-mints/966
