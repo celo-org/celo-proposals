@@ -5,8 +5,8 @@ author: Trevor Porter (@tkporter), Albert Wang (@albertclabs)
 discussions-to: https://forum.celo.org/t/discussion-on-granda-mento-enabling-larger-stablecoin-mints/966
 status: Draft
 type: Standards Track
-category (*only required for Standards Track): <Ring 0, 1, 2, 3>
-created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
+category (*only required for Standards Track): Ring 1
+created: 2021-05-11
 license: Apache 2.0
 ---
 
@@ -16,12 +16,12 @@ Granda Mento is a mechanism to facilitate large CELO <-> stable token (e.g. cXXX
 
 ## Abstract
 
-There are no existing solutions for making large exchanges ($1m+) involving stable tokens. Apart from cUSD minted for validator payments every epoch, stable tokens can only be minted via Mento. Large volume exchanges ($50k+) via Mento experience higher slippage (1-2%) due to the limited sizes of the constant product market maker buckets. Granda Mento is a proposed a mechanism for large volume stable token exchanges, primarily to enable minting of large quantities of stable tokens.
+There are no existing solutions for making large exchanges ($1m+) involving stable tokens. Apart from cUSD minted for validator payments every epoch, stable tokens can only be minted via Mento. Large volume exchanges ($50k+) via Mento experience higher slippage (1-2%) due to the limited sizes of the constant product market maker buckets. Granda Mento is a proposed mechanism for large volume stable token exchanges, primarily to enable minting of large quantities of stable tokens.
 
 ## Motivation
 
 There are no existing avenues that are able to satisfy high volume stable token exchanges on the order of millions. Users looking to make larger exchanges involving stable tokens are faced with 3 options:
-1. Exchange `CELO <-> stable token` via Mento slowly over a longer period of time.
+1. Exchange `CELO <-> stable token` via Mento slowly over a longer period of time to minimize slippage.
 2. Arrange one or many `XXX <-> stable token` OTC trades.
 3. Create a large limit order of `fiat <-> stable token` on a centralized exchange in hope it gets filled over time.
 
@@ -82,10 +82,10 @@ The contract has the following configurable parameters:
 
 The contract has the following functions:
 
-1. **`function createExchangeProposal(address stableToken, uint256 sellAmount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
+1. **`function createExchangeProposal(string calldata stableTokenRegistryId, uint256 sellAmount, bool sellCelo) external returns (uint256)`** - Called by an exchange proposer to propose an exchange.
    * Callable by anyone.
-   * If `sellCelo` is true, CELO is the asset being sold and `stableToken` is the asset being bought. If `sellCelo` is false, `stableToken` is the asset being sold and CELO is the asset being bought.
-   * Requires the amount of `stableToken` being bought/sold to be within the token-specific range `[stableTokenExchangeLimits[stableToken].minExchangeAmount, stableTokenExchangeLimits[stableToken].maxExchangeAmount]` that is set by Governance via `setStableTokenExchangeLimits` (described later).
+   * If `sellCelo` is true, CELO is the asset being sold and the stable token is the asset being bought. If `sellCelo` is false, the stable token is the asset being sold and CELO is the asset being bought.
+   * Requires the amount of the stable token being bought/sold to be within the token-specific range `[stableTokenExchangeLimits[stableToken].minExchangeAmount, stableTokenExchangeLimits[stableToken].maxExchangeAmount]` that is set by Governance via `setStableTokenExchangeLimits` (described later).
    * Deposits the full amount of the asset being sold into the contract.
    * Records:
      * The exchange as in the Proposed state.
@@ -94,6 +94,7 @@ The contract has the following functions:
        * The amount of the asset being sold.
          * Behind the scenes, StableToken keeps track of balances via "units," which do not change with time. However, the value returned by a call to `balanceOf` is the "value," which can change with time due to the inflation/demurrage feature. Because GrandaMento must refund a deposit for a Cancelled exchange proposal, GrandaMento should be sure to refund the correct amount adjusted by any inflation that has been incurred. To account for this, the amount of the StableToken being sold is stored in "units," and the "value" at a given time is calculated using [StableToken.unitsToValue](https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/contracts/stability/StableToken.sol#L415).
        * Whether CELO is being sold.
+       * The amount of the asset to be bought according to the current oracle price and spread.
    * Returns:
      * The `proposalId` of the struct in the mapping.
 2. **`function approveExchangeProposal(uint256 proposalId) external`** - Approves a proposed exchange.
@@ -159,7 +160,7 @@ The proposed implementation prohibits the proposer from cancelling their own exc
    * Involves smart contract changes to have the TWAP available on chain.
    * Exchanger doesn't know the price at the proposal time.
 
-It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a manipulated price being executed. Because there is not a strong user need behind (2), (1) has been chosen. While the use of a TWAP for the price may be nice, the implementation complexity of implementing a TWAP on-chain is high, and the benefit is slim.
+It's desirable for both the exchanger and for the Celo community to know what price will be used for the exchange-- this way, the exchanger knows what they're committing to, and the community can decide if they agree with the price. Approaches (1) and (2) are the only options that involve knowledge of the price at the start of the trade. While these are both vulnerable to oracle attacks, the proposed implementation's approver and Governance veto serve as safeguards against an exchange with a manipulated price being executed. Because there is not a strong user need behind (2), (1) has been chosen. While the use of a TWAP for the price may be nice, the implementation complexity of implementing a TWAP on-chain is high, and the benefit is slim.
 
 ## Backwards Compatibility
 
