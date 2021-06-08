@@ -1,11 +1,11 @@
 ---
-cip: <to be assigned>
+cip: 39
 title: Mnemonic phrases with error correcting codes
 author: Victor Graf <victor@clabs.co>
 discussions-to: https://github.com/celo-org/celo-proposals/issues/225
 status: Draft
 type: Standards Track
-category: 3
+category: Ring 3
 created: 2021-06-01
 license: Apache 2.0
 ---
