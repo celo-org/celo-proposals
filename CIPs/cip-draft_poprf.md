@@ -128,7 +128,7 @@ interface GetDomainRestrictedSigRequest {
 }
 
 interface Domain {
-	// Unique name of the domain. (e.g. org.celo/passwords)
+	// Unique name of the domain. (e.g. "ODIS Password Domain")
 	name: string
 	// Major version number. Allows for backwards incompatible changes.
 	version: number
@@ -189,7 +189,7 @@ time period could be implemented as a linear backoff with some amount of saved q
 
 ```typescript
 interface LinearBackoffDomain implements Domain {
-	name: "org.celo.odis/backoff/linear"
+	name: "ODIS Linear Backoff Domain"
 	version: 1
 	// Maximum number of saved quota.
 	cap: number
@@ -206,7 +206,7 @@ be created to restrict requests before a particular time, but publicly available
 
 ```typescript
 interface NotBeforeDomain implements Domain {
-	name: "org.celo.odis/not-before"
+	name: "ODIS Not Before Domain"
 	version: 1
 	// Unix time after which this domain can be queried.
 	notBefore: number
@@ -219,7 +219,7 @@ stored alongside the ciphertext.
 
 ```typescript
 interface PepperedDomain implements Domain {
-	name: "org.celo.odis/peppered"
+	name: "ODIS Peppered Domain"
 	version: 1
 	// Public key of a keypair derived from the pepper.
 	publicKey: string
@@ -240,7 +240,7 @@ domain in the new API. A domain string and options could be written as follows:
 
 ```typescript
 interface PhoneNumberDomain implements Domain {
-	name: "org.celo.odis/identity/telephone"
+	name: "ODIS Phone Number Domain"
 	version: 1
 }
 
@@ -271,7 +271,7 @@ value from the contract function.
 
 ```typescript
 interface SmartContractDomain implements Domain {
-	name: "org.celo.odis/smartcontract"
+	name: "ODIS Smart Contract Domain"
 	version: 1
 	// Specified to ensure an unambiguous smart contract is resolved.
 	// An ODIS given service is likely to support only a single chain.
