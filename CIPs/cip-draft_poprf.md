@@ -90,17 +90,17 @@ ODIS currently makes available its OPRF function with the following API:
 //   Content-Type: application/json
 //   Authorization: ${signature from authorized signer (e.g. DEK) for account}
 interface GetBlindedMessageSigRequest {
-	// Celo account address. Query is charge against this account's quota.
+  // Celo account address. Query is charge against this account's quota.
   account: string
-	// Query message. A blinded elliptic curve point encoded in base64.
+  // Query message. A blinded elliptic curve point encoded in base64.
   blindedQueryPhoneNumber: string
-	// Optional on-chain identifier. Unlocks additional quota if the
-	// account is verified as an owner of the identifier.
+  // Optional on-chain identifier. Unlocks additional quota if the
+  // account is verified as an owner of the identifier.
   hashedPhoneNumber?: string
-	// [Deprecated] Client-specified request timestamp, in milliseconds.
-	// Used for request expiration.
+  // [Deprecated] Client-specified request timestamp, in milliseconds.
+  // Used for request expiration.
   timestamp?: number
-	// Client-specified session ID.
+  // Client-specified session ID.
   sessionID?: string
 }
 ```
@@ -114,34 +114,34 @@ In order to support domain-restricted queries, a new API is proposed:
 // Headers:
 //   Content-Type: application/json
 interface GetDomainRestrictedSigRequest {
-	// Domain specification.
-	// Selects the PRF domain and rate limiting rules.
+  // Domain specification.
+  // Selects the PRF domain and rate limiting rules.
   domain: Domain
-	// Domain-specific options.
-	// Used for inputs relevant to the domain, but not part of the domain string.
-	// Example: { "authorization": <signature> } for an account-restricted domain.
-	domainOptions?: DomainOptions
-	// Query message. A blinded elliptic curve point encoded in base64.
+  // Domain-specific options.
+  // Used for inputs relevant to the domain, but not part of the domain string.
+  // Example: { "authorization": <signature> } for an account-restricted domain.
+  domainOptions?: DomainOptions
+  // Query message. A blinded elliptic curve point encoded in base64.
   blindedMessage: string
-	// Client-specified session ID.
+  // Client-specified session ID.
   sessionID?: string
 }
 
 interface Domain {
-	// Unique name of the domain. (e.g. "ODIS Password Domain")
-	name: string
-	// Major version number. Allows for backwards incompatible changes.
-	version: number
-	// Arbitrary key-value pairs.
-	// Must be serializable to EIP-712 encoding.
-	[key: string]: EIP712Value
+  // Unique name of the domain. (e.g. "ODIS Password Domain")
+  name: string
+  // Major version number. Allows for backwards incompatible changes.
+  version: number
+  // Arbitrary key-value pairs.
+  // Must be serializable to EIP-712 encoding.
+  [key: string]: EIP712Value
 }
 
 interface DomainOptions {
-	// Arbitrary key-value pairs.
-	// Valid keys and values depend on the domain specification.
-	// Must be serializable to EIP-712 encoding.
-	[key: string]: EIP712Value
+  // Arbitrary key-value pairs.
+  // Valid keys and values depend on the domain specification.
+  // Must be serializable to EIP-712 encoding.
+  [key: string]: EIP712Value
 }
 ```
 
@@ -156,7 +156,6 @@ In order to provide flexibility and support future extensions, the domain specif
 and allows for the usage of multiple domain-specific rate limiting rules, as support by the ODIS
 service.
 
-<!-- TODO(victor): Create a place to propose and catalog active rate limiting schemes -->
 In the domain specifiers, two fields are always required: `name` and `version`. Together, these
 select which set of rules the service will apply to the request. Rulesets are included in the ODIS
 implementation, and new rulesets may be added over time. Updating a ruleset in a way that would
@@ -165,7 +164,8 @@ number.
 
 With a given `name` and `version`, a number of additional fields may be specified which act as
 parameters for the rate limiting ruleset. (e.g. in a linear backoff ruleset, a field may define the
-refresh rate)
+refresh rate). In order to ensure deterministic serialization, each `name` and `version` MUST
+correspond to a single type definition.
 
 Changing any field in the domain specifier, results in a new domain with completely unrelated
 output. (e.g. an attacker cannot simply dial down the security level of a domain. If they tried,
@@ -188,28 +188,28 @@ implemented as described.
 time period could be implemented as a linear backoff with some amount of saved quota cap.
 
 ```typescript
-interface LinearBackoffDomain implements Domain {
-	name: "ODIS Linear Backoff Domain"
-	version: 1
-	// Maximum number of saved quota.
-	cap: number
-	// Length of time, in milliseconds, to refresh a single unit of quota.
-	// Undefined refesh time indicates that the quota never refreshes (hard cap).
-	refresh?: number
-	// Unique string to identify the "instance" of this rate limited domain.
-	salt?: string
-
+type LinearBackoffDomain = {
+  name: "ODIS Linear Backoff Domain"
+  version: 1
+  // Maximum number of saved quota.
+  cap: number
+  // Length of time, in milliseconds, to refresh a single unit of quota.
+  // Undefined refesh time indicates that the quota never refreshes (hard cap).
+  refresh?: number
+  // Unique string to identify the "instance" of this rate limited domain.
+  salt?: string
+}
 ```
 
 **Not before:** Useful in the lotteries and other random-selection based protocols, a domain could
 be created to restrict requests before a particular time, but publicly available after.
 
 ```typescript
-interface NotBeforeDomain implements Domain {
-	name: "ODIS Not Before Domain"
-	version: 1
-	// Unix time after which this domain can be queried.
-	notBefore: number
+type NotBeforeDomain = {
+  name: "ODIS Not Before Domain"
+  version: 1
+  // Unix time after which this domain can be queried.
+  notBefore: number
 }
 ```
 
@@ -218,20 +218,20 @@ domain could be defined that requires a signature from a pepper-derived keypair.
 stored alongside the ciphertext.
 
 ```typescript
-interface PepperedDomain implements Domain {
-	name: "ODIS Peppered Domain"
-	version: 1
-	// Public key of a keypair derived from the pepper.
-	publicKey: string
-	// Maximum number of requests that can be made against this domain.
-	cap?: number
+type PepperedDomain = {
+  name: "ODIS Peppered Domain"
+  version: 1
+  // Public key of a keypair derived from the pepper.
+  publicKey: string
+  // Maximum number of requests that can be made against this domain.
+  cap?: number
 }
 
-interface PepperedDomainOptions implements DomainOptions {
-	// Nonce value to include in the signature message to make it unique.
-	nonce: number
-	// EIP-712 signature over the request.
-	signature: string
+type PepperedDomainOptions = {
+  // Nonce value to include in the signature message to make it unique.
+  nonce: number
+  // EIP-712 signature over the request.
+  signature: string
 }
 ```
 
@@ -239,18 +239,18 @@ interface PepperedDomainOptions implements DomainOptions {
 domain in the new API. A domain string and options could be written as follows:
 
 ```typescript
-interface PhoneNumberDomain implements Domain {
-	name: "ODIS Phone Number Domain"
-	version: 1
+type PhoneNumberDomain = {
+  name: "ODIS Phone Number Domain"
+  version: 1
 }
 
-interface PhoneNumberDomainOptions implements DomainOptions {
-	// Celo account address. Query is charge against this account's quota.
+type PhoneNumberDomainOptions = {
+  // Celo account address. Query is charge against this account's quota.
   account: string
-	// Signature from the account, or authorized signer for the account.
-	authorization: string
-	// Optional on-chain identifier. Unlocks additional quota if the
-	// account is verified as an owner of the identifier.
+  // Signature from the account, or authorized signer for the account.
+  authorization: string
+  // Optional on-chain identifier. Unlocks additional quota if the
+  // account is verified as an owner of the identifier.
   hashedPhoneNumber?: string
 }
 ```
@@ -261,7 +261,7 @@ parameter.
 
 ```solidity
 interface AccessControlled {
-	function shouldAllow(address requester) external view returns(string);
+  function shouldAllow(address requester) external view returns(string);
 }
 ```
 
@@ -270,27 +270,27 @@ being allowed access to the signature. The signature would be applied to the dom
 value from the contract function.
 
 ```typescript
-interface SmartContractDomain implements Domain {
-	name: "ODIS Smart Contract Domain"
-	version: 1
-	// Specified to ensure an unambiguous smart contract is resolved.
-	// An ODIS given service is likely to support only a single chain.
-	chainId: number
-	// Address of the smart contract on which `shouldAllow` will be called
-	// to determine rate limiting. Call will occur as a view call at the
-	// chain head upon receiving the request.
-	contractAddress: string
+type SmartContractDomain = {
+  name: "ODIS Smart Contract Domain"
+  version: 1
+  // Specified to ensure an unambiguous smart contract is resolved.
+  // An ODIS given service is likely to support only a single chain.
+  chainId: number
+  // Address of the smart contract on which `shouldAllow` will be called
+  // to determine rate limiting. Call will occur as a view call at the
+  // chain head upon receiving the request.
+  contractAddress: string
 }
 
-interface SmartContractDomainOptions implements DomainOptions {
-	// Optional parameter to avoid issues if the ODIS service node is behind.
-	// When speciifed, the authorization check should not occur agsint a block
-	// prior to the specified number.
-	notBeforeBlock?: number
-	// Celo account address of the requester.
-    account: string
-	// Signature from the account, or authorized signer for the account.
-	authorization: string
+type SmartContractDomainOptions = {
+  // Optional parameter to avoid issues if the ODIS service node is behind.
+  // When speciifed, the authorization check should not occur agsint a block
+  // prior to the specified number.
+  notBeforeBlock?: number
+  // Celo account address of the requester.
+  account: string
+  // Signature from the account, or authorized signer for the account.
+  authorization: string
 }
 ```
 
@@ -304,17 +304,28 @@ Further, there must not be a collision in the encoded domain strings between two
 different domain specifiers (i.e. the encoding function must be injective). This matches the
 requirements for the encoding function specified in
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#specification). As a result, this proposal adopts
-their encoding function for domain specifiers.
+their encoding function for its domains specifiers.
 
-Specifically, the required `name` and `version` fields of the `Domain` struct are used to populate
-the respective fields in an `EIP712Domain`. Additional fields of the `Domain` struct are used to
-construct an EIP-712 type. Fields within a struct type are sorted by name when mapping to an EIP-712
-type.
+#### Mapping TypeScript to EIP-712 types
 
-Optional values are encoded by adding an implicit field to the struct with key `${key}?` and `bool`
-value. If `true`, the value is defined. Otherwise it is unspecified and the value of the explicit
-key should be set to zero in the serialized form. Note that this serialization remains injective, as
-required by EIP-712.
+In order to serialize a given `Domain` type, we must first define it as a EIP-712 object. As shown
+above, domains may be represented as TypeScript types, in which case they can be mapped to an
+equivalent EIP-712 object.
+
+To form the EIP-712 domain, the required `name` and `version` fields of the `Domain` type are used
+to populate the respective fields in an `EIP712Domain`. Additional fields of the `Domain` struct are
+used to construct an EIP-712 type.
+
+Other fields in the domain form the EIP-712 type. The EIP-712 type name should be equal to the
+interface name. Fields within the interface are sorted by name. Values SHOULD be mapped from their
+TypeScript types to the corresponding EIP-712 type.
+
+Optional values are encoded by interpreting it as EIP-712 type `Optional<T>(T value,bool defined)`,
+with `T` are the generic type name. When serialized, `value` MUST be set to the zero value of the
+type when `defined` is true. Zero values for a type is the value when all atomic types are set to
+zero, and dynamic types (`string` and `bytes`) are empty.
+
+<!-- TODO(victor) Add an example here of converting LinearBackoffDomain to EIP-712 -->
 
 ### Signatures
 
