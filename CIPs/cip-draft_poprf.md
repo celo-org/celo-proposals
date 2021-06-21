@@ -191,11 +191,11 @@ time period could be implemented as a linear backoff with some amount of saved q
 type LinearBackoffDomain = {
   name: "ODIS Linear Backoff Domain"
   version: 1
-  // Maximum number of saved quota.
-  cap: number
   // Length of time, in milliseconds, to refresh a single unit of quota.
   // Undefined refesh time indicates that the quota never refreshes (hard cap).
   refresh?: number
+  // Maximum number of saved quota.
+  cap: number
   // Unique string to identify the "instance" of this rate limited domain.
   salt?: string
 }
@@ -306,6 +306,15 @@ requirements for the encoding function specified in
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#specification). As a result, this proposal adopts
 their encoding function for its domains specifiers.
 
+In order to implement this, each domain type MUST be expressed as an EIP-712 domain and type.
+Domain type definitions MAY be origonally written in another format as long as there is a
+deterministic and injective mapping to the EIP-712 definition, such as the mapping for a subset of
+TypeScript types defined below.
+
+Note that in addition to the domain, the entire request SHOULD be serialization using EIP-712, in
+order to facilitate hashing and signing of the requests. In particular, this means that an EIP-712
+type definition SHOULD be provided for the domain options.
+
 #### Mapping TypeScript to EIP-712 types
 
 In order to serialize a given `Domain` type, we must first define it as a EIP-712 object. As shown
@@ -318,14 +327,54 @@ used to construct an EIP-712 type.
 
 Other fields in the domain form the EIP-712 type. The EIP-712 type name should be equal to the
 interface name. Fields within the interface are sorted by name. Values SHOULD be mapped from their
-TypeScript types to the corresponding EIP-712 type.
+TypeScript types to the corresponding EIP-712 type. Specifically:
 
-Optional values are encoded by interpreting it as EIP-712 type `Optional<T>(T value,bool defined)`,
-with `T` are the generic type name. When serialized, `value` MUST be set to the zero value of the
-type when `defined` is true. Zero values for a type is the value when all atomic types are set to
-zero, and dynamic types (`string` and `bytes`) are empty.
+* `string`  -> `string`
+* `number`  -> `int256`
+* `boolean` -> `bool`
 
-<!-- TODO(victor) Add an example here of converting LinearBackoffDomain to EIP-712 -->
+Optional values are encoded by interpreting it as EIP-712 type `Optional<T>(bool defined,T value)`,
+with `T` as the generic type name. When serialized, `value` MUST be set to the zero value of the
+type when `defined` is `false`. The zero value of a type is the value when all atomic types are set
+to zero, and dynamic types (`string` and `bytes`) are empty. Note that the zero hash of the encoded
+data of two distinct types may be distinct (i.e. it is not equal to the empty hash).
+
+As an example, the following instance of a `LinearBackoffDomain` is hashed:
+```typescript
+const domain: LinearBackoffDomain = {
+  name: "ODIS Linear Backoff Domain"
+  version: 1
+  cap: 10
+  salt: "saltvalue"
+}
+```
+
+```text
+domainSeparator = keccak256(
+  keccak256("EIP712Domain(string name,string version)") ||
+  keccak256("ODIS Linear Backoff Domain") || keccak256("1")
+)
+typeHash = keccak256(
+  "LinearBackoffDomain(int256 cap, Optional<int256> refresh, Optional<string> salt)" ||
+  "Optional<int256>(bool defined,int256 value)" ||
+  "Optional<string>(bool defined,string value)"
+)
+structHash = keccak256(
+  typeHash ||
+  0x000000000000000000000000000000000000000000000000000000000000000A ||
+  keccak256(
+    keccak256("Optional<int256>(bool defined,int256 value)") ||
+    0x0000000000000000000000000000000000000000000000000000000000000000 ||
+    0x0000000000000000000000000000000000000000000000000000000000000000
+  ) ||
+  keccak256(
+    keccak256("Optional<string>(bool defined,string value)") ||
+    0x0000000000000000000000000000000000000000000000000000000000000001 ||
+    keccak256("saltvalue")
+  )
+)
+encoded = 0x1901 || domainSeparator || structHash
+```
 
 ### Signatures
 
