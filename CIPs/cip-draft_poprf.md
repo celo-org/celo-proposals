@@ -296,8 +296,6 @@ type SmartContractDomainOptions = {
 
 ### Domain serialization
 
-<!-- TODO(victor): Refactor this section a bit to describe a function to map a subset of TS types to
-EIP-712 types -->
 Because any variation in the domain string, by design, results in an unpredictable change in the
 output, there must be a canonical (i.e. deterministic) serialization for each given domain string.
 Further, there must not be a collision in the encoded domain strings between two semantically
@@ -349,6 +347,7 @@ const domain: LinearBackoffDomain = {
 }
 ```
 
+<!-- TODO(victor) Verify that there are no mistakes in this example. -->
 ```text
 domainSeparator = keccak256(
   keccak256("EIP712Domain(string name,string version)") ||
@@ -386,10 +385,13 @@ Domains that make use of signatures for authentication of requests (e.g. the `Pe
 example below) should include a field in the domain options for specification of a signature.
 Additional fields may also be added, such as a nonce to prevent replaying requests.
 
-<!-- TOOD(victor): Add a specification of the EIP-712 domain to be used for here -->
 Signatures should be verified over the entire request, excluding the signature itself. Specifically,
 the message against which a signature is verified should be obtained by first removing the signature
 from the full `GetDomainRestrictedSigRequest` object, then serializing it via EIP-712.
+
+Serializing the request with EIP-712 should use the domain `{ name: "ODIS Domain Restricted
+Signature Request", version: "1" }` and type defined by applying the type mapping [defined
+above](#mapping-typescript-to-eip-712-types) to the `GetDomainRestrictedSigRequest` type.
 
 ### HTTP Transport
 
