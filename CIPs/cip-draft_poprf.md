@@ -22,40 +22,46 @@ described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119.html).
 
 ## Simple Summary
 
-An extension to the ODIS phone number privacy service to allow for its use for hardening passwords
-such that they can be used as encryption and authorization keys.
+An extension to the ODIS phone number privacy service to support granular rate limiting with the
+goal of hardening passwords for use as encryption and authorization keys.
 
 ## Abstract
 
 <!-- TODO(victor): Once we have a roughly agreed upon proposal for the pOPRF, link it here -->
 Given the required cryptographic functionality (to be discussed in more detail in a future
-proposal), this proposal describes an interface to be exposed by the ODIS service to allow for
-rate-limited hash queries against user-defined domains.
+proposal), this proposal describes an interface to be exposed by the ODIS service allowing the user
+to specify a domain string (i.e. a salt value) with rate-limiting rules to be combined with their
+blinded input (e.g.  phone number or password).
 
 Central to the proposed interface are domains. A domain is a struct which specifies rate limiting
-information and uniquely identifies the context of the secret to be hashed. 
+information and uniquely identifies the context of the secret to be hashed. As an example, a domain
+for hashing an account password might specify the username (context) and a cap of 10 password
+attempts (rate-limiting parameter). These would be combined with their password to form the final
+output.
 
 Queries with distinct domain specifiers will receive uncorrelated output. For example, output from
-ODIS when requesting `{ domain: "tel", message: "+18002738255" }` will be distinct from and
-unrelated to the output when requesting `{ domain: "password", message: "+18002738255" }`.
+ODIS with a phone number domain and message `+18002738255` will be distinct from and
+unrelated to the output when requesting with a password domain and message `+18002738255`.
 
-Additionally, domain specifiers will control what rate limiting rules are applied. Combined with the
-fact that distinct domains produce uncorrelated output, this allows for the domains to be used as
-distinct OPRFs with custom rate limiting rules. For example the `tel` domain could use the current
-ODIS rate limiting rules, while the `password` domain may use much stricter rules.
+Additionally, domain specifiers will control what rate limiting rules are applied. For example the
+phone number domain could use the current ODIS rate limiting rules, while the password domain may
+use much stricter rules. Combined with the fact that distinct domains produce uncorrelated output,
+this allows for the domains to be used as distinct OPRFs with custom rate limiting rules. 
 
 In order to make this scheme flexible, allowing for user-defined tuning of rate-limits and the
 introduction of new rate limiting and authorization rules in the future, domains are defined as
-serializeable structures.
+serializeable structs.
 
 ## Motivation
 
 Effective [offline password cracking](https://en.wikipedia.org/wiki/Password_cracking) techniques
 limit the use of passwords to derive encryption or authentication keys. Rate-limited hashing can be
-used to make it much more difficult to crack a password. ODIS, the phone number privacy service on
-Celo, implements a rate-limited hash to protect users' phone numbers from being extracted from their
-on-chain identifiers. With some extensions, ODIS can additionally be used to provide a rate-limited
-hash for passwords, as well as many more use cases.
+used to make it much more difficult to crack a password. Computationally expensive password hashing
+functions, such as `PBKDF` and `scrypt`, are commonly used for this purpose, but provide [limited
+protection](https://arxiv.org/abs/2006.05023) and are expensive to run on end-user devices. ODIS,
+the phone number privacy service on Celo, implements a rate-limited hash to protect users' phone
+numbers from being extracted from their on-chain identifiers. With some extensions, ODIS can
+additionally be used to provide a rate-limited hash for passwords, as well as many more use cases.
 
 [Phone Number Privacy](https://docs.celo.org/celo-codebase/protocol/identity/phone-number-privacy)
 
@@ -67,9 +73,9 @@ input (e.g. phone number or password). Unfortunately, it only allows for a singl
 scheme.
 
 In order to support secure password hashing, granular rate limits are invaluable. In order to apply
-rate limits on a per-user basis (e.g. restricting the number of guesses on a user's password to a
+rate limits on a per-context basis (e.g. restricting the number of guesses on a user's password to a
 constant number) ODIS' OPRF scheme must be extended to allow the inclusion of a domain specifier
-(a.k.a salt) that is visible to the service.
+that is visible to the service.
 
 ## Specification
 
@@ -133,14 +139,14 @@ interface Domain {
   // Major version number. Allows for backwards incompatible changes.
   version: number
   // Arbitrary key-value pairs.
-  // Must be serializable to EIP-712 encoding.
+  // MUST be serializable to EIP-712 encoding.
   [key: string]: EIP712Value
 }
 
 interface DomainOptions {
   // Arbitrary key-value pairs.
   // Valid keys and values depend on the domain specification.
-  // Must be serializable to EIP-712 encoding.
+  // SHOULD be serializable to EIP-712 encoding.
   [key: string]: EIP712Value
 }
 ```
@@ -156,43 +162,44 @@ In order to provide flexibility and support future extensions, the domain specif
 and allows for the usage of multiple domain-specific rate limiting rules, as support by the ODIS
 service.
 
-In the domain specifiers, two fields are always required: `name` and `version`. Together, these
-select which set of rules the service will apply to the request. Rulesets are included in the ODIS
-implementation, and new rulesets may be added over time. Updating a ruleset in a way that would
-change the rules applied to existing domains must be accompanied by an increase in the `version`
-number.
+In the domain specifiers, two fields MUST be provided: `name` and `version`. Together, these select
+which set of rules the service will apply to the request. Rule sets are included in the ODIS
+implementation, and new rule sets may be added over time. Updating a rule set in a way that would
+change the rules applied to existing domains MUST be accompanied by an increase in the `version`
+number. Domain names SHOULD be human-readable. Version numbers SHOULD be whole integers.
 
-With a given `name` and `version`, a number of additional fields may be specified which act as
-parameters for the rate limiting ruleset. (e.g. in a linear backoff ruleset, a field may define the
-refresh rate). In order to ensure deterministic serialization, each `name` and `version` MUST
-correspond to a single type definition.
+With a given `name` and `version`, a number of additional fields MAY be specified to act as
+parameters for the rate limiting rule set (e.g. in a linear backoff rule set, a field may define the
+refresh rate) and to establish the context. In order to ensure deterministic serialization, each
+`name` and `version` MUST correspond to a single type definition.
 
 Changing any field in the domain specifier, results in a new domain with completely unrelated
 output. (e.g. an attacker cannot simply dial down the security level of a domain. If they tried,
 they would get useless output.)
 
-Note that deprecation of a domain will make all secrets hashed under that domain inaccessible.
-Depending on the application, it is likely to be very difficult to full deprecate a domain, as users
-will need to actively migrate any usages from the deprecated domain.
-
-In addition to the domain string, a ruleset may allow a number of "domain options". Domain options
-are defined by and are relevant to a particular ruleset, but are not part of the domain (i.e. their
+In addition to the domain string, a rule set MAY allow a number of "domain options". Domain options
+are defined by and are relevant to a particular rule set, but are not part of the domain (i.e. their
 value does not effect the function output).
+
+<!-- TODO(victor) Find a place for this note -->
+Deprecation of a domain will make all secrets hashed under that domain inaccessible.  Depending on
+the application, it is likely to be very difficult to full deprecate a domain, as users will need to
+actively migrate any usages from the deprecated domain.
 
 ### Examples
 
-The following examples are provided to help understand the scheme, and will likely not be
+The following examples are provided to help understand the scheme. They will likely not be
 implemented as described.
 
 **Linear backoff:** A rate limiting scheme allowing up to a given number of requests in a defined
-time period could be implemented as a linear backoff with some amount of saved quota cap.
+time period could be implemented as a linear backoff with some amount of saved-up quota cap.
 
 ```typescript
 type LinearBackoffDomain = {
   name: "ODIS Linear Backoff Domain"
   version: 1
   // Length of time, in milliseconds, to refresh a single unit of quota.
-  // Undefined refesh time indicates that the quota never refreshes (hard cap).
+  // Undefined refresh time indicates that the quota never refreshes (hard cap).
   refresh?: number
   // Maximum number of saved quota.
   cap: number
@@ -214,14 +221,14 @@ type NotBeforeDomain = {
 ```
 
 **Peppered:** Useful in the context of hardening encryption keys for non-public ciphertexts, a
-domain could be defined that requires a signature from a pepper-derived keypair. The pepper may be
+domain could be defined that requires a signature from a pepper-derived key-pair. The pepper may be
 stored alongside the ciphertext.
 
 ```typescript
 type PepperedDomain = {
   name: "ODIS Peppered Domain"
   version: 1
-  // Public key of a keypair derived from the pepper.
+  // Public key of a key-pair derived from the pepper.
   publicKey: string
   // Maximum number of requests that can be made against this domain.
   cap?: number
@@ -256,12 +263,12 @@ type PhoneNumberDomainOptions = {
 ```
 
 **Smart contract access controlled:** Useful for expanding the set of use cases to community derived
-ones. The address of a smart contract implementing the following interface will be passed in as a
-parameter.
+ones. The address of a smart contract implementing the following interface will be a parameter in
+the domain.
 
 ```solidity
-interface AccessControlled {
-  function shouldAllow(address requester) external view returns(string);
+interface OdisAccessController {
+  function shouldAllowOdisRequest(bytes calldata domainData, bytes calldata authorization) external view returns(bool);
 }
 ```
 
@@ -273,23 +280,25 @@ value from the contract function.
 type SmartContractDomain = {
   name: "ODIS Smart Contract Domain"
   version: 1
+  // Address of the contract that controls access to this domain.
+  // Call will occur as a view call at the chain head upon receiving
+  // the request to determine rate limiting.
+  contractAddress: string
   // Specified to ensure an unambiguous smart contract is resolved.
   // An ODIS given service is likely to support only a single chain.
   chainId: number
-  // Address of the smart contract on which `shouldAllow` will be called
-  // to determine rate limiting. Call will occur as a view call at the
-  // chain head upon receiving the request.
-  contractAddress: string
+  // Arbitrary bytes to be included in the smart contract call for
+  // use by the contract logic.
+  domainData?: string
 }
 
 type SmartContractDomainOptions = {
   // Optional parameter to avoid issues if the ODIS service node is behind.
-  // When speciifed, the authorization check should not occur agsint a block
+  // When specified, the authorization check should not occur against a block
   // prior to the specified number.
   notBeforeBlock?: number
-  // Celo account address of the requester.
-  account: string
-  // Signature from the account, or authorized signer for the account.
+  // Arbitrary bytes to be included in the smart contract call for use by the
+  // contract logic. Intended to be a signature or other authorization string.
   authorization: string
 }
 ```
@@ -304,20 +313,20 @@ requirements for the encoding function specified in
 [EIP-712](https://eips.ethereum.org/EIPS/eip-712#specification). As a result, this proposal adopts
 their encoding function for its domains specifiers.
 
-In order to implement this, each domain type MUST be expressed as an EIP-712 domain and type.
-Domain type definitions MAY be origonally written in another format as long as there is a
+In order to implement EIP-712 hashing, each domain type MUST be expressed as an EIP-712 domain and
+type. Domain type definitions MAY be originally written in another format as long as there is a
 deterministic and injective mapping to the EIP-712 definition, such as the mapping for a subset of
 TypeScript types defined below.
 
-Note that in addition to the domain, the entire request SHOULD be serialization using EIP-712, in
-order to facilitate hashing and signing of the requests. In particular, this means that an EIP-712
-type definition SHOULD be provided for the domain options.
+Note that in addition to the domain, the entire request SHOULD be serializeable as an EIP-712
+object. This allows hashing and signing of the full requests. In particular, this means that an
+EIP-712 type definition SHOULD be provided for the domain options.
 
 #### Mapping TypeScript to EIP-712 types
 
 In order to serialize a given `Domain` type, we must first define it as a EIP-712 object. As shown
-above, domains may be represented as TypeScript types, in which case they can be mapped to an
-equivalent EIP-712 object.
+above, domains may be represented as TypeScript types, in which case they need to be mapped to an
+equivalent EIP-712 object. In this section is an example mapping from TypeScript types to EIP-712.
 
 To form the EIP-712 domain, the required `name` and `version` fields of the `Domain` type are used
 to populate the respective fields in an `EIP712Domain`. Additional fields of the `Domain` struct are
@@ -448,7 +457,15 @@ all existing functionality, including the public keys currently used to operate 
 
 ## Security Considerations
 
-WIP
+Incorrect implementation or operation of the ODIS service can have very serious effects on users of
+the service. In particular, a bug in the rate limiting code or compromise of a threshold of nodes
+could allow an attacker to bypass rate limiting and derive a user's secret from its hash or other
+commitment.
+
+Implementing this proposal involves writing new code to be included in the ODIS service, which
+implies a potential increase in the attack surface and opportunities to introduce security
+vulnerabilities. Care should be taken to ensure the correctness of the implementation, including
+testing, careful code review, and potentially third-party audits.
 
 ## License
 
