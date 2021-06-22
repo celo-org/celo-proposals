@@ -405,54 +405,56 @@ above](#mapping-typescript-to-eip-712-types) to the `GetDomainRestrictedSigReque
 ### HTTP Transport
 
 When requested over HTTP, which is the primary proposed transport, the following HTTP semantics
-should be followed.
+SHOULD be followed.
 
-If a given `name` and `version` are not recognized by an ODIS signer, they should return a `501: Not
-Implemented` error. If a given `name` and `version` are recognized, but are deprecated, ODIS should
-return a `405: Method Not Allowed` error. Signers should keep a list of all old domain names and
+If a given `name` and `version` are not recognized by an ODIS signer, it SHOULD return a `501: Not
+Implemented` error. If a given `name` and `version` are recognized, but are deprecated, it SHOULD
+return a `405: Method Not Allowed` error. Signers SHOULD keep a list of all old domain names and
 version, even if they are no longer supported.
 
-When a users request is rejected for violating the rate limiting of a domain, the service should
+When a user's request is rejected for violating the rate limiting of a domain, the service SHOULD
 respond with `429: Too Many Requests`. If the waiting would allow for additional requests against
-the same domain, the service should include the `Retry-After` header to specify how long the client
-must wait. ODIS servers may apply additional rate limiting, such as by IP address. Any rate limiting
-rules outside of those applied per domain should be counted against first, such that a request
-dropped by external rate limiting will not be counted against the domain quota.
+the same domain, the service SHOULD include the `Retry-After` header to specify how long the client
+must wait. ODIS servers MAY apply additional rate limiting, such as by IP address. Any rate limiting
+rules outside of those applied per domain MUST be counted against first, such that a request
+dropped by optional rate limiting rules will not be counted against the domain quota.
 
 ### Key management
 
-Because ODIS' current OPRF function operates with the same cryptographic primitives as the proposed
-function below, and because its a bad idea in general to reuse keys, this proposed requires a new
-set of keys to be generated and used in computing the pOPRF function.
+Because ODIS' current OPRF function operates with the same cryptographic primitives as the [proposed
+function](https://github.com/celo-org/celo-proposals/pull/234), and because its a bad idea in
+general to reuse keys, implementation of this proposal MUST use a new set of keys, not used in any
+other service.
 
-Prior to the deployment of this new pOPRF functionality a DKG will need to be run on the nodes that
-will participate in serving it. This new public key should be distributed along with client
-implementations and used to verify the values returned from the new API. Note that the existing ODIS
-OPRF key will continue to be used to verify output from the existing API.
+Keys used in this service SHOULD be generated through a DKG ceremony amongst the servers that will
+operate the service. This new public key SHOULD be distributed along with client implementations and
+used to verify the values returned from the new API. Note that the existing ODIS OPRF key will
+continue to be used to verify output from the existing API.
 
 ### Cryptographic interface
 
-Implementation of a domain-restricted hashing function is build on top of a partial
+Implementation of a domain-restricted hashing function is built on top of a partial
 [oblivious](http://www.cs.columbia.edu/~tal/4261/F19/hugo-columbia-oprf.pdf) [pseudorandom
 function](https://en.wikipedia.org/wiki/Pseudorandom_function_family) (pOPRF). It extends the
 existing OPRF, currently implemented by ODIS, by adding a second input, which is not blinded, and
 can be used by the pOPRF for rate limiting.
 
 With respect the client, this functionality has the interface $F_K(d,m)$ where $d$, $m$, and the
-output are binary strings, and $K$ is a public key which commits to the output of the function, and
+output are binary strings. $K$ is a public key which commits to the output of the function, and
 allows for verification. $d$ is considered the "domain string" and is visible to the pOPRF service.
 $m$ is the message string, and is hidden from the pOPRF service. Both strings are combined
-cryptographically to form the output.
+cryptographically in a one-way function to form the output.
 
 Multiple candidate implementations exist for this functionality. Linked below is the proposed
 cryptographic design for use in the ODIS pOPRF service. Other implementation with the same interface
 may also be used to implement the following service design.
 
+<!-- TODO(victor) Replace this Notion link when the proposal is written up as a CIP -->
 [pOPRF Cryptography Proposal](https://www.notion.so/pOPRF-Cryptography-Proposal-493f1099460940f8a5d7dee4c78b4442)
 
 ## Backwards Compatibility
 
-Backwards compatibility of for current users of ODIS is ensure because this proposal leaves in place
+Backwards compatibility for current users of ODIS is ensured because this proposal leaves in place
 all existing functionality, including the public keys currently used to operate the service.
 
 ## Security Considerations
