@@ -165,7 +165,7 @@ service.
 In the domain specifiers, two fields MUST be provided: `name` and `version`. Together, these select
 which set of rules the service will apply to the request. Rule sets are included in the ODIS
 implementation, and new rule sets may be added over time. Updating a rule set in a way that would
-change the rules applied to existing domains MUST be accompanied by an increase in the `version`
+change the rules applied to existing domains SHOULD be accompanied by an increase in the `version`
 number. Domain names SHOULD be human-readable. Version numbers SHOULD be whole integers.
 
 With a given `name` and `version`, a number of additional fields MAY be specified to act as
@@ -332,7 +332,7 @@ To form the EIP-712 domain, the required `name` and `version` fields of the `Dom
 to populate the respective fields in an `EIP712Domain`. Additional fields of the `Domain` struct are
 used to construct an EIP-712 type.
 
-Other fields in the domain form the EIP-712 type. The EIP-712 type name should be equal to the
+Other fields in the domain form the EIP-712 type. The EIP-712 type name SHOULD be equal to the
 interface name. Fields within the interface are sorted by name. Values SHOULD be mapped from their
 TypeScript types to the corresponding EIP-712 type. Specifically:
 
@@ -388,18 +388,19 @@ encoded = 0x1901 || domainSeparator || structHash
 
 Signatures are a useful primitive for authenticated rate limiting (e.g. allowing a higher rate limit
 to the owners of verified accounts on Celo). In order to facilitate this, the entire request struct
-should be deterministically serializeable, specifically using EIP-712.
+SHOULD be deterministically serializeable, specifically using EIP-712.
 
 Domains that make use of signatures for authentication of requests (e.g. the `PepperedDomain`
-example below) should include a field in the domain options for specification of a signature.
-Additional fields may also be added, such as a nonce to prevent replaying requests.
+example below) SHOULD include a field in the domain options for specification of a signature.
+Additional fields MAY also be added, such as a nonce to prevent replaying requests.
 
-Signatures should be verified over the entire request, excluding the signature itself. Specifically,
-the message against which a signature is verified should be obtained by first removing the signature
-from the full `GetDomainRestrictedSigRequest` object, then serializing it via EIP-712.
+Signatures SHOULD be verified over the entire request, excluding the signature itself. Specifically,
+the message against which a signature is verified SHOULD be obtained by first setting the signature
+field value to its zero value (e.g. empty string) object, then serializing the
+`GetDomainRestrictedSigRequest` object via EIP-712.
 
-Serializing the request with EIP-712 should use the domain `{ name: "ODIS Domain Restricted
-Signature Request", version: "1" }` and type defined by applying the type mapping [defined
+Serializing the request SHOULD use the EIP-712 domain `{ name: "ODIS Domain Restricted Signature
+Request", version: "1" }` and type defined by applying the type mapping [defined
 above](#mapping-typescript-to-eip-712-types) to the `GetDomainRestrictedSigRequest` type.
 
 ### HTTP Transport
