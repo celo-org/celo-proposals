@@ -27,10 +27,10 @@ Once the proposal is successfully proposed on chain, update this file so that th
 
 Fill out the following template for each transaction in the proposal
 
-1. Description of transaction 1 
+1. Description of transaction 1
   - Destination: A human readable description of the address and method being called
   - Data: A human readable description of the transaction data
-  - Value: How much cGLD is being sent, and why?
+  - Value: How much CELO is being sent, and why?
 
 ## Verification
 
