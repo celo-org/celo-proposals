@@ -1,5 +1,5 @@
 ---
-cip: <to be assigned>
+cip: 40
 title: Extension to ODIS for Password Hashing
 author: Victor Graf <victor@clabs.co>, Cody Born <cody@clabs.co>, Alec Schaefer <alec@clabs.co>
 discussions-to: https://github.com/celo-org/celo-proposals/issues/233
