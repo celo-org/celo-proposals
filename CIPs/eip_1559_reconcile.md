@@ -1,0 +1,62 @@
+---
+cip: ??
+title: Modification to EIP-1559
+author: Joshua Gutow <@trianglesphere>
+discussions-to: URL
+status: Draft
+type: Standards Track
+category: Ring 0
+created: 2021-08-11
+requires: Typed Transaction Envelopes (EIP-2718)
+license: Apache 2.0
+---
+
+This specifies modifications to EIP-1559 for Celo.
+
+  
+## Simple Summary
+Users pay `basefee + tip` with the `tip` going to the validator and `basefee` to the reserve instead of paying `gas_price` with `basefee` going the to reserve and `gas_price - basefee` going to validators.
+
+## Abstract
+This CIP specifies how [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) should be modified and implemented on Celo. In particular, the gas price minimum (also known as the basefee) should be kept the same, but the gas price should be split into `max_priority_fee_per_gas` and `max_fee_per_gas` and the effecitive gas price should be paid as specified in EIP-1559.
+
+
+## Motivation
+
+Celo implemented part of [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) at launch. The implementation sets a gas price minimum through smart contract logic, but continues to keep a single gas price field. Thus transactions on Celo behave like legacy Ethereum transactions post London. Implementing the `basefee` and `tip` system will enable users to more reliably include their transactions at a lower and more predictable price.
+
+
+## Specification
+[EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) should be implemented on Celo with the following modifications:
+1. The block header shall not be modified
+2. The `base_fee_per_gas` shall be calculated by calling `getGasPriceMinimum` to the `GasPriceMinimum` smart contract.
+3. The `basefee` or `gas_price_minimum` shall be paid to the reserve if it exists or refunded to the sender if not.
+4. There shall be a typed transaction with the code `TBD` (likely `0x7f - 0x03`) that has the following format:
+`$TBD || rlp([chain_id, nonce, max_priority_fee_per_gas, max_fee_per_gas, gas_limit, feecurrency, gatewayfeerecipient, gatewayfee, destination, amount, data, access_list, signature_y_parity, signature_r, signature_s])`.
+This will be in addition to the type `0x02` transaction as specified in [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559).
+
+
+## Rationale
+This brings only the portions of EIP-1559 that have not been implemented to Celo.
+This is required to continue to maintain compatibility with Ethereum.
+
+## Backwards Compatibility
+Legacy transactions will continue to work and will still be included in blocks.
+
+EIP-1559 compatibility issues also apply with the exception that the Celo block header is not changing.
+One EVM modification is that the `GASPRICE` opcode will now refer to the `effective_gas_price` (`basefee+tip`) not the amount paid to the validator.
+
+## Test Cases
+TODO
+
+## Implementation
+EIP-1559 has been fully implemented in go-ethereum. On Celo the `basefee` is already set via the `gas price minimum contract`, however this CIP has not yet been implemented.
+
+
+## Security Considerations
+
+This contains the same set of security considerations as EIP-1559.
+One additional consideration is that this CIP reduces the amount of fees paid to the validators.
+
+## License
+This work is licensed under the Apache License, Version 2.0.
