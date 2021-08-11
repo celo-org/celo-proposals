@@ -54,6 +54,7 @@ Modifications to the EIPs
 * EIP-3554: Difficulty Bomb Delay (Included in London) will not be included in the "E" Hardfork
 * EIP-1559 is already partially implemented on Celo but the upstream implementation does not match what is on Celo.
 * EIP-2929 may have different gas costs
+* The `BASEFEE` opcode should return the result of calling `getGasPriceMinimum` to the `GasPriceMinimum` smart contract at the end of the previous block.
 
 CIPs to be Included
 * CIP-???: Block Context
