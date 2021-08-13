@@ -1,14 +1,12 @@
 ---
 cip: <to be assigned>
 title: Left/Right Constrained PRFs for use in Celo protocols
-author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
-discussions-to: <URL>
+author:  Mikerah Quintyne-Collins (@Mikerah), Kob Gurkan (@kobigurkan), Philipp Jovanovic(@daeinar)
+discussions-to: https://github.com/celo-org/celo-proposals/issues/270
 status: Draft
-type: <Standards Track, Meta or Informational>
+type: Standards
 category (*only required for Standards Track): <Ring 0, 1, 2, 3>
-created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
-requires (*optional): <CIP number(s)>
-replaces (*optional): <CIP number(s)>
+created: 2021-08-10
 license: Apache 2.0
 ---
 
