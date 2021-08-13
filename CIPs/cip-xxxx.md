@@ -41,7 +41,7 @@ For example: `GrandaMento Exchange Proposal 1 Discussion: 500,000 CELO for 1,500
 
 If the proposal has not been created on-chain yet, the proposal ID and buy amount can be omitted for the time being, though it should be added later upon exchange proposal creation. For example: `GrandaMento Exchange Proposal <TBD> Discussion: 500,000 CELO for cUSD`.
 
-#### Forum post contents format
+#### Forum post contents
 ```
 1. What token and quantity are you selling, and what token are you buying?
 
