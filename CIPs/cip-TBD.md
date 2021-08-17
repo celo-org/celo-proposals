@@ -27,6 +27,8 @@ When checking if the balance covers the transaction fee using non-native currenc
 This introduces a change in the transaction validity check.
 
 ## Test Cases
+TODO:
+
 For each non-native currency that is whitelisted:
 - Send a Tx with balance = fee: :x: before HF block, :white_check_mark: after.
 - Send a Tx with balance > fee: :white_check_mark: before/after HF block.
