@@ -14,14 +14,14 @@ license: Apache 2.0
 Paying transaction fees using currencies other than CELO should be feasible if a transactor has a balance greater than or equal to the fee.
 
 ## Abstract
-When paying transaction fees using currencies other than CELO, the transaction should be deemed as valid if the transactor's balance is greater than or equal to the required fee, rather than strictly greater than it. This CIP seeks to modify the transaction fee check rule.
+When paying transaction fees using currencies other than CELO, the transaction should be deemed as valid if the transactor's balance is greater than or equal to the transaction fee, rather than strictly greater than it. This CIP seeks to modify the transaction fee check rule.
 
 ## Specification
 When checking if the balance covers the transaction fee using other currencies than CELO in `state_transition` and `tx_pool`, it should pass if the currency balance `>=` transaction fee. The current behavior is to require the currency balance `>` transaction fee.
 
 ## Rationale
 - Intuitively, anyone should not be required to have more than one dollar if they just intend to buy a one-dollar pizza.
-- Transaction fee checks should be consistent across using ELO and other currencies. For now, the transaction validity check on CELO is `>=`, rather than `>`, which is what this CIP proposes for other currencies.
+- Transaction fee checks should be consistent across using CELO and other currencies. For now, the transaction validity check using CELO is `>=`, rather than `>`, which is what this CIP is proposing for other currencies.
 
 ## Backwards Compatibility
 This introduces a change in the transaction validity check.
