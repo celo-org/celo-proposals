@@ -19,7 +19,7 @@ This is a description of the processes surrounding Granda Mento (see [CIP 38](ci
 * Vetoing an exchange proposal.
 
 ## Abstract
-Granda Mento, as described in [CIP 38](cip-0038.md), is a mechanism for large CELO <-> stable token exchanges through "exchange proposals" that anyone can create. If rough consensus from the community is achieved, the approver (multisig of community member signers) is expected to approve an exchange proposal. After an exchange proposal is approved, a period of time exists where the community can veto the exchange proposal via a governance proposal. This document provides details on these processes.
+Granda Mento, as described in [CIP 38](cip-0038.md), is a mechanism for large CELO <-> stable token exchanges through "exchange proposals" that anyone can create. If rough consensus from the community is achieved, the approver (a multisig of community member signers) is expected to approve an exchange proposal. After an exchange proposal is approved, a period of time exists where the community can veto the exchange proposal via a governance proposal. This document provides details on these processes.
 
 ## Motivation
 While CIP 38 details the implementation of Granda Mento, there is no standard for the surrounding processes. Because Granda Mento relies upon community participation and approver multisig signers executing the rough consensus of the community, it's important for these processes to exist.
@@ -51,6 +51,8 @@ If the proposal has not been created on-chain yet, the proposal ID and buy amoun
 // Include the intended use of bought funds.
 
 4. What is the on-chain proposal ID and the on-chain buy amount?
+// Detailed info can be found by running this command and sharing the output:
+//   `celocli grandamento:show --proposalId <proposal-id>`
 // If you are planning to create the on-chain exchange proposal after
 // fielding opinions from the community, please mention so here.
 
@@ -61,13 +63,13 @@ If the proposal has not been created on-chain yet, the proposal ID and buy amoun
 6. At what price did you acquire the CELO?
 ```
 
-For extra visibility, after creating the forum post, the exchanger should share the link to the forum post in the #granda-mento Discord channel.
+For extra visibility, after creating the forum post, the exchanger should share the link to the forum post in the `#celo-governance` Discord channel.
 
 ### Achieving rough consensus
 
 [Rough consensus](https://en.wikipedia.org/wiki/Rough_consensus) in favor of an exchange proposal is expected prior to the approver multisig approving an exchange proposal. 51% of discussion participants in agreement is seen as worse than rough consensus, while 99% is seen as better than rough consensus. Rough consensus is seen as sufficient for approval because community members are able to create a governance proposal to veto an approved exchange proposal. "Achieving" rough consensus is defined as the approver multisig deciding to approve the exchange proposal as a result of rough consensus being in favor of the exchange proposal.
 
-A forum post must exist for at least one week prior to rough consensus being achieved. The on-chain proposal must be submitted and the corresponding on-chain proposal ID must be shared in the forum post for at least 4 days prior to rough consensus. This gives community members the opportunity to independently verify the on-chain exchange proposal.
+A forum post must exist for at least one week prior to rough consensus being achieved. The on-chain proposal must be submitted and the corresponding on-chain proposal ID must be shared in the forum post for at least 4 days prior to achieving rough consensus. This gives community members the opportunity to independently verify the on-chain exchange proposal.
 
 The exchange proposer is expected to answer reasonable questions from the community related to the exchange proposal, motivations, and funds.
 
