@@ -6,13 +6,13 @@ This is a proposed extension to the new ODIS interface put forward in [CIP-40](h
 
 ## Overview
 
-The use of arrays in this document is for illustrative purposes only. It may be useful to look at the [RateLimit Structures]() section below to see where this proposal is headed before reading on.
+The use of arrays in this document is for illustrative purposes only. It may be useful to look at the RateLimit Structures section below to see where this proposal is headed before reading on.
 
-We'd like to define a `RateLimit` structure that nests within a `Domain` and specifies an arbitrary sequence of time intervals, where the $*i*$th interval is the `delay` before the $*i*$th query attempt against the `Domain`.
+We'd like to define a `RateLimit` structure that nests within a `Domain` and specifies an arbitrary sequence of time intervals, where the $*i*$th interval is the `delay` before the $i$-th query attempt against the `Domain`.
 
 Using days for simplicity, the sequence
 
-$d_i = [ 0, 1, 1, 2, 2, 4, 0]$
+$$d_i = [ 0, 1, 1, 2, 2, 4, 0]$$
 
 Would specify that the user can start querying immediately, but must wait
 
@@ -32,9 +32,9 @@ ex. The user waits 4 days before performing the 2nd query, at which point they c
 
 This option can be controlled by a boolean on a per-interval basis. That is,
 
-$d_i = [ 0, 1, 1, 2, 2, 4, 0]$
+$$d_i = [ 0, 1, 1, 2, 2, 4, 0]$$
 
-$c_i = [0, 1, 1, 1, 0, 0, 0]$
+$$c_i = [0, 1, 1, 1, 0, 0, 0]$$
 
 Would dictate that the user can accumulate a quota of up to 3 by waiting 4 days before making a 2nd attempt, but regardless of whether they wait longer they will not get more quota until 2 days after their 4th attempt.
 
@@ -42,25 +42,25 @@ Allowing developers to combine these two behaviors is useful for avoiding situat
 
 ## Enhancements
 
-Many applications will want to define RateLimits where the user can perform batches of queries without delay. For instance, the user may perform 3 queries immediately before being told to wait until the next day. To make defining these sequences easier, we can use a new array of values where the $*i*$th element corresponds to how many attempts are in the $*i*$th `batch`.
+Many applications will want to define RateLimits where the user can perform batches of queries without delay. For instance, the user may perform 3 queries immediately before being told to wait until the next day. To make defining these sequences easier, we can use a new array of values where the $i$-th element corresponds to how many attempts are in the $i$-th `batch`.
 
 For example, we can rewrite the above `RateLimit` as
 
-$d_i = [ 0, 1, 1, 2, 2, 4]$
+$$d_i = [ 0, 1, 1, 2, 2, 4]$$
 
-$c_i = [0, 1, 1, 1, 0, 0]$
+$$c_i = [0, 1, 1, 1, 0, 0]$$
 
-$b_i = [ 1, 1, 1, 1, 1, 2]$
+$$b_i = [ 1, 1, 1, 1, 1, 2]$$
 
 Finally, notice that contiguous values are repeated when $i ∈ (1,2)$. Let's call this a `stage` of the rate limit with 2 repetitions. We can make these arrays more concise by introducing a new (optional) array where the $*i*$th element denotes how many `repetitions` of each `stage` there should be.
 
-$d_i = [ 0, 1, 2, 2, 4]$
+$$d_i = [ 0, 1, 2, 2, 4]$$
 
-$c_i = [0, 1, 1, 0, 0]$
+$$c_i = [0, 1, 1, 0, 0]$$
 
-$b_i = [ 1, 1, 1, 1, 2]$
+$$b_i = [ 1, 1, 1, 1, 2]$$
 
-$r_i = [ 1, 2, 1, 1, 1]$
+$$r_i = [ 1, 2, 1, 1, 1]$$
 
 ## Potential Future Extensions
 
@@ -68,13 +68,13 @@ Simply providing these arrays may be enough for most use cases, but if we want t
 
 For example,
 
-$d_i = [ 0, 1, 2, 2, 4, d_{i-1} + i]$
+$$d_i = [ 0, 1, 2, 2, 4, d_{i-1} + i]$$
 
-$c_i = [0, 1, 1, 0, 0, 1]$
+$$c_i = [0, 1, 1, 0, 0, 1]$$
 
-$b_i = [ 1, 1, 1, 1, 2, 1]$
+$$b_i = [ 1, 1, 1, 1, 2, 1]$$
 
-$r_i = [ 1, 2, 1, 1, 1, ...]$
+$$r_i = [ 1, 2, 1, 1, 1, ...]$$
 
 Specifies the same `RateLimit` we've constructed above, but replaces a hard cap on attempts with a backoff function that accumulates over time.
 
