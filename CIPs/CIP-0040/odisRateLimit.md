@@ -2,83 +2,107 @@
 
 ## Background
 
-This is a proposed extension to the new ODIS interface put forward in [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md) that aims to specify how rate limits are defined within Domains. The motivating use case is allowing wallets to define how often users can attempt to recover their account per the scheme outlined in [Cloud backup with PIN encryption](https://www.notion.so/Cloud-backup-with-PIN-encryption-cea30f57bdaf4945a50eba2a42e1b85c).
+This is a proposed extension to the new ODIS interface put forward in [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md) that aims to specify how rate limits are defined within `Domains`. The motivating use case is allowing wallets to define how often users can attempt to recover their account via the scheme outlined in [Cloud backup with PIN encryption](https://www.notion.so/Cloud-backup-with-PIN-encryption-cea30f57bdaf4945a50eba2a42e1b85c), but the design attempts to accommodate any use case for which quota is calculated purely based on time.
 
 ## Overview
 
-The use of arrays in this document is for illustrative purposes only. It may be useful to look at the RateLimit Structures section below to see where this proposal is headed before reading on.
+We'd like to define a `RateLimit` structure that nests within a `Domain` and specifies an arbitrary sequence of time intervals, where interval $i$ is the `delay` before attempt $i$ can be made against the `Domain`.
 
-We'd like to define a `RateLimit` structure that nests within a `Domain` and specifies an arbitrary sequence of time intervals, where the $*i*$th interval is the `delay` before the $i$-th query attempt against the `Domain`.
+#### simple rate limit
 
-Using days for simplicity, the sequence
+| Attempt      | 1                                   | 2                                                  | 3                                             | 4                                             | 5                                              | 6                                              | 7                                                       |
+| ------------ | ----------------------------------- | -------------------------------------------------- | --------------------------------------------- | --------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
+| delay (days) | 0                                   | 0                                                  | 1                                             | 1                                             | 2                                              | 4                                              | 0                                                       |
+| explanation  | User can start querying immediately | User can make 2 initial attempts without any delay | User must wait 1 day between attempts 2 and 3 | User must wait 1 day between attempts 3 and 4 | User must wait 2 days between attempts 4 and 5 | User must wait 4 days between attempts 5 and 6 | User can make attempt 7 immediately following attempt 6 |
 
-$$d_i = [ 0, 1, 1, 2, 2, 4, 0]$$
+Notice here we determine when an attempt can be performed by adding the `delay` to the timestamp at which the preceding attempt was performed. Alternatively, we could add the delay to the _earliest timestamp at which the preceding attempt could have been performed._ These two behaviors have the following effects on quota.
 
-Would specify that the user can start querying immediately, but must wait
+1. If `delay` signifies the amount of time that must pass between attempts $i-1$ and $i$, then quota does not accumulate.
+   - ex. The user waits 3 days after attempt 1, at which point their quota is 1. Regardless of when attempt 2 is made, attempt 3 must be made at least a day later.
+2. If `delay` signifies the amount of time that must pass between _the earliest time attempt $i-1$ could have been performed_ and attempt $i$, then quota is accumulated as `delay` intervals pass.
+   - ex. The user waits 4 days after attempt 1, at which point their quota is 4 because they have accumulated attempts 2, 3, 4 and 5.
 
-- 1 day before the 2nd query
-- 1 day before the 3rd query
-- 2 days before the 4th query
-- 2 days before the 5th query
-- 4 days before the 6th and 7th queries (which can happen back to back)
+Allowing developers to combine these two behaviors can be used in account recovery to avoid situations where users make one attempt, set the task aside for a while and then burn through their entire accumulated quota the next time they try to recover their account. It's likely the last few attempts before a hard cap should be separated by strict delay intervals so the user is forced to take breaks during which they may remember their password.
 
-From here, two different behaviors should be exposed to developers.
+We can expose both of these behaviors via a `resetTimer` boolean that is configurable per attempt.
 
-1. The user accumulates quota as time intervals pass.
+- We keep track of a `timer` timestamp for each rate limited `Domain` instance that is used to determine when the next attempt will be accepted.
 
-ex. The user waits 4 days before performing the 2nd query, at which point they can query up to 3 times.
+```
+if (now < timer + delay) {
+ return error
+}
+```
 
-2. The user must wait at least the specified amount of time between attempts, regardless of whether they have waited for longer than necessary between previous attempts.
+- The `timer` for a given `Domain` instance starts at 0 (Unix epoch) and is updated to the current timestamp whenever an attempt is made for which the `RateLimit` is satisfied and `resetTimer` is true. When `resetTimer` is false, the `timer` is incremented by `delay` to record the earliest timestamp at which the attempt would have satisfied the `RateLimit`.
 
-This option can be controlled by a boolean on a per-interval basis. That is,
+```
+if (now >= timer + delay) {
+ timer = resetTimer ? now : timer + delay
+}
+```
 
-$$d_i = [ 0, 1, 1, 2, 2, 4, 0]$$
+#### rate limit w/ timer
 
-$$c_i = [0, 1, 1, 1, 0, 0, 0]$$
+| Attempt      | 1                                                           | 2                                                                                                                      | 3                                                                                             | 4                                                                                                                       | 5                                                                                                                                                                           | 6                                                                                              | 7                                                                                                        |
+| ------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| delay (days) | 0                                                           | 0                                                                                                                      | 1                                                                                             | 1                                                                                                                       | 2                                                                                                                                                                           | 4                                                                                              | 0                                                                                                        |
+| resetTimer   | yes                                                         | yes                                                                                                                    | no                                                                                            | yes                                                                                                                     | no                                                                                                                                                                          | yes                                                                                            | yes                                                                                                      |
+| explanation  | The timer will be set to the current timestamp at attempt 1 | The timer will be set to the current timestamp at attempt 2. This means that 1 day must pass between attempts 2 and 3. | The user can perform attempt 4 two days after attempt 2 regardless of when attempt 3 is made. | The timer will be set to the current timestamp at attempt 4. This means that 2 days must pass between attempts 4 and 5. | The timer will be set to the timestamp at attempt 4 plus 2 days at attempt 5. This means if 6 days pass between attempt 4 and attempt 5 the user can also perform attempt 6 | The timer will be set to the current timestamp at attempt 6, which has no impact in this case. | Even if this were not the last interval in the RateLimit, the user could not have a quota greater than 2 |
 
-Would dictate that the user can accumulate a quota of up to 3 by waiting 4 days before making a 2nd attempt, but regardless of whether they wait longer they will not get more quota until 2 days after their 4th attempt.
+Notice the first `delay` is relative to the Unix Epoch. This has 2 notable consequences
 
-Allowing developers to combine these two behaviors is useful for avoiding situations where users make one attempt, set the task aside for a while and then burn through their entire accumulated quota the next time they try to recover their account. It's likely the last few attempts before a hard cap should be separated by strict delay intervals so the user is forced to take breaks during which they may remember their password.
+1. The first `delay`can be used to set an arbitrary time in the future before which the `Domain` cannot be queried.
+2. If the first attempt does not reset the `timer`, then quota will begin accumulating after the first `delay` and will continue to accumulate with each subsequent `delay` until `resetTimer` is true.
 
-## Enhancements
+These behaviors may enable some interesting use cases such as lotteries and other random-selection based protocols where queries "vest" over time. However, for most use cases (including account recovery) the first attempt should set `resetTimer` to true and `delay` to 0. We will make this clear to developers in our documentation to avoid confusion.
 
-Many applications will want to define RateLimits where the user can perform batches of queries without delay. For instance, the user may perform 3 queries immediately before being told to wait until the next day. To make defining these sequences easier, we can use a new array of values where the $i$-th element corresponds to how many attempts are in the $i$-th `batch`.
+### Batching
 
-For example, we can rewrite the above `RateLimit` as
+Applications may require `RateLimits` where users can perform a `batch` of queries after a given `delay`. In our example, notice that attempts {0, 1} and {6, 7} always become available as `batches` of 2. To help us express this, we can define rules in terms of `stages` rather than attempts.
 
-$$d_i = [ 0, 1, 1, 2, 2, 4]$$
+#### rate limit w/ stages and batching
 
-$$c_i = [0, 1, 1, 1, 0, 0]$$
+| Attempt      | 1                                                                                                                                                             | 2   | 3   | 4   | 5                                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| delay (days) | 0                                                                                                                                                             | 1   | 1   | 2   | 4                                                                                                                                                             |
+| resetTimer   | yes                                                                                                                                                           | no  | yes | no  | yes                                                                                                                                                           |
+| batchSize    | 2                                                                                                                                                             | 1   | 1   | 1   | 2                                                                                                                                                             |
+| explanation  | Attempts 0 and 1 can be combined into a single stage with a batchSize of 2 because there is no delay between them and they have the same value for resetTimer |     |     |     | Attempts 6 and 7 can be combined into a single stage with a batchSize of 2 because there is no delay between them and they have the same value for resetTimer |
 
-$$b_i = [ 1, 1, 1, 1, 1, 2]$$
+### Repetitions
 
-Finally, notice that contiguous values are repeated when $i ∈ (1,2)$. Let's call this a `stage` of the rate limit with 2 repetitions. We can make these arrays more concise by introducing a new (optional) array where the $*i*$th element denotes how many `repetitions` of each `stage` there should be.
+Similarly, imagine we wish to append 6 stages to our `RateLimit` that are duplicates of stage 5. That is, we want users to be able to use 2 attempts every 4 days at the end of our `RateLimit` for 7 `repetitions`. We could then combine these into a single `stage` as follows.
 
-$$d_i = [ 0, 1, 2, 2, 4]$$
+#### rate limit w/ stage repetitions
 
-$$c_i = [0, 1, 1, 0, 0]$$
+| Attempt      | 1   | 2   | 3   | 4   | 5                                                             |
+| ------------ | --- | --- | --- | --- | ------------------------------------------------------------- |
+| delay (days) | 0   | 1   | 1   | 2   | 4                                                             |
+| resetTimer   | yes | no  | yes | no  | yes                                                           |
+| batchSize    | 2   | 1   | 1   | 1   | 2                                                             |
+| repetitions  | 1   | 1   | 1   | 1   | 7                                                             |
+| explanation  |     |     |     |     | stage 5 is repeated 7 times before the RateLimit is exhausted |
 
-$$b_i = [ 1, 1, 1, 1, 2]$$
+Repetitions will be useful for `RateLimits` that follow simple repeating patterns. For example, a developer may wish to give a user 1 attempt per day for 3 weeks.
 
-$$r_i = [ 1, 2, 1, 1, 1]$$
+Because the default value for `repetitions` and `batchSize` will be 1, developers who prefer a simpler interface or require a modest number of `stages` can simply ignore them.
 
-## Potential Future Extensions
+### Mathematical Expressions
 
-Simply providing these arrays may be enough for most use cases, but if we want to support longer sequences we need more concise syntax. Future versions of `Domains` that use the `RateLimit` structure could support simple mathematical expressions to easily define arbitrary sequences of intervals.
+This feature will not be part of the initial implementation but could be added to later versions of rate limited domains.
 
-For example,
+If we want to support long or infinite sequences of intervals we will need more concise syntax. Future versions of `Domains` that use the `RateLimit` structure could support mathematical expressions to easily define arbitrary sequences of intervals.
 
-$$d_i = [ 0, 1, 2, 2, 4, d_{i-1} + i]$$
+#### rate limit w/ mathematical expressions
 
-$$c_i = [0, 1, 1, 0, 0, 1]$$
-
-$$b_i = [ 1, 1, 1, 1, 2, 1]$$
-
-$$r_i = [ 1, 2, 1, 1, 1, ...]$$
-
-Specifies the same `RateLimit` we've constructed above, but replaces a hard cap on attempts with a backoff function that accumulates over time.
-
-In this way, the developer could easily define any rate limit for their `Domain` as an arbitrary sequence of time intervals.
+| Attempt      | 1   | 2   | 3   | 4   | 5                                                                                                                                                   |
+| ------------ | --- | --- | --- | --- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| delay (days) | 0   | 1   | 1   | 2   | $min(d_{i-1} + i, 365)$                                                                                                                             |
+| resetTimer   | yes | no  | yes | no  | yes                                                                                                                                                 |
+| batchSize    | 2   | 1   | 1   | 1   | 1                                                                                                                                                   |
+| repetitions  | 1   | 1   | 1   | 1   | ...                                                                                                                                                 |
+| explanation  |     |     |     |     | Rather than impose a hard cap on attempts, the user will continue accumulating quota forever at increasingly infrequent intervals up to a year long |
 
 ## RateLimit Structures
 
@@ -88,39 +112,191 @@ interface RateLimit {
 }
 
 interface Stage {
-  // How long the user must wait between batches
-  // of attempts in this stage. (ex. "1 day")
-  delay: string;
-  // Whether quota accumulates across time intervals during this stage.
-  cumulative: boolean;
+  // How many seconds each batch of attempts is delayed by in this stage.
+  delay: number;
+  // Whether the timer should be reset between attempts during this stage.
+  // Defaults to true.
+  resetTimer?: boolean;
   // The number of continuous attempts a user gets before the next delay
   // in each repetition of this stage. Defaults to 1.
-  batch?: number;
+  batchSize?: number;
   // The number of times this stage repeats before continuing to the next stage
   // in the RateLimit array. Defaults to 1.
   repetitions?: number;
 }
 ```
 
-## Usage in Cloud Backup Domain
+### Usage in Cloud Backup Domain
 
 ```tsx
-type CloudBackupDomain = {
-  name: "ODIS Cloud Backup Domain";
-  version: "1";
-  rateLimit: RateLimit;
+type AuthenticatedRateLimitDomain = {
+  name: "Authenticated Rate Limit Domain"
+  version: "1"
+  info: "Valora Cloud Backup"
+  rateLimit: RateLimit
   // Public key of a key-pair derived from a salt stored alongside the
   // cyphertext that is backed up in the cloud.
-  publicKey: string;
-};
+  publicKey: string
+}
 
-type CloudBackupDomainOptions = {
+interface AuthenticatedRateLimitDomainOptions = {
   // EIP-712 signature over the entire request by the private key of the salt
   // derived key-pair.
-  signature: string;
-};
+  signature: string
+  // Used to prevent replay attacks.
+  nonce: number
+}
+```
+
+### Querying Domain Status
+
+```tsx
+interface AuthenticatedRateLimitDomainStatusResponse = {
+  // How many attempts the user has already made against the Domain that have
+  // satisfied the RateLimit
+  counter: number
+  // The timestamp to which the next delay is added to determine when the next
+  // quota increase will occur
+  timer: number
+  // Whether the Domain has been permanently disabled
+  disabled: boolean
+}
 ```
 
 ## Signer DB Schema Changes
 
-To support `RateLimits`, a new table will be added to ODIS Signers that maps full `Domain` instances (or their hash) to a timestamp and nonce. The nonce and timestamp will be updated each time the signer receives a request for that `Domain` that does not violate its `RateLimit`.
+To support `RateLimits`, a new `Domains` table will be added to ODIS Signers that maps the hash of full `Domain` instances to a `timer` and `counter` . To implement the `/disableDomain` endpoint specified in [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md) this table will also have a boolean `disabled` column.
+
+## Replay Handling
+
+The `counter` stored for a given `Domain` instance will be checked against the `nonce` provided in the signed `DomainOptions` for the request. This will prevent requests from being replayed by a third party and depleting the user's quota. If the client forgets their `nonce` , it can be queried via `/getDomainQuotaStatus` (See [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md)).
+
+## Example
+
+```tsx
+interface IndexedStage {
+  stage: Stage;
+  // The Stage's index in the RateLimit array
+  index: number;
+  // The attempt number at which the Stage begins
+  start: number;
+}
+
+interface Result {
+  accepted: boolean;
+  state: State;
+}
+
+interface State {
+  // Timestamp used for deciding when the next request will be accepted.
+  timer: number;
+  // Number of queries that have been accepted for the RateLimit.
+  counter: number;
+}
+
+const getIndexedStage = (limit: RateLimit, counter: number): IndexedStage => {
+  let attemptsInStage = 0;
+  let stage = 0;
+  let _counter = 0;
+
+  while (_counter <= counter) {
+    let repetitions = limit.stages[stage].repetitions ?? 1;
+    let batchSize = limit.stages[stage].batchSize ?? 1;
+    attemptsInStage = repetitions * batchSize;
+    _counter += attemptsInStage;
+    stage++;
+  }
+
+  _counter -= attemptsInStage;
+  stage--;
+
+  return { stage: limit.stages[stage], index: stage, start: _counter };
+};
+
+const getDelay = (
+  stage: Stage,
+  stageStart: number,
+  counter: number
+): number => {
+  if (counter - (stageStart % stage.delay) == 0) {
+    return stage.delay;
+  }
+  return 0;
+};
+
+const checkRateLimit = (
+  limit: RateLimit,
+  state: State | null,
+  attemptTime: number
+): Result => {
+  const counter = state?.counter ?? 0;
+  const timer = state?.timer ?? 0;
+
+  const indexedStage = getIndexedStage(limit, counter);
+  const stage = indexedStage.stage;
+  const resetTimer = stage.resetTimer ?? true;
+
+  const delay = getDelay(stage, indexedStage.start, counter);
+  const notBefore = timer + delay;
+
+  if (attemptTime < notBefore) {
+    return { accepted: false, state };
+  }
+
+  // Request is accepted. Update the state.
+  return {
+    accepted: true,
+    state: {
+      counter: counter + 1,
+      timer: resetTimer ? attemptTime : notBefore,
+    },
+  };
+};
+
+const t = 1631650286;
+
+const limit: RateLimit = {
+  stages: [
+    { delay: t, resetTimer: true, batchSize: 2, repetitions: 1 },
+    { delay: 1, resetTimer: false, batchSize: 1, repetitions: 1 },
+    { delay: 1, resetTimer: true, batchSize: 1, repetitions: 1 },
+    { delay: 2, resetTimer: false, batchSize: 1, repetitions: 1 },
+    { delay: 4, resetTimer: true, batchSize: 2, repetitions: 2 },
+  ],
+};
+
+let state: State | null = null;
+
+// { accepted: false, state: null }
+state = checkRateLimit(limit, state, t - 1).state;
+
+// { accepted: true, state: { timer: t, counter: 1 } }
+state = checkRateLimit(limit, state, t).state;
+
+// { accepted: true, state: { timer: t+1, counter: 2 } }
+state = checkRateLimit(limit, state, t + 1).state;
+
+// { accepted: true, state: { timer: t+2, counter: 3 } }
+state = checkRateLimit(limit, state, t + 3).state;
+
+// { accepted: true, state: { timer: t+3, counter: 4 } }
+state = checkRateLimit(limit, state, t + 3).state;
+
+// { accepted: true, state: { timer: t+5, counter: 5 } }
+state = checkRateLimit(limit, state, t + 6).state;
+
+// { accepted: false, state: { timer: t+5, counter: 5 } }
+state = checkRateLimit(limit, state, t + 8).state;
+
+// { accepted: true, state: { timer: t+9, counter: 6 } }
+state = checkRateLimit(limit, state, t + 9).state;
+
+// { accepted: true, state: { timer: t+10, counter: 7 } }
+state = checkRateLimit(limit, state, t + 10).state;
+
+// { accepted: true, state: { timer: t+14, counter: 8 } }
+state = checkRateLimit(limit, state, t + 14).state;
+
+// { accepted: true, state: { timer: t+15, counter: 9 } }
+state = checkRateLimit(limit, state, t + 15).state;
+```
