@@ -70,6 +70,8 @@ Applications may require `RateLimits` where users can perform a `batch` of queri
 | batchSize    | 2                                                                                                                                                             | 1   | 1   | 1   | 2                                                                                                                                                             |
 | explanation  | Attempts 0 and 1 can be combined into a single stage with a batchSize of 2 because there is no delay between them and they have the same value for resetTimer |     |     |     | Attempts 6 and 7 can be combined into a single stage with a batchSize of 2 because there is no delay between them and they have the same value for resetTimer |
 
+Notice that a `stage` with a `batchSize` of $n$ is equivalent to inserting $n - 1$ `stages` after `stage` $i$ with `delays` of 0 and `resetTimer` matching `stage` $i$. The `batchSize` option just serves to make the `RateLimit` more concise.
+
 ### Repetitions
 
 Similarly, imagine we wish to append 6 stages to our `RateLimit` that are duplicates of stage 5. That is, we want users to be able to use 2 attempts every 4 days at the end of our `RateLimit` for 7 `repetitions`. We could then combine these into a single `stage` as follows.
@@ -112,7 +114,8 @@ interface RateLimit {
 }
 
 interface Stage {
-  // How many seconds each batch of attempts is delayed by in this stage.
+  // How many seconds each batch of attempts in this stage is delayed with
+  // respect to the timer.
   delay: number;
   // Whether the timer should be reset between attempts during this stage.
   // Defaults to true.
@@ -132,11 +135,13 @@ interface Stage {
 type AuthenticatedRateLimitDomain = {
   name: "Authenticated Rate Limit Domain"
   version: "1"
-  info: "Valora Cloud Backup"
   rateLimit: RateLimit
   // Public key of a key-pair derived from a salt stored alongside the
   // cyphertext that is backed up in the cloud.
   publicKey: string
+  // Optional string to distinguish the output of this Domain from
+  // other AuthenticatedRateLimitDomains
+  context?: "Valora Cloud Backup"
 }
 
 interface AuthenticatedRateLimitDomainOptions = {
@@ -169,7 +174,7 @@ To support `RateLimits`, a new `Domains` table will be added to ODIS Signers tha
 
 ## Replay Handling
 
-The `counter` stored for a given `Domain` instance will be checked against the `nonce` provided in the signed `DomainOptions` for the request. This will prevent requests from being replayed by a third party and depleting the user's quota. If the client forgets their `nonce` , it can be queried via `/getDomainQuotaStatus` (See [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md)).
+The `counter` stored for a given `Domain` instance must equal the `nonce` provided in the signed `DomainOptions` for the request. This will prevent requests from being replayed by a third party and depleting the user's quota. If the client forgets their `counter` / `nonce` , it can be queried via `/getDomainQuotaStatus` (See [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md)).
 
 ## Example
 
