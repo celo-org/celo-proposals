@@ -1,4 +1,4 @@
-# ODIS RateLimit Structures
+# CIP-40 Sequential Delay Domain
 
 ## Background
 
@@ -93,11 +93,7 @@ Because the default value for `repetitions` and `batchSize` will be 1, developer
 ## RateLimit Structures
 
 ```typescript
-interface RateLimit {
-  stages: Stage[];
-}
-
-interface Stage {
+interface SequentialDelayStage {
   // How many seconds each batch of attempts in this stage is delayed with
   // respect to the timer.
   delay: number;
@@ -116,19 +112,19 @@ interface Stage {
 ### Usage in Cloud Backup Domain
 
 ```typescript
-type AuthenticatedRateLimitDomain = {
-  name: "Authenticated Rate Limit Domain"
+type SequentialDelayDomain = {
+  name: "Sequential Delay Domain"
   version: "1"
-  rateLimit: RateLimit
+  stages: SequentialDelayStage[]
   // Public key of a key-pair derived from a salt stored alongside the
   // cyphertext that is backed up in the cloud.
   publicKey: string
   // Optional string to distinguish the output of this Domain from
-  // other AuthenticatedRateLimitDomains
+  // other SequentialDelayDomain
   context?: "Valora Cloud Backup"
 }
 
-interface AuthenticatedRateLimitDomainOptions = {
+interface SequentialDelayDomainOptions = {
   // EIP-712 signature over the entire request by the private key of the salt
   // derived key-pair.
   signature: string
@@ -140,7 +136,7 @@ interface AuthenticatedRateLimitDomainOptions = {
 ### Querying Domain Status
 
 ```typescript
-interface AuthenticatedRateLimitDomainStatusResponse = {
+interface SequentialDelayDomainStatusResponse = {
   // How many attempts the user has already made against the Domain that have
   // satisfied the RateLimit
   counter: number
