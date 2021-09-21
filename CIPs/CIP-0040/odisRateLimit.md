@@ -118,20 +118,21 @@ type SequentialDelayDomain = {
   name: "Sequential Delay Domain"
   version: "1"
   stages: SequentialDelayStage[]
-  // Public key of a key-pair derived from a salt stored alongside the
-  // cyphertext that is backed up in the cloud.
-  publicKey: string
-  // Optional string to distinguish the output of this Domain from
-  // other SequentialDelayDomain
-  context?: "Valora Cloud Backup"
+  // Optional public key of a against which signed requests must be authenticated.
+  // In the case of Cloud Backup, this will be a one-time key stored with the ciphertext.
+  publicKey?: string
+  // Optional string to distinguish the output of this domain instance from
+  // other SequentialDelayDomain instances
+  salt?: string
 }
 
-interface SequentialDelayDomainOptions = {
-  // EIP-712 signature over the entire request by the private key of the salt
-  // derived key-pair.
-  signature: string
-  // Used to prevent replay attacks.
-  nonce: number
+type SequentialDelayDomainOptions = {
+  // EIP-712 signature over the entire request by the key specified in the domain.
+  // Required if `publicKey` is defined in the domain instance. If `publicKey` is
+  // not defined in the domain instance, then a signature must not be provided.
+  signature?: string
+  // Used to prevent replay attacks. Required if a signature is provided.
+  nonce?: number
 }
 ```
 
@@ -141,7 +142,7 @@ In response to a domain quota status request, the following status structure wil
 Note that this includes the `counter` field, which is used in setting and checking the query nonce. (See [Replay Handling](#replay-handling) below)
 
 ```typescript
-interface SequentialDelayDomainStatusResponse = {
+interface SequentialDelayDomainStatusResponse {
   // How many attempts the user has already made against the domain that have
   // satisfied the rate limit
   counter: number
