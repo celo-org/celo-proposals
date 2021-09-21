@@ -8,7 +8,7 @@ This is a proposed extension to the new ODIS interface put forward in [CIP-40](h
 
 We'd like to define a `RateLimit` structure that nests within a `Domain` and specifies an arbitrary sequence of time intervals, where interval $i$ is the `delay` before attempt $i$ can be made against the `Domain`.
 
-#### simple rate limit
+#### Simple rate limit
 
 | Attempt      | 1                                   | 2                                                  | 3                                             | 4                                             | 5                                              | 6                                              | 7                                                       |
 | ------------ | ----------------------------------- | -------------------------------------------------- | --------------------------------------------- | --------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
@@ -28,7 +28,7 @@ We can expose both of these behaviors via a `resetTimer` boolean that is configu
 
 - We keep track of a `timer` timestamp for each rate limited `Domain` instance that is used to determine when the next attempt will be accepted.
 
-```
+```typescript
 if (now < timer + delay) {
  return error
 }
@@ -36,13 +36,13 @@ if (now < timer + delay) {
 
 - The `timer` for a given `Domain` instance starts at 0 (Unix epoch) and is updated to the current timestamp whenever an attempt is made for which the `RateLimit` is satisfied and `resetTimer` is true. When `resetTimer` is false, the `timer` is incremented by `delay` to record the earliest timestamp at which the attempt would have satisfied the `RateLimit`.
 
-```
+```typescript
 if (now >= timer + delay) {
  timer = resetTimer ? now : timer + delay
 }
 ```
 
-#### rate limit w/ timer
+#### Rate limit with timer
 
 | Attempt      | 1                                                           | 2                                                                                                                      | 3                                                                                             | 4                                                                                                                       | 5                                                                                                                                                                           | 6                                                                                              | 7                                                                                                        |
 | ------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -61,7 +61,7 @@ These behaviors may enable some interesting use cases such as lotteries and othe
 
 Applications may require `RateLimits` where users can perform a `batch` of queries after a given `delay`. In our example, notice that attempts {0, 1} and {6, 7} always become available as `batches` of 2. To help us express this, we can define rules in terms of `stages` rather than attempts.
 
-#### rate limit w/ stages and batching
+#### Rate limit with stages and batching
 
 | Attempt      | 1                                                                                                                                                             | 2   | 3   | 4   | 5                                                                                                                                                             |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -76,7 +76,7 @@ Notice that a `stage` with a `batchSize` of $n$ is equivalent to inserting $n - 
 
 Similarly, imagine we wish to append 6 stages to our `RateLimit` that are duplicates of stage 5. That is, we want users to be able to use 2 attempts every 4 days at the end of our `RateLimit` for 7 `repetitions`. We could then combine these into a single `stage` as follows.
 
-#### rate limit w/ stage repetitions
+#### Rate limit with stage repetitions
 
 | Attempt      | 1   | 2   | 3   | 4   | 5                                                             |
 | ------------ | --- | --- | --- | --- | ------------------------------------------------------------- |
@@ -89,22 +89,6 @@ Similarly, imagine we wish to append 6 stages to our `RateLimit` that are duplic
 Repetitions will be useful for `RateLimits` that follow simple repeating patterns. For example, a developer may wish to give a user 1 attempt per day for 3 weeks.
 
 Because the default value for `repetitions` and `batchSize` will be 1, developers who prefer a simpler interface or require a modest number of `stages` can simply ignore them.
-
-### Mathematical Expressions
-
-This feature will not be part of the initial implementation but could be added to later versions of rate limited domains.
-
-If we want to support long or infinite sequences of intervals we will need more concise syntax. Future versions of `Domains` that use the `RateLimit` structure could support mathematical expressions to easily define arbitrary sequences of intervals.
-
-#### rate limit w/ mathematical expressions
-
-| Attempt      | 1   | 2   | 3   | 4   | 5                                                                                                                                                   |
-| ------------ | --- | --- | --- | --- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| delay (days) | 0   | 1   | 1   | 2   | $min(d_{i-1} + i, 365)$                                                                                                                             |
-| resetTimer   | yes | no  | yes | no  | yes                                                                                                                                                 |
-| batchSize    | 2   | 1   | 1   | 1   | 1                                                                                                                                                   |
-| repetitions  | 1   | 1   | 1   | 1   | ...                                                                                                                                                 |
-| explanation  |     |     |     |     | Rather than impose a hard cap on attempts, the user will continue accumulating quota forever at increasingly infrequent intervals up to a year long |
 
 ## RateLimit Structures
 
@@ -176,7 +160,7 @@ To support `RateLimits`, a new `Domains` table will be added to ODIS Signers tha
 
 The `counter` stored for a given `Domain` instance must equal the `nonce` provided in the signed `DomainOptions` for the request. This will prevent requests from being replayed by a third party and depleting the user's quota. If the client forgets their `counter` / `nonce` , it can be queried via `/getDomainQuotaStatus` (See [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md)).
 
-## Example
+## Example Implementation
 
 ```typescript
 interface IndexedStage {
@@ -305,3 +289,22 @@ state = checkRateLimit(limit, state, t + 14).state;
 // { accepted: true, state: { timer: t+15, counter: 9 } }
 state = checkRateLimit(limit, state, t + 15).state;
 ```
+
+## Future Improvements
+
+This feature will not be part of the initial implementation but could be added to later versions of rate limited domains.
+
+### Mathematical Expressions
+
+If we want to support long or infinite sequences of intervals we will need more concise syntax. Future versions of `Domains` that use the `RateLimit` structure could support mathematical expressions to easily define arbitrary sequences of intervals.
+
+#### Rate limit with mathematical expressions
+
+| Attempt      | 1   | 2   | 3   | 4   | 5                                                                                                                                                   |
+| ------------ | --- | --- | --- | --- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| delay (days) | 0   | 1   | 1   | 2   | $min(d_{i-1} + i, 365)$                                                                                                                             |
+| resetTimer   | yes | no  | yes | no  | yes                                                                                                                                                 |
+| batchSize    | 2   | 1   | 1   | 1   | 1                                                                                                                                                   |
+| repetitions  | 1   | 1   | 1   | 1   | ...                                                                                                                                                 |
+| explanation  |     |     |     |     | Rather than impose a hard cap on attempts, the user will continue accumulating quota forever at increasingly infrequent intervals up to a year long |
+
