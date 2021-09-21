@@ -108,7 +108,7 @@ If we want to support long or infinite sequences of intervals we will need more 
 
 ## RateLimit Structures
 
-```tsx
+```typescript
 interface RateLimit {
   stages: Stage[];
 }
@@ -131,7 +131,7 @@ interface Stage {
 
 ### Usage in Cloud Backup Domain
 
-```tsx
+```typescript
 type AuthenticatedRateLimitDomain = {
   name: "Authenticated Rate Limit Domain"
   version: "1"
@@ -155,7 +155,7 @@ interface AuthenticatedRateLimitDomainOptions = {
 
 ### Querying Domain Status
 
-```tsx
+```typescript
 interface AuthenticatedRateLimitDomainStatusResponse = {
   // How many attempts the user has already made against the Domain that have
   // satisfied the RateLimit
@@ -178,7 +178,7 @@ The `counter` stored for a given `Domain` instance must equal the `nonce` provid
 
 ## Example
 
-```tsx
+```typescript
 interface IndexedStage {
   stage: Stage;
   // The Stage's index in the RateLimit array
