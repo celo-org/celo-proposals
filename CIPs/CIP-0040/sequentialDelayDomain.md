@@ -35,7 +35,7 @@ We can expose both of these behaviors via a `resetTimer` boolean that is configu
 
   ```typescript
   if (now < timer + delay) {
-    return error
+    return error;
   }
   ```
 
@@ -44,7 +44,7 @@ We can expose both of these behaviors via a `resetTimer` boolean that is configu
 
   ```typescript
   if (now >= timer + delay) {
-    timer = resetTimer ? now : timer + delay
+    timer = resetTimer ? now : timer + delay;
   }
   ```
 
@@ -115,25 +115,25 @@ interface SequentialDelayStage {
 }
 
 type SequentialDelayDomain = {
-  name: "Sequential Delay Domain"
-  version: "1"
-  stages: SequentialDelayStage[]
+  name: "Sequential Delay Domain";
+  version: "1";
+  stages: SequentialDelayStage[];
   // Optional public key of a against which signed requests must be authenticated.
   // In the case of Cloud Backup, this will be a one-time key stored with the ciphertext.
-  publicKey?: string
+  publicKey?: string;
   // Optional string to distinguish the output of this domain instance from
   // other SequentialDelayDomain instances
-  salt?: string
-}
+  salt?: string;
+};
 
 type SequentialDelayDomainOptions = {
   // EIP-712 signature over the entire request by the key specified in the domain.
   // Required if `publicKey` is defined in the domain instance. If `publicKey` is
   // not defined in the domain instance, then a signature must not be provided.
-  signature?: string
+  signature?: string;
   // Used to prevent replay attacks. Required if a signature is provided.
-  nonce?: number
-}
+  nonce?: number;
+};
 ```
 
 ### Querying Domain Status
@@ -145,12 +145,12 @@ Note that this includes the `counter` field, which is used in setting and checki
 interface SequentialDelayDomainStatusResponse {
   // How many attempts the user has already made against the domain that have
   // satisfied the rate limit
-  counter: number
+  counter: number;
   // The timestamp to which the next delay is added to determine when the next
   // quota increase will occur
-  timer: number
+  timer: number;
   // Whether the domain instance has been permanently disabled
-  disabled: boolean
+  disabled: boolean;
 }
 ```
 
@@ -168,69 +168,75 @@ If the client does not have their `counter` / `nonce` , it can be queried via `/
 ## Example Implementation
 
 ```typescript
-interface IndexedStage {
-  stage: SequentialDelayStage;
-  // The Stage's index in the stage array
-  index: number;
+interface IndexedSequentialDelayStage extends SequentialDelayStage {
   // The attempt number at which the Stage begins
   start: number;
 }
 
-interface Result {
+interface SequentialDelayResult {
   accepted: boolean;
-  state: State;
+  state?: State;
 }
 
-interface State {
+interface SequentialDelayState {
   // Timestamp used for deciding when the next request will be accepted.
   timer: number;
   // Number of queries that have been accepted for the SequentialDelayDomain instance.
   counter: number;
 }
 
-const getIndexedStage = (domain: SequentialDelayDomain, counter: number): IndexedStage => {
+const getIndexedStage = (
+  domain: SequentialDelayDomain,
+  counter: number
+): IndexedSequentialDelayStage | undefined => {
   let attemptsInStage = 0;
   let stage = 0;
-  let _counter = 0;
-
-  while (_counter <= counter) {
-    let repetitions = domain.stages[stage].repetitions ?? 1;
-    let batchSize = domain.stages[stage].batchSize ?? 1;
+  let i = 0;
+  while (i <= counter) {
+    if (stage >= domain.stages.length) {
+      return undefined;
+    }
+    const repetitions = domain.stages[stage].repetitions ?? 1;
+    const batchSize = domain.stages[stage].batchSize ?? 1;
     attemptsInStage = repetitions * batchSize;
-    _counter += attemptsInStage;
+    i += attemptsInStage;
     stage++;
   }
 
-  _counter -= attemptsInStage;
+  i -= attemptsInStage;
   stage--;
 
-  return { stage: domain.stages[stage], index: stage, start: _counter };
+  return { ...domain.stages[stage], start: i };
 };
 
 const getDelay = (
-  stage: Stage,
-  stageStart: number,
+  stage: IndexedSequentialDelayStage,
   counter: number
 ): number => {
-  if (counter - (stageStart % stage.delay) == 0) {
+  const batchSize = stage.batchSize ?? 1;
+  if ((counter - stage.start) % batchSize === 0) {
     return stage.delay;
   }
   return 0;
 };
 
-const checkRateLimit = (
+const checkSequentialDelay = (
   domain: SequentialDelayDomain,
-  state: State | null,
-  attemptTime: number
-): Result => {
+  attemptTime: number,
+  state?: SequentialDelayState
+): SequentialDelayResult => {
+  // If no state is available (i.e. this is the first request against the domain) use the initial state.
   const counter = state?.counter ?? 0;
   const timer = state?.timer ?? 0;
+  const stage = getIndexedStage(domain, counter);
 
-  const indexedStage = getIndexedStage(domain, counter);
-  const stage = indexedStage.stage;
+  // If the counter is past the last stage (i.e. the domain is permanently out of quota) return early.
+  if (!stage) {
+    return { accepted: false, state };
+  }
+
   const resetTimer = stage.resetTimer ?? true;
-
-  const delay = getDelay(stage, indexedStage.start, counter);
+  const delay = getDelay(stage, counter);
   const notBefore = timer + delay;
 
   if (attemptTime < notBefore) {
@@ -315,4 +321,3 @@ Future versions of the `SequentialDelayDomain` could support mathematical expres
 | batchSize    | 2   | 1   | 1   | 1   | 1                                                                                                                                                   |
 | repetitions  | 1   | 1   | 1   | 1   | ...                                                                                                                                                 |
 | explanation  |     |     |     |     | Rather than impose a hard cap on attempts, the user will continue accumulating quota forever at increasingly infrequent intervals up to a year long |
-
