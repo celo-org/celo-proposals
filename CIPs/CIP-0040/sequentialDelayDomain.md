@@ -120,19 +120,19 @@ type SequentialDelayDomain = {
   stages: SequentialDelayStage[];
   // Optional public key of a against which signed requests must be authenticated.
   // In the case of Cloud Backup, this will be a one-time key stored with the ciphertext.
-  publicKey?: string;
+  publicKey: Optional<string>;
   // Optional string to distinguish the output of this domain instance from
   // other SequentialDelayDomain instances
-  salt?: string;
+  salt: Optional<string>;
 };
 
 type SequentialDelayDomainOptions = {
   // EIP-712 signature over the entire request by the key specified in the domain.
   // Required if `publicKey` is defined in the domain instance. If `publicKey` is
   // not defined in the domain instance, then a signature must not be provided.
-  signature?: string;
+  signature: Optional<string>;
   // Used to prevent replay attacks. Required if a signature is provided.
-  nonce?: number;
+  nonce: Optional<number>;
 };
 ```
 
