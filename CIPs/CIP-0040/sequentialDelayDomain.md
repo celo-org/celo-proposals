@@ -105,13 +105,13 @@ interface SequentialDelayStage {
   delay: number;
   // Whether the timer should be reset between attempts during this stage.
   // Defaults to true.
-  resetTimer?: boolean;
+  resetTimer: Optional<boolean>;
   // The number of continuous attempts a user gets before the next delay
   // in each repetition of this stage. Defaults to 1.
-  batchSize?: number;
+  batchSize: Optional<number>;
   // The number of times this stage repeats before continuing to the next stage
   // in the RateLimit array. Defaults to 1.
-  repetitions?: number;
+  repetitions: Optional<number>;
 }
 
 type SequentialDelayDomain = {
