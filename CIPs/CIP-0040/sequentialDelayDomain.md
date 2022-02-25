@@ -131,7 +131,8 @@ type SequentialDelayDomainOptions = {
   // Required if `address` is defined in the domain instance. If `address` is
   // not defined in the domain instance, then a signature must not be provided.
   signature: Optional<string>;
-  // Used to prevent replay attacks. Required if a signature is provided.
+  // Used to prevent replay attacks. Required when sending a DomainRestrictedSignatureRequest
+  // if a signature is provided.
   nonce: Optional<number>;
 };
 ```
@@ -146,8 +147,8 @@ interface SequentialDelayDomainStatusResponse {
   // How many attempts the user has already made against the domain that have
   // satisfied the rate limit
   counter: number;
-  // The timestamp to which the next delay is added to determine when the next
-  // quota increase will occur
+  // The timestamp, in seconds, to which the next delay is added to determine
+  // when the next quota increase will occur
   timer: number;
   // Whether the domain instance has been permanently disabled
   disabled: boolean;
@@ -161,9 +162,15 @@ To implement the `/disableDomain` endpoint specified in [CIP-40](https://github.
 
 ## Replay Handling
 
-The `counter` stored for a given `SequentialDelayDomain` domain instance must equal the `nonce` provided in the signed `SequentialDelayDomainOptions` for the request.
-This will prevent requests from being replayed by a third party and depleting the user's quota.
-If the client does not have their `counter` / `nonce` , it can be queried via `/getDomainQuotaStatus` (See [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md)).
+Replaying of a `DomainRestrictedSignatureRequest` should lead to the user's quota being consumed. In order to prevent this, a `nonce` is included in the options field.
+The `nonce` must be greater than or equal to the `counter` stored for a given `SequentialDelayDomain`.
+When the request is processed, the `counter` value will be set to the provided `nonce` value.
+
+If the client does not have their `counter` / `nonce` , it can be queried via quota status endpoint (See [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md)).
+
+Note that requests to the disable domain and quota status endpoints do not require a nonce to be specified.
+This is not required because disable domain is permanent and idempotent, and quota status has no side effects.
+As a result, replays against those APIs do not result in any change of state.
 
 ## Example Implementation
 
