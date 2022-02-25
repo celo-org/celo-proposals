@@ -146,12 +146,12 @@ Note that this includes the `counter` field, which is used in setting and checki
 interface SequentialDelayDomainStatusResponse {
   // How many attempts the user has already made against the domain that have
   // satisfied the rate limit
-  counter: number;
+  counter: number
   // The timestamp, in seconds, to which the next delay is added to determine
   // when the next quota increase will occur
-  timer: number;
+  timer: number
   // Whether the domain instance has been permanently disabled
-  disabled: boolean;
+  disabled: boolean
 }
 ```
 
