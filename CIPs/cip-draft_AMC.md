@@ -14,7 +14,7 @@ license: Apache 2.0
 A mock proposal used for developing Governcelo
 
 ## Abstract
-Governcelo being developed (here)[https://github.com/ianmunge0/make-crypto-mobile-hackathon/tree/governcelo] needs this proposal to test how it's created
+Governcelo being developed [here](https://github.com/ianmunge0/make-crypto-mobile-hackathon/tree/governcelo) needs this proposal to test how it's created
 
 ## Motivation
 Celo is a mobile-first blockchain. Governcelo will make the current method of making a proposal with pull requests easier.
@@ -29,8 +29,9 @@ In OAuth for GitHub, the device flow method is used. In the GitHub OAuth app, ha
 The introduction of making a proposal using pull requests from a mobile device will not change anything in the existing method of making a pull request from a command line interface or from a web browser.
 
 ## Test Cases
-(test title)[https://github.com/ianmunge0/make-crypto-mobile-hackathon/pull/5]
-(test title)[https://github.com/ianmunge0/make-crypto-mobile-hackathon/pull/4]
+[test title](https://github.com/ianmunge0/make-crypto-mobile-hackathon/pull/5)
+
+[test title](https://github.com/ianmunge0/make-crypto-mobile-hackathon/pull/4)
 
 ## Implementation
 
