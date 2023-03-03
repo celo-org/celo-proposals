@@ -1,0 +1,54 @@
+---
+cip: <to be assigned>
+title: Community rewards go to reserve if undercollaterized
+author: Paul Lange (@palango)
+discussions-to: <URL>
+status: Draft
+type: Standards Track
+category: Ring 0
+created: 2023-03-03
+license: Apache 2.0
+---
+
+## Simple Summary
+
+Simplify the epoch rewards by never sending funds designated for the community fund to the stable coin reserve instead.
+
+## Abstract
+
+A part of the epoch rewards is sent to the community fund. However, in the case of the stable coin reserve being undercollaterized, those funds are sent to the reserve instead. This CIP proposes to never send funds designated for the community fund to the reserve.
+
+## Motivation
+
+The stable coins, and with them the underlying reserve, are now maintained by Mento. As an independent entity it should not directly receive funds designated for the community fund.
+
+Additionally the protocol gets simplified by reducing the number of conditional actions.
+
+## Specification
+
+During the distribution of epoch rewards it will not be checked if the stable coin reserve is undercollaterized. Instead, funds designated for the community fund will always be send there.
+
+## Rationale
+
+See Motivation.
+
+## Backwards Compatibility
+
+This changes the consensus rules and therefore needs to be enabled as part of a hardfork.
+
+## Implementation
+
+Epoch rewards are distributed in the `distributeCommunityRewards` function. There `epoch_rewards.IsReserveLow` is used to decide if the reserve is undercollateralized.
+
+This function and dependent code are to be removed and the funds will be minted for the community fund instead.
+
+This changes the consensus rules and therefore needs to be enabled as part of a hardfork.
+
+Draft PR: https://github.com/celo-org/celo-blockchain/pull/2030
+
+## Security Considerations
+
+No security implications are known.
+
+## License
+This work is licensed under the Apache License, Version 2.0.
