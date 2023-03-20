@@ -88,13 +88,13 @@ The rationale to not exchange all the balance of non-Celo fees but just the port
 
 It should include a function to exchange tokens individually, to avoid Out of Gas errors or the failure to execute one exchange (because the slippage was too high for example or a token is frozen) to prevent exchanging the rest of the tokens.
 
-## Implementation and deploy
+### Implementation and deploy
 
 The contract will be a core-contract, and thus be available in the registry with key `FeeHander` in the registry.  
 
-## Sequence Diagram of a Burn
+### Sequence Diagram of a Burn
 
-High level view
+#### High level view
 
 ```mermaid
 sequenceDiagram
@@ -114,7 +114,7 @@ sequenceDiagram
 		FeeHandler-->>-Bot: <<done>>
 ```
 
-sell() detail
+#### sell() detail
 
 ```mermaid
 sequenceDiagram
@@ -134,7 +134,7 @@ sequenceDiagram
 		FeeHandler-->>-Bot: <<done>>
 ```
 
-MentoFeeHandleSeller.handleToken(tokenAddress)
+#### MentoFeeHandleSeller.handleToken(tokenAddress)
 
 ```mermaid
 sequenceDiagram
@@ -199,7 +199,7 @@ sequenceDiagram
 
 Interfaces are not formal, they include modifiers for access control
 
-Feehandler - Core:
+#### Feehandler - Core:
 
 ```solidity
 
@@ -256,7 +256,7 @@ interface FeeHandler {
 
 The rationale to have different functions to burn individual tokens, as well as batching many at the same time, is that if an exchange fails for whatever reason, it wouldn't prevent the rest of the tokens from being exchanged.
 
-Feehandler  - Implementation details:
+#### Feehandler  - Implementation details:
 
 ```solidity
 
@@ -272,7 +272,7 @@ function getPastBurnForToken(address token) external view returns (uint256)
 function getPastDistributedAmountForToken(address token) external view returns (uint256)
 ```
 
-FeeHandleSeller
+#### FeeHandleSeller
 
 ```solidity
 interface FeeHandleSeller {
@@ -284,7 +284,7 @@ interface FeeHandleSeller {
 }
 ```
 
-MentoFeeHandleSeller:
+#### MentoFeeHandleSeller:
 
 ```solidity
 interface MentoFeeHandleSeller implements FeeHandleSeller {
@@ -292,7 +292,7 @@ interface MentoFeeHandleSeller implements FeeHandleSeller {
 }
 ```
 
-UniswapFeeHandleSeller 
+#### UniswapFeeHandleSeller
 
 ```solidity
 interface UniswapFeeHandleSeller implements FeeHandleSeller {
@@ -301,7 +301,7 @@ interface UniswapFeeHandleSeller implements FeeHandleSeller {
 }
 ```
 
-Routers
+#### Routers
 
 Router addresses for `UniswapFeeHandleSeller` are smart contracts that implement a simplified versions of UniswapV2Router:
 
