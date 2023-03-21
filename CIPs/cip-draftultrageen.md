@@ -11,7 +11,7 @@ license: Apache 2.0
 ---
 
 ## Simple Summary
-Celo has since its inception, in April 2020, had a focus on creating a positive impact on the plannet, becoming the first carbon-negative blockchain. This proposals wants to take that efford further and redistribute 20% of base fees of transactions to a new Green Fund (GF) and burn the remaining 80%, base fees are now sent fully to the Community Fund. The on-chain [Carbon Offsetting Fund](https://docs.celo.org/protocol/pos/epoch-rewards-carbon-offsetting-fund) also aims to be overhauled for a more transparent approach.
+Celo since its inception, in April 2020, had a focus on creating a positive impact on the planet, becoming the first carbon-negative blockchain. This proposals wants to take that effort further and redistribute 20% of transaction's base fees to a new Green Fund (GF) and burn the remaining 80%. All base fees are currently sent fully to the Community Fund. The on-chain [Carbon Offsetting Fund](https://docs.celo.org/protocol/pos/epoch-rewards-carbon-offsetting-fund) also aims to be overhauled for a more transparent approach.
 
 ## Abstract
 This proposals aims to oultine the requirements to make Celo fund on-chain ReFi initiatives with half of the base fees collected from transactions. The other half aims to improve the already deflationary tokenomics by burning it. The Carbon Offsetting Fund is meant to be transfered to an on-chain contract owned by Governance.
