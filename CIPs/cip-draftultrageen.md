@@ -71,7 +71,7 @@ It is also very challenging for indexers, and the general public, to understand 
 
 It's worth noting that this is the approach Ethereum uses for burning its fees.
 
-Solution (2) is straightforward, but it may seen a little hacky. This approach has the benefit that, as it's just an address on-chain, it's trivial to keep track of the burned amounts. For implementation details, it is more practical to use the `0x0….dead` address, as it is well-known in the Ethereum community, holding almost [$600M](https://etherscan.io/address/0x000000000000000000000000000000000000dead) worth of burned tokens.
+Solution (2) is straightforward, but it may seem a little hacky. This approach has the benefit that, as it's just an address on-chain, it's trivial to keep track of the burned amounts. For implementation details, it is more practical to use the `0x0….dead` address, as it is well-known in the Ethereum community, holding almost [$600M](https://etherscan.io/address/0x000000000000000000000000000000000000dead) worth of burned tokens.
 
 Truffle test suit also has a bug where it changes the balance of the zero address every line of the test (or maybe every time it's queried), so it was impossible to test using this address.
 
