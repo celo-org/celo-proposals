@@ -2,7 +2,7 @@
 cip: <to be assigned>
 title: Ultragreen Celo
 author: Martín Vople (@martinvol)
-discussions-to: <URL>
+discussions-to: https://forum.celo.org/t/core-devs-call-on-cip-ultragreen-celo/5387
 status: Draft
 type: Standards Track
 category (*only required for Standards Track): <Ring 0, 1, 2, 3>
