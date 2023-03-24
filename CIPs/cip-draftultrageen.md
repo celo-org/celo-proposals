@@ -1,12 +1,12 @@
 ---
 cip: <to be assigned>
 title: Ultragreen Celo
-author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
+author: Martín Vople (@martinvol)
 discussions-to: <URL>
 status: Draft
 type: Standards Track
 category (*only required for Standards Track): <Ring 0, 1, 2, 3>
-created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
+created: 2023-03-24
 license: Apache 2.0
 ---
 
