@@ -3,7 +3,7 @@ cip: 53
 title: Remove Minimum Client Version Check
 author: Karl Bartel (@karlb)
 discussions-to: https://github.com/celo-org/celo-proposals/discussions/361
-status: Draft
+status: Accepted
 type: Standards Track
 category: Ring 0
 created: 2023-02-27
