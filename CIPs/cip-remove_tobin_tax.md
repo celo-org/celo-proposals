@@ -49,7 +49,7 @@ Draft PR: https://github.com/celo-org/celo-blockchain/pull/2029
 
 Once the hardfork is completed, all smart contract functionality regarding the Tobin Tax can be deleted. This includes various fields in the `Reserve` smart contract. A draft PR is available at https://github.com/celo-org/celo-monorepo/pull/10206.
 
-Once this work is done it can be put on-chain after evaluation of a corresponding governance proposal.
+Once this work is done, it can be put on-chain after evaluation of a corresponding governance proposal.
 
 ## Rationale
 
