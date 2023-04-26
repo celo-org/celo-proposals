@@ -34,7 +34,7 @@ Secondly, the implementation complicates both the Celo protocol smart contracts 
 
 Removing the Tobin Tax solves those problems.
 
-Additionally the reserve is bound to stable coins that are developed by Mento, which is an independent entity now. Therefore separation of the core protocol from the reserve is desirable.
+Additionally, the reserve is bound to stable coins that are developed by Mento, which is an independent entity now. Therefore, separation of the core protocol from the reserve is desirable.
 
 ## Specification
 ### Blockchain node
