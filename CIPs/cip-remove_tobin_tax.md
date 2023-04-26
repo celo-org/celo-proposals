@@ -39,7 +39,7 @@ Additionally, the reserve is bound to stable coins that are developed by Mento, 
 ## Specification
 ### Blockchain node
 
-Currently the Tobin Tax is injected in the block context [here](https://github.com/celo-org/celo-blockchain/blob/master/core/vm/vmcontext/context.go#L48). This can be replaced with default `Transfer` function.
+Currently the Tobin Tax is injected in the block context [here](https://github.com/celo-org/celo-blockchain/blob/master/core/vm/vmcontext/context.go#L48). This can be replaced with the default `Transfer` function.
 
 This switch needs to be enabled during a hardfork.
 
