@@ -26,7 +26,7 @@ Additionally the protocol gets simplified by reducing the number of conditional 
 
 ## Specification
 
-During the distribution of epoch rewards it will not be checked if the stable coin reserve is undercollaterized. Instead, funds designated for the community fund will always be send there.
+During the distribution of epoch rewards, it will not be checked if the stable coin reserve is undercollateralized. Instead, funds designated for the community fund will always be sent there.
 
 ## Rationale
 
