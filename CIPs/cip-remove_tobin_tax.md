@@ -18,7 +18,7 @@ Remove the [Tobin Tax](https://docs.celo.org/protocol/stability/tobin-tax) from 
 
 This CIP proposes to remove the Tobin Tax from the Celo protocol. The Tobin Tax is a small fee that is levied on CELO transfers when the reserve ratio falls below a certain value. The Tobin tax has never been enabled on mainnet.
 
-Currently the client includes a special transfer function that checks if a Tobin Tax has to be paid and pays it if necessary. This code is proposed to be removed.
+Currently, the client includes a special transfer function that checks if a Tobin Tax has to be paid and pays it if necessary. This code is proposed to be removed.
 
 ## Motivation
 
