@@ -29,7 +29,7 @@ First, it can lead to confusion for users, when two equal transactions result in
 Secondly, the implementation complicates both the Celo protocol smart contracts and the client software in several ways.
 
 - It uses additional call stacks when executing EVM bytecode in the virtual machine, leading to  incompatible behaviour with Ethereum.
-- It complicates tools that track CELO on the network and will require changes for every tool build on Ethereum to run on Celo.
+- It complicates tools that track CELO on the network and will require changes for every tool built on Ethereum to run on Celo.
 - A CELO transaction that pays a Tobin Tax will still cost 21,000 gas, even though it does two transfers. This means more execution work for the client for the same gas budget.
 
 Removing the Tobin Tax solves those problems.
