@@ -24,7 +24,7 @@ Currently the client includes a special transfer function that checks if a Tobin
 
 The Tobin Tax creates two problems.
 
-First, it can lead to confusion for users, when two equal transactions result in different outcome, depending on whether or not the Tobin Tax has to be paid.
+First, it can lead to confusion for users, when two equal transactions result in a different outcome, depending on whether or not the Tobin Tax has to be paid.
 
 Secondly, the implementation complicates both the Celo protocol smart contracts and the client software in several ways.
 
