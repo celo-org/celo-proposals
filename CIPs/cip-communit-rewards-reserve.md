@@ -20,7 +20,7 @@ A part of the epoch rewards is sent to the community fund. However, in the case 
 
 ## Motivation
 
-The stable coins, and with them the underlying reserve, are now maintained by Mento. As an independent entity it should not directly receive funds designated for the community fund.
+The stable coins, and with them the underlying reserve, are now maintained by Mento. As an independent entity, it should not directly receive funds designated for the community fund.
 
 Additionally the protocol gets simplified by reducing the number of conditional actions.
 
