@@ -16,7 +16,7 @@ Simplify the epoch rewards by never sending funds designated for the community f
 
 ## Abstract
 
-A part of the epoch rewards is sent to the community fund. However, in the case of the stable coin reserve being undercollaterized, those funds are sent to the reserve instead. This CIP proposes to never send funds designated for the community fund to the reserve.
+A part of the epoch rewards is sent to the community fund. However, in the case of the stable coin reserve being undercollateralized, those funds are sent to the reserve instead. This CIP proposes to never send funds designated for the community fund to the reserve.
 
 ## Motivation
 
