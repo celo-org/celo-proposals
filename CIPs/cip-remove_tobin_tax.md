@@ -61,7 +61,7 @@ The Tobin Tax was only paid for CELO transfers. As it was handled by the transfe
 
 ## Implementation
 
-There current code that calculates and pays the Tobin Tax can be disabled at the hardfork in which this CIP is enabled. It will be replaced by the default transfer function instead.
+The current code that calculates and pays the Tobin Tax can be disabled at the hardfork in which this CIP is enabled. It will be replaced by the default transfer function instead.
 
 ## Security Considerations
 
