@@ -1,0 +1,45 @@
+---
+cip: 56
+title: Remove freezable check on epoch rewards
+author: Gastón Ponti (@gastonponti)
+discussions-to: https://github.com/celo-org/celo-proposals/discussions/368
+status: Accepted
+type: Standards Track
+category: Ring 0
+created: 2023-03-27
+license: Apache 2.0
+---
+
+## Simple Summary
+
+Remove the freezable check on epoch rewards distribution.
+
+## Abstract
+
+This CIP will remove the freezable check in the finalize stage of the last epoch block creation.
+
+## Motivation
+
+The freeze of the epoch rewards contract was a mechanism used at the beginning of mainnet as a way to control and test all the features needed related to the CELO protocol. The unfreeze of this contract was performed in the first CGP proposal ([GCP-0001](https://github.com/celo-org/governance/blob/main/CGPs/cgp-0001.md)) after checking that everything was working as expected.
+The real motivation of this check added in the finalize stage of the last block of the epoch, was to avoid error logs on the pre-mainnet testnets, which was confusing a part of the validator set of those testnets (https://github.com/celo-org/celo-blockchain/pull/839).
+Removing this check will save an unnecessary state call.
+
+## Specification
+
+Remove the freezer check in the `distributeEpochRewards` method called at the finalize stage of the last block of the epoch ([https://github.com/celo-org/celo-blockchain/blob/master/consensus/istanbul/backend/pos.go#L48](https://github.com/celo-org/celo-blockchain/blob/master/consensus/istanbul/backend/pos.go#L48))
+
+## Rationale
+
+The decision of removing this check is not only to save a state call, but also to clean the codebase. The freeze feature was suppose to be used only at the beginning of the blockchain, which makes that check an unnecessary cost now that the network is stable.
+
+## Backwards Compatibility
+
+This needs to be added as part of a fork.
+
+## Security Considerations
+
+If for some reason, the whole community votes for a new governance proposal to freeze the epoch rewards again (which seems unlikely), the validators will still generate blocks, and the only downside is that the block receipt of the last block of the epoch will have a revert on that epoch distribution call, which shouldn’t generate any problem at all.
+
+## License
+
+This work is licensed under the Apache License, Version 2.0.
