@@ -7,7 +7,7 @@ CIP-40 domain supporting signature-authenticated rate limits defined as a series
 ## Background
 
 This is an extension to the new ODIS interface put forward in [CIP-40](https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0040.md) which specifies a domain supporting signature-authenticated rate limits defined as a series of time-delayed stages.
-The motivating use case is allowing wallets to define how often users can attempt to recover their account via the scheme outlined in [Cloud backup with PIN encryption](https://www.notion.so/Cloud-backup-with-PIN-encryption-cea30f57bdaf4945a50eba2a42e1b85c), but the design attempts to accommodate a number of simmilar rate limiting goals based solely on time.
+The motivating use case is allowing wallets to define how often users can attempt to recover their account via the scheme outlined in [Cloud backup with PIN encryption](https://www.notion.so/Cloud-backup-with-PIN-encryption-cea30f57bdaf4945a50eba2a42e1b85c), but the design attempts to accommodate a number of similar rate limiting goals based solely on time.
 
 ## Specification
 
